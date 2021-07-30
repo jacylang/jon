@@ -74,6 +74,11 @@ namespace jon {
             return (... and lookup(chars));
         }
 
+        template<class ...Args>
+        bool isAnyOf(Args && ...chars) {
+            return (... or peek(chars));
+        }
+
         void lexCurrent() {
             switch (peek()) {
                 case '/': {
