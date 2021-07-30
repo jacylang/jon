@@ -83,10 +83,6 @@ namespace jon {
                 case '"': {
                     return lexString();
                 }
-                case '\n': {
-                    addToken(TokenKind::NL);
-                    break;
-                }
                 case ',': {
                     addToken(TokenKind::Comma);
                     break;
@@ -112,7 +108,7 @@ namespace jon {
                     break;
                 }
                 default: {
-
+                    return lexMisc();
                 }
             }
         }
@@ -192,6 +188,13 @@ namespace jon {
             }
 
             addToken(TokenKind::String, val);
+        }
+
+        void lexMisc() {
+            if (isNL()) {
+                addToken(TokenKind::NL);
+                return;
+            }
         }
 
         // Tokens //
