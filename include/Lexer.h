@@ -204,6 +204,18 @@ namespace jon {
                 addToken(TokenKind::NL);
                 return;
             }
+
+            // Identifier is anything not containing specific tokens
+            std::string val;
+            while (not eof()) {
+                if (isAnyOf(',', ':', '{', '}', '[', ']', '\'', '"') or isNL()) {
+                    break;
+                }
+                val += peek();
+            }
+
+            // Add identifier as string
+            addToken(TokenKind::String, val);
         }
 
         // Tokens //
