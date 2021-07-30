@@ -64,6 +64,10 @@ namespace jon {
                 case '/': {
                     return lexComment();
                 }
+                case ':': {
+                    addToken(TokenKind::Colon);
+                    break;
+                }
             }
         }
 
