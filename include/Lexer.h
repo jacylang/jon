@@ -10,8 +10,18 @@
 namespace jon {
     enum class TokenKind {
         NL,
+
+        // Punctuations
         Comma,
         Colon,
+        LBrace,
+        RBrace,
+        LBracket,
+        RBracket,
+
+        /// Either string enclosed into quotes (maybe triple if multi-line) or identifier
+        // Note: Separate with identifier if would be needed
+        String,
     };
 
     struct Token {
