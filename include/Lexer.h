@@ -74,9 +74,13 @@ namespace jon {
             return (... and lookup(chars));
         }
 
+        bool is(char c) {
+            return peek() == c;
+        }
+
         template<class ...Args>
         bool isAnyOf(Args && ...chars) {
-            return (... or peek(chars));
+            return (... or is(chars));
         }
 
         void lexCurrent() {
