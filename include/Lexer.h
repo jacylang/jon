@@ -7,6 +7,17 @@
 #include "utils.h"
 
 namespace jon {
+    enum class TokenKind {
+        NL,
+        Comma,
+        Colon,
+    };
+
+    struct Token {
+        TokenKind kind;
+        std::string val;
+    };
+
     class Lexer {
     public:
         Lexer(std::string && source) : source(std::move(source)) {}
