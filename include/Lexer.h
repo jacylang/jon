@@ -150,11 +150,15 @@ namespace jon {
         void lexNormalString() {
             const auto quote = peek();
 
-            advance(); // Skip quote
+            // Skip quote
+            advance();
 
             std::string val;
             while (not eof()) {
-                if (isNL() or peek() == quote) {
+                if (isNL()) {
+                    expectedError("' at the end of string");
+                }
+                if (peek() == quote) {
                     break;
                 }
                 val += peek();
@@ -173,6 +177,10 @@ namespace jon {
         // Errors //
         void unexpectedToken() {
             throw std::runtime_error(mstr("Unexpected token '", peek(), "'"));
+        }
+
+        void expectedError(const std::string & msg) {
+            throw std::runtime_error(mstr("Expected ", msg, ", got `", peek(), "`"));
         }
     };
 }
