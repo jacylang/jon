@@ -120,9 +120,11 @@ namespace jon {
         void lexString() {
             const auto quote = peek();
             if (lookup() == quote and lookup(2) == quote) {
-                // TODO: Multi-line
+                // Multi-line string
+
             }
 
+            // Single-line string
             advance(); // Skip quote
 
             std::string val;
