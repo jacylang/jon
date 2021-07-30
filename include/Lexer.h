@@ -69,6 +69,11 @@ namespace jon {
             return peek() == '\n';
         }
 
+        template<class ...Args>
+        bool isSeq(Args && ...chars) {
+            return (... and lookup(chars));
+        }
+
         void lexCurrent() {
             switch (peek()) {
                 case '/': {
