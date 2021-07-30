@@ -3,6 +3,7 @@
 
 #include <string>
 #include <stdexcept>
+#include <vector>
 
 #include "utils.h"
 
@@ -14,6 +15,8 @@ namespace jon {
     };
 
     struct Token {
+        Token(TokenKind kind, const std::string & val) : kind(kind), val(val) {}
+
         TokenKind kind;
         std::string val;
     };
@@ -94,6 +97,13 @@ namespace jon {
                     }
                 }
             }
+        }
+
+        // Tokens //
+        std::vector<Token> tokens;
+
+        void addToken(TokenKind kind, const std::string & val = "") {
+            tokens.emplace_back(kind, val);
         }
 
         // Errors //
