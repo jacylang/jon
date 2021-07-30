@@ -27,7 +27,7 @@ namespace jon {
             return source.at(index);
         }
 
-        char advance(uint8_t dist) {
+        char advance(uint8_t dist = 1) {
             index += dist;
             return peek();
         }
@@ -38,6 +38,11 @@ namespace jon {
 
         bool eof() {
             return index >= source.size();
+        }
+
+        bool isNL() {
+            // TODO: Handle '\r' and '\r\n'
+            return peek() == '\n';
         }
 
         void lexCurrent() {
@@ -54,8 +59,29 @@ namespace jon {
             }
             if (lookup() == '*') {
                 advance(2);
-            } else if (lookup() == '/') {
 
+                // Parse block comment handling nested
+                uint8_t depth{1};
+                while (not eof()) {
+                    if (peek() == '/' and lookup() == '*') {
+                        depth++;
+                    }
+
+                    if (peek() == '*' and lookup() == '/') {
+                        depth--;
+                    }
+
+                    if (depth == 0) {
+                        break;
+                    }
+                }
+            } else if (lookup() == '/') {
+                while (not eof()) {
+                    advance();
+                    if (isNL()) {
+                        break;
+                    }
+                }
             }
         }
 
