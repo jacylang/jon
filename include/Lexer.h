@@ -124,9 +124,8 @@ namespace jon {
 
         void lexString() {
             const auto quote = peek();
-            if (lookup() == quote and lookup(2) == quote) {
-                // Multi-line string
-
+            if (isSeq(quote, quote, quote)) {
+                return lexMLString();
             }
 
             // Single-line string
@@ -138,6 +137,22 @@ namespace jon {
                 if (isNL() or peek() == quote) {
                     break;
                 }
+            }
+
+            addToken(TokenKind::String, val);
+        }
+
+        void lexMLString() {
+            const auto quote = peek();
+            // Note: Skip triple quote
+            advance(3);
+
+            std::string val;
+            while (not eof()) {
+                if (isSeq(quote, quote, quote)) {
+                    break;
+                }
+                val += peek();
             }
 
             addToken(TokenKind::String, val);
