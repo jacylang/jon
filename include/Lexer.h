@@ -27,8 +27,9 @@ namespace jon {
             return source.at(index);
         }
 
-        char advance() {
-            return source.at(++index);
+        char advance(uint8_t dist) {
+            index += dist;
+            return peek();
         }
 
         char lookup() {
@@ -52,6 +53,7 @@ namespace jon {
                 throw std::runtime_error("Called `Lexer::lexComment` with not the '/' char");
             }
             if (lookup() == '*') {
+                advance(2);
             } else if (lookup() == '/') {
 
             }
