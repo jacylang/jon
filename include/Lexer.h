@@ -74,13 +74,13 @@ namespace jon {
                 case '/': {
                     return lexComment();
                 }
-                case ':': {
-                    addToken(TokenKind::Colon);
-                    break;
-                }
                 case '\'':
                 case '"': {
                     return lexString();
+                }
+                case ':': {
+                    addToken(TokenKind::Colon);
+                    break;
                 }
             }
         }
