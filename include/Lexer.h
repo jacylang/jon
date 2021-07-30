@@ -83,9 +83,36 @@ namespace jon {
                 case '"': {
                     return lexString();
                 }
+                case '\n': {
+                    addToken(TokenKind::NL);
+                    break;
+                }
+                case ',': {
+                    addToken(TokenKind::Comma);
+                    break;
+                }
                 case ':': {
                     addToken(TokenKind::Colon);
                     break;
+                }
+                case '{': {
+                    addToken(TokenKind::LBrace);
+                    break;
+                }
+                case '}': {
+                    addToken(TokenKind::RBrace);
+                    break;
+                }
+                case '[': {
+                    addToken(TokenKind::LBracket);
+                    break;
+                }
+                case ']': {
+                    addToken(TokenKind::RBracket);
+                    break;
+                }
+                default: {
+
                 }
             }
         }
