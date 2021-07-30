@@ -56,8 +56,8 @@ namespace jon {
             return peek();
         }
 
-        char lookup() {
-            return index < source.size() - 1 ? source.at(index + 1) : '\0';
+        char lookup(uint8_t dist = 1) {
+            return index < source.size() - dist ? source.at(index + dist) : '\0';
         }
 
         bool eof() {
@@ -77,6 +77,10 @@ namespace jon {
                 case ':': {
                     addToken(TokenKind::Colon);
                     break;
+                }
+                case '\'':
+                case '"': {
+                    return lexString();
                 }
             }
         }
@@ -111,6 +115,25 @@ namespace jon {
                     }
                 }
             }
+        }
+
+        void lexString() {
+            const auto quote = peek();
+            if (lookup() == quote and lookup(2) == quote) {
+                // TODO: Multi-line
+            }
+
+            advance(); // Skip quote
+
+            std::string val;
+            while (not eof()) {
+                val += peek();
+                if (isNL() or peek() == quote) {
+                    break;
+                }
+            }
+
+            addToken(TokenKind::String, val);
         }
 
         // Tokens //
