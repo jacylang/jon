@@ -128,18 +128,7 @@ namespace jon {
                 return lexMLString();
             }
 
-            // Single-line string
-            advance(); // Skip quote
-
-            std::string val;
-            while (not eof()) {
-                val += peek();
-                if (isNL() or peek() == quote) {
-                    break;
-                }
-            }
-
-            addToken(TokenKind::String, val);
+            return lexNormalString();
         }
 
         void lexMLString() {
@@ -150,6 +139,22 @@ namespace jon {
             std::string val;
             while (not eof()) {
                 if (isSeq(quote, quote, quote)) {
+                    break;
+                }
+                val += peek();
+            }
+
+            addToken(TokenKind::String, val);
+        }
+
+        void lexNormalString() {
+            const auto quote = peek();
+
+            advance(); // Skip quote
+
+            std::string val;
+            while (not eof()) {
+                if (isNL() or peek() == quote) {
                     break;
                 }
                 val += peek();
