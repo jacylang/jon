@@ -159,6 +159,16 @@ namespace jon {
             return isAnyOf(' ', '\t', '\r');
         }
 
+        bool isDigit() {
+            return peek() >= '0' and peek() <= '9';
+        }
+
+        bool isHexDigit() {
+            return isDigit()
+                or peek() >= 'a' and peek() <= 'f'
+                or peek() >= 'A' and peek() <= 'F';
+        }
+
         void skip(char c) {
             if (peek() != c) {
                 expectedError("`" + mstr(c) + "`");
