@@ -48,7 +48,16 @@ namespace jon {
     private:
         void init() {
             auto tokens = lexer.lex(std::move(source));
+
+            if (mode == Mode::Debug) {
+                printer.printTokens(tokens);
+            }
+
             ast = parser.parse(std::move(tokens));
+
+            if (mode == Mode::Debug) {
+                ast->accept(printer);
+            }
         }
 
     private:
