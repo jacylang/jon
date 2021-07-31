@@ -107,13 +107,20 @@ namespace jon {
                 case TokenKind::False: {
                     return std::make_unique<Bool>(advance().kind == TokenKind::True);
                 }
+                case TokenKind::BinInt: {
+                    return std::make_unique<Int>(std::stoul(advance().val.substr(2), nullptr, 2));
+                }
+                case TokenKind::OctoInt: {
+                    return std::make_unique<Int>(std::stoul(advance().val.substr(2), nullptr, 8));
+                }
+                case TokenKind::HexInt: {
+                    return std::make_unique<Int>(std::stoul(advance().val.substr(2), nullptr, 16));
+                }
                 case TokenKind::DecInt: {
-                    auto val = std::stoul(advance().val);
-                    return std::make_unique<Int>(val);
+                    return std::make_unique<Int>(std::stoul(advance().val));
                 }
                 case TokenKind::Float: {
-                    auto val = std::stod(advance().val);
-                    return std::make_unique<Float>(val);
+                    return std::make_unique<Float>(std::stod(advance().val));
                 }
                 case TokenKind::String: {
                     return std::make_unique<String>(advance().val);
