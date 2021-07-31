@@ -37,6 +37,7 @@ namespace jon {
 
             for (const auto & entry : object.entries) {
                 out(entry.key.val, ": ");
+                entry.val->accept(*this);
             }
 
             out("}");
