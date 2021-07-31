@@ -5,6 +5,8 @@
 #include "ast.h"
 
 namespace jon {
+    using namespace ast;
+
     class Parser {
     public:
         Parser() {}
@@ -128,7 +130,7 @@ namespace jon {
                 rootBraced = skipOpt(TokenKind::LBrace);
             }
 
-            NValue::Entries entries;
+            Object::Entries entries;
             while (not eof()) {
                 auto key = Ident {
                     skip(TokenKind::String, "key", true).val
@@ -145,7 +147,7 @@ namespace jon {
                 skip(TokenKind::RBrace, "closing `}`", false);
             }
 
-            return std::make_unique<NValue>(std::move(entries));
+            return std::make_unique<Object>(std::move(entries));
         }
 
         value_ptr parseArray() {
