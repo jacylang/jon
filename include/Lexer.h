@@ -44,31 +44,31 @@ namespace jon {
                     return "new line";
                 }
                 case TokenKind::Comma: {
-                    return ",";
+                    return "`,`";
                 }
                 case TokenKind::Colon: {
-                    return ":";
+                    return "`:`";
                 }
                 case TokenKind::LBrace: {
-                    return "{";
+                    return "`{`";
                 }
                 case TokenKind::RBrace: {
-                    return "}";
+                    return "`}`";
                 }
                 case TokenKind::LBracket: {
-                    return "[";
+                    return "`[`";
                 }
                 case TokenKind::RBracket: {
-                    return "]";
+                    return "`]`";
                 }
                 case TokenKind::Null: {
-                    return "null";
+                    return "`null`";
                 }
                 case TokenKind::False: {
-                    return "false";
+                    return "`false`";
                 }
                 case TokenKind::True: {
-                    return "true";
+                    return "`true`";
                 }
                 case TokenKind::String: {
                     return "string '" + val + "'";

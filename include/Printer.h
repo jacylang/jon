@@ -14,7 +14,7 @@ namespace jon {
 
         void printTokens(const TokenStream & tokens) {
             out("Tokens: [");
-            for (auto it = tokens.begin(); it != tokens.end(); i++) {
+            for (auto it = tokens.begin(); it != tokens.end(); it++) {
                 out(it->toString());
 
                 if (it != std::prev(tokens.end())) {
