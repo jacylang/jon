@@ -34,10 +34,11 @@ namespace jon {
             return peek().kind == kind;
         }
 
-        void skip(TokenKind kind, const std::string & expected) {
-            if (peek().kind == kind) {
+        Token skip(TokenKind kind, const std::string & expected) {
+            auto token = peek();
+            if (token.kind == kind) {
                 advance();
-                return;
+                return token;
             }
             expectedError(expected);
         }
@@ -60,6 +61,13 @@ namespace jon {
         }
 
         value_ptr parseObject() {
+            advance(); // Skip `{`
+            auto object = parseObjectInner();
+            skip(TokenKind::RBrace, "closing `}`");
+            return object;
+        }
+
+        value_ptr parseObjectInner() {
 
         }
 
