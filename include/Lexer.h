@@ -129,6 +129,10 @@ namespace jon {
             return (... or is(chars));
         }
 
+        bool isHidden() {
+            return isAnyOf(' ', '\t', '\r');
+        }
+
         void lexCurrent() {
             switch (peek()) {
                 case '/': {
