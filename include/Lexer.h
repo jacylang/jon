@@ -344,6 +344,21 @@ namespace jon {
                 }
             }
 
+            // Octodecimal //
+            if (peek() == '0' and (lookup() == 'o' or lookup() == 'O')) {
+                advance(2);
+                if (not isOctDigit()) {
+                    expectedError("octodecimal digit");
+                }
+                while (not eof()) {
+                    if (not isOctDigit()) {
+                        break;
+                    }
+                    val += peek();
+                    advance();
+                }
+            }
+
             addToken(TokenKind::Int, val);
         }
 
