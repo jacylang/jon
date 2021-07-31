@@ -141,6 +141,8 @@ namespace jon {
             }
 
             skip(TokenKind::RBracket, "Closing `]`", false);
+
+            return std::make_unique<Array>(std::move(values));
         }
 
         // Errors //
