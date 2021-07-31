@@ -12,6 +12,7 @@ namespace jon {
         AstPrinter() {}
         ~AstPrinter() = default;
 
+        // Values //
         void visit(const Null & null) override {
             out("null");
         }
@@ -34,19 +35,38 @@ namespace jon {
 
         void visit(const Object & object) override {
             out("{");
+            nl();
 
             for (const auto & entry : object.entries) {
                 out(entry.key.val, ": ");
                 entry.val->accept(*this);
+                nl();
             }
 
+            nl();
             out("}");
+        }
+
+        void visit(const Array & array) override {
+            out("[");
+            nl();
+
+            for (const auto & value : array.values) {
+                value->accept(*this);
+            }
+
+            nl();
+            out("]");
         }
 
     private:
         template<class ...Args>
         void out(Args && ...args) {
             std::cout << mstr(std::forward<Args>(args)...);
+        }
+
+        void nl() {
+            std::cout << std::endl;
         }
     };
 }
