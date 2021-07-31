@@ -43,6 +43,16 @@ namespace jon {
             expectedError(expected);
         }
 
+        bool skipNls(bool optional) {
+            if (is(TokenKind::NL)) {
+                while (is(TokenKind::NL)) {
+                    advance();
+                }
+                return true;
+            }
+            return false;
+        }
+
         bool skipOpt(TokenKind kind) {
             if (peek().kind == kind) {
                 advance();
