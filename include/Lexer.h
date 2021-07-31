@@ -181,6 +181,14 @@ namespace jon {
             advance();
         }
 
+        bool skipOpt(char c) {
+            if (is(c)) {
+                advance();
+                return true;
+            }
+            return false;
+        }
+
         void lexCurrent() {
             switch (peek()) {
                 case '/': {
