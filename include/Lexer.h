@@ -104,6 +104,9 @@ namespace jon {
 
         char advance(uint8_t dist = 1) {
             index += dist;
+            if (eof()) {
+                return '\0';
+            }
             return peek();
         }
 
