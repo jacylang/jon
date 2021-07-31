@@ -10,8 +10,8 @@ namespace jon {
         Parser() {}
         ~Parser() = default;
 
-        void parse() {
-
+        value_ptr parse() {
+            return parseObject(true);
         }
 
     private:
