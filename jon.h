@@ -6,7 +6,7 @@
 
 #include "Lexer.h"
 #include "Parser.h"
-#include "AstPrinter.h"
+#include "Printer.h"
 
 namespace jon {
     class jon {
@@ -41,7 +41,7 @@ namespace jon {
         std::string source;
         Lexer lexer;
         Parser parser;
-        AstPrinter printer;
+        Printer printer;
         value_ptr ast;
     };
 }

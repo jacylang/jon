@@ -1,5 +1,5 @@
-#ifndef JON_INCLUDE_ASTPRINTER_H
-#define JON_INCLUDE_ASTPRINTER_H
+#ifndef JON_PRINTER_H
+#define JON_PRINTER_H
 
 #include <iostream>
 
@@ -7,10 +7,10 @@
 #include "utils.h"
 
 namespace jon {
-    class AstPrinter : public ValueVisitor {
+    class Printer : public ValueVisitor {
     public:
-        AstPrinter() {}
-        ~AstPrinter() = default;
+        Printer() {}
+        ~Printer() = default;
 
         void print(value_ptr ast) {
             ast->accept(*this);
@@ -74,4 +74,4 @@ namespace jon {
     };
 }
 
-#endif // JON_INCLUDE_ASTPRINTER_H
+#endif // JON_PRINTER_H
