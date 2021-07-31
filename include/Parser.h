@@ -112,6 +112,11 @@ namespace jon {
                     advance();
                     return std::make_unique<Int>(intVal.val);
                 }
+                case TokenKind::Float: {
+                    auto floatVal = peek();
+                    advance();
+                    return std::make_unique<Float>(floatVal.val);
+                }
                 case TokenKind::String: {
                     auto str = peek();
                     advance();
