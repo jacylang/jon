@@ -3,4 +3,4 @@ project(jon)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(jon test.cpp include/Lexer.h include/utils.h)
+add_library(jon test.cpp include/Lexer.h include/utils.h include/Parser.h)

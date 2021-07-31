@@ -36,10 +36,11 @@ namespace jon {
         Lexer(std::string && source) : source(std::move(source)) {}
         ~Lexer() = default;
 
-        void lex() {
+        std::vector<Token> lex() {
             while (not eof()) {
                 lexCurrent();
             }
+            return std::move(tokens);
         }
 
     private:
