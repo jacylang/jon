@@ -60,9 +60,14 @@ namespace jon {
             return false;
         }
 
-        bool skipOpt(TokenKind kind) {
+        bool skipOpt(TokenKind kind, bool rightNls = false) {
             if (peek().kind == kind) {
                 advance();
+
+                if (rightNls) {
+                    skipNls(true);
+                }
+
                 return true;
             }
 
