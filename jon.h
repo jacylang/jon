@@ -47,11 +47,15 @@ namespace jon {
 
     private:
         void init() {
+            logDebug("Lexing...");
+
             auto tokens = lexer.lex(std::move(source));
 
             if (mode == Mode::Debug) {
                 printer.printTokens(tokens);
             }
+
+            logDebug("Parsing...");
 
             ast = parser.parse(std::move(tokens));
 
@@ -67,6 +71,15 @@ namespace jon {
         Parser parser;
         Printer printer;
         value_ptr ast;
+
+    private:
+        template<class ...Args>
+        void logDebug(Args && ...args) {
+            if (mode != Mode::Debug) {
+                return;
+            }
+            printer.out(std::forward<Args>(args)...);
+        }
     };
 }
 

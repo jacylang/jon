@@ -84,7 +84,7 @@ namespace jon {
             out("]");
         }
 
-    private:
+    public:
         template<class ...Args>
         void out(Args && ...args) {
             std::cout << mstr(std::forward<Args>(args)...);
@@ -94,6 +94,7 @@ namespace jon {
             std::cout << std::endl;
         }
 
+    private:
         void printIndent() {
             out(std::string(indent * 2, ' '));
         }
