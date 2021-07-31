@@ -117,7 +117,8 @@ namespace jon {
 
         template<class ...Args>
         bool isSeq(Args && ...chars) {
-            return (... and lookup(chars));
+            uint8_t offset{0};
+            return (... and (lookup(offset++) == chars));
         }
 
         bool is(char c) {
