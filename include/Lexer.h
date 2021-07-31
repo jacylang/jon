@@ -267,15 +267,15 @@ namespace jon {
                 return;
             }
 
-            if (isSeq('t', 'r', 'u', 'e')) {
-                advance(4);
-                addToken(TokenKind::True);
-                return;
-            }
-
             if (isSeq('f', 'a', 'l', 's', 'e')) {
                 advance(5);
                 addToken(TokenKind::False);
+                return;
+            }
+
+            if (isSeq('t', 'r', 'u', 'e')) {
+                advance(4);
+                addToken(TokenKind::True);
                 return;
             }
 
