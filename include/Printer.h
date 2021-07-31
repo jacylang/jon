@@ -12,8 +12,10 @@ namespace jon {
         Printer() {}
         ~Printer() = default;
 
-        void print(value_ptr ast) {
-            ast->accept(*this);
+        void printTokens(const TokenStream & tokens) {
+            for (const auto & token : tokens) {
+                out(token.toString(), ", ");
+            }
         }
 
         void visit(const Null & null) override {
