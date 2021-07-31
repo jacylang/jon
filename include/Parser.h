@@ -34,6 +34,14 @@ namespace jon {
             return peek().kind == kind;
         }
 
+        void skip(TokenKind kind, const std::string & expected) {
+            if (peek().kind == kind) {
+                advance();
+                return;
+            }
+            expectedError(expected);
+        }
+
         value_ptr parseValue() {
             switch (peek().kind) {
                 case TokenKind::LBrace: {
