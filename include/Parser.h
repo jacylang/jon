@@ -73,7 +73,7 @@ namespace jon {
                     return parseObject();
                 }
                 case TokenKind::LBracket: {
-
+                    return parseArray();
                 }
                 case TokenKind::String: {
 
