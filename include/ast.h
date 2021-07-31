@@ -11,7 +11,7 @@ namespace jon {
     struct Int;
     struct Float;
     struct String;
-    struct Object;
+    struct Value;
     struct Array;
 
     struct ValueVisitor {
@@ -21,7 +21,7 @@ namespace jon {
         virtual void visit(const Int&) = 0;
         virtual void visit(const Float&) = 0;
         virtual void visit(const String&) = 0;
-        virtual void visit(const Object&) = 0;
+        virtual void visit(const Value&) = 0;
         virtual void visit(const Array&) = 0;
     };
 }
@@ -112,10 +112,10 @@ namespace jon {
         value_ptr val;
     };
 
-    struct Object : Value {
+    struct Value : Value {
         using Entries = std::vector<KeyValue>;
 
-        Object(Entries && entries) : Value(ValueKind::Object), entries(std::move(entries)) {}
+        Value(Entries && entries) : Value(ValueKind::Object), entries(std::move(entries)) {}
 
         Entries entries;
 

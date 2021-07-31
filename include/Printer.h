@@ -53,7 +53,7 @@ namespace jon {
             out("'", escstr(string.val), "'");
         }
 
-        void visit(const Object & object) override {
+        void visit(const Value & object) override {
             out("{");
             nl();
             indent++;
