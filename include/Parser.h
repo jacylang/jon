@@ -43,6 +43,15 @@ namespace jon {
             expectedError(expected);
         }
 
+        bool skipOpt(TokenKind kind) {
+            if (peek().kind == kind) {
+                advance();
+                return true;
+            }
+
+            return false;
+        }
+
         value_ptr parseValue() {
             switch (peek().kind) {
                 case TokenKind::LBrace: {
@@ -60,15 +69,17 @@ namespace jon {
             }
         }
 
-        value_ptr parseObject() {
-            advance(); // Skip `{`
-            auto object = parseObjectInner();
-            skip(TokenKind::RBrace, "closing `}`");
-            return object;
-        }
+        value_ptr parseObject(bool root = false) {
+            bool braced = false;
+            if (not root) {
+                skip(TokenKind::LBrace, "[BUG] expected `{`"); // Skip `{`
+            } else {
+                if
+            }
 
-        value_ptr parseObjectInner() {
-
+            if (not root) {
+                skip(TokenKind::RBrace, "closing `}`");
+            }
         }
 
         // Errors //
