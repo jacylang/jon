@@ -15,7 +15,9 @@ namespace jon {
     };
 
     struct Value {
+        Value(ValueKind kind) : kind(kind) {}
 
+        ValueKind kind;
     };
 }
 
