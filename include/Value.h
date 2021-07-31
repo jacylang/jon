@@ -4,7 +4,7 @@
 #include <variant>
 #include <memory>
 
-namespace jon {
+namespace jon::val {
     struct Value;
     using value_ptr = std::unique_ptr<Value>;
 

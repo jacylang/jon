@@ -59,7 +59,7 @@ namespace jon::ast {
 
     struct Null : Value {
         Null() : Value(ValueKind::Null) {}
-        
+
         void accept(ValueVisitor & visitor) const override {
             visitor.visit(*this);
         }
@@ -76,9 +76,9 @@ namespace jon::ast {
     };
 
     struct Int : Value {
-        Int(const std::string & val) : Value(ValueKind::Int), val(val) {}
+        Int(int64_t val) : Value(ValueKind::Int), val(val) {}
 
-        std::string val;
+        int64_t val;
 
         void accept(ValueVisitor & visitor) const override {
             visitor.visit(*this);
@@ -86,9 +86,9 @@ namespace jon::ast {
     };
 
     struct Float : Value {
-        Float(const std::string & val) : Value(ValueKind::Float), val(val) {}
+        Float(double val) : Value(ValueKind::Float), val(val) {}
 
-        std::string val;
+        double val;
 
         void accept(ValueVisitor & visitor) const override {
             visitor.visit(*this);
