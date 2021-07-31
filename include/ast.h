@@ -11,7 +11,7 @@ namespace jon {
     struct Int;
     struct Float;
     struct String;
-    struct Value;
+    struct NValue;
     struct Array;
 
     struct ValueVisitor {
@@ -21,15 +21,15 @@ namespace jon {
         virtual void visit(const Int&) = 0;
         virtual void visit(const Float&) = 0;
         virtual void visit(const String&) = 0;
-        virtual void visit(const Value&) = 0;
+        virtual void visit(const NValue&) = 0;
         virtual void visit(const Array&) = 0;
     };
 }
 
 namespace jon {
-    struct Value;
-    using value_ptr = std::unique_ptr<Value>;
-    using value_list = std::vector<value_ptr>;
+    struct NValue;
+    using n_value_ptr = std::unique_ptr<NValue>;
+    using n_value_list = std::vector<n_value_ptr>;
 
     struct Node {};
 
@@ -49,24 +49,24 @@ namespace jon {
         Array,
     };
 
-    struct Value {
-        Value(ValueKind kind) : kind(kind) {}
+    struct NValue {
+        NValue(ValueKind kind) : kind(kind) {}
 
         ValueKind kind;
 
         virtual void accept(ValueVisitor & visitor) const = 0;
     };
 
-    struct Null : Value {
-        Null() : Value(ValueKind::Null) {}
+    struct Null : NValue {
+        Null() : NValue(ValueKind::Null) {}
         
         void accept(ValueVisitor & visitor) const override {
             visitor.visit(*this);
         }
     };
 
-    struct Bool : Value {
-        Bool(bool val) : Value(ValueKind::Bool), val(val) {}
+    struct Bool : NValue {
+        Bool(bool val) : NValue(ValueKind::Bool), val(val) {}
 
         bool val;
 
@@ -75,8 +75,8 @@ namespace jon {
         }
     };
 
-    struct Int : Value {
-        Int(const std::string & val) : Value(ValueKind::Int), val(val) {}
+    struct Int : NValue {
+        Int(const std::string & val) : NValue(ValueKind::Int), val(val) {}
 
         std::string val;
 
@@ -85,8 +85,8 @@ namespace jon {
         }
     };
 
-    struct Float : Value {
-        Float(const std::string & val) : Value(ValueKind::Float), val(val) {}
+    struct Float : NValue {
+        Float(const std::string & val) : NValue(ValueKind::Float), val(val) {}
 
         std::string val;
 
@@ -95,8 +95,8 @@ namespace jon {
         }
     };
 
-    struct String : Value {
-        String(const std::string & val) : Value(ValueKind::String), val(val) {}
+    struct String : NValue {
+        String(const std::string & val) : NValue(ValueKind::String), val(val) {}
 
         std::string val;
 
@@ -106,16 +106,16 @@ namespace jon {
     };
 
     struct KeyValue {
-        KeyValue(Ident && key, value_ptr && val) : key(std::move(key)), val(std::move(val)) {}
+        KeyValue(Ident && key, n_value_ptr && val) : key(std::move(key)), val(std::move(val)) {}
 
         Ident key;
-        value_ptr val;
+        n_value_ptr val;
     };
 
-    struct Value : Value {
+    struct NValue : NValue {
         using Entries = std::vector<KeyValue>;
 
-        Value(Entries && entries) : Value(ValueKind::Object), entries(std::move(entries)) {}
+        NValue(Entries && entries) : NValue(ValueKind::Object), entries(std::move(entries)) {}
 
         Entries entries;
 
@@ -124,10 +124,10 @@ namespace jon {
         }
     };
 
-    struct Array : Value {
-        Array(value_list && values) : Value(ValueKind::Array), values(std::move(values)) {}
+    struct Array : NValue {
+        Array(n_value_list && values) : NValue(ValueKind::Array), values(std::move(values)) {}
 
-        value_list values;
+        n_value_list values;
 
         void accept(ValueVisitor & visitor) const override {
             visitor.visit(*this);

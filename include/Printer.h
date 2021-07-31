@@ -25,7 +25,7 @@ namespace jon {
             nl();
         }
 
-        void printAst(const value_ptr & ast) {
+        void printAst(const n_value_ptr & ast) {
             indent = 0;
             ast->accept(*this);
         }
@@ -53,7 +53,7 @@ namespace jon {
             out("'", escstr(string.val), "'");
         }
 
-        void visit(const Value & object) override {
+        void visit(const NValue & object) override {
             out("{");
             nl();
             indent++;

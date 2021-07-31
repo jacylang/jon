@@ -5,14 +5,14 @@
 #include <memory>
 
 namespace jon {
-    struct Value;
-    using value_ptr = std::unique_ptr<Value>;
+    struct NValue;
+    using n_value_ptr = std::unique_ptr<NValue>;
 
     enum class Type {
 
     };
 
-    struct Value {
+    struct NValue {
 
     };
 }

@@ -71,7 +71,7 @@ namespace jon {
         Lexer lexer;
         Parser parser;
         Printer printer;
-        value_ptr ast;
+        n_value_ptr ast;
 
     private:
         template<class ...Args>
