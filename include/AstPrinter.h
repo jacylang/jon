@@ -32,6 +32,16 @@ namespace jon {
             out(string.val);
         }
 
+        void print(const Object & object) {
+            out("{");
+
+            for (const auto & entry : object.entries) {
+                out(entry.key.val, ": ");
+            }
+
+            out("}");
+        }
+
     private:
         template<class ...Args>
         void out(Args && ...args) {
