@@ -95,7 +95,7 @@ namespace jon {
                     return parseArray();
                 }
                 case TokenKind::String: {
-
+                    return std::make_unique<String>(peek().val);
                 }
                 default: {
                     expectedError("value");
