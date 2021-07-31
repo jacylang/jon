@@ -169,6 +169,10 @@ namespace jon {
                 or peek() >= 'A' and peek() <= 'F';
         }
 
+        bool isOctDigit() {
+            return peek() >= '0' and peek() <= '7';
+        }
+
         void skip(char c) {
             if (peek() != c) {
                 expectedError("`" + mstr(c) + "`");
