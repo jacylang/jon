@@ -32,6 +32,35 @@ namespace jon {
 
         TokenKind kind;
         std::string val;
+
+        std::string toString() const {
+            switch (kind) {
+                case TokenKind::NL: {
+                    return "new line";
+                }
+                case TokenKind::Comma: {
+                    return ",";
+                }
+                case TokenKind::Colon: {
+                    return ":";
+                }
+                case TokenKind::LBrace: {
+                    return "{";
+                }
+                case TokenKind::RBrace: {
+                    return "}";
+                }
+                case TokenKind::LBracket: {
+                    return "[";
+                }
+                case TokenKind::RBracket: {
+                    return "]";
+                }
+                case TokenKind::String: {
+                    return "string '" + val + "'";
+                }
+            }
+        }
     };
 
     class Lexer {
