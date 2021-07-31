@@ -120,11 +120,12 @@ namespace jon {
         }
 
         char advance(uint8_t dist = 1) {
+            auto cur = peek();
             index += dist;
             if (eof()) {
                 return '\0';
             }
-            return peek();
+            return cur;
         }
 
         char lookup(uint8_t dist = 1) {
@@ -278,8 +279,7 @@ namespace jon {
                     closed = true;
                     break;
                 }
-                val += peek();
-                advance();
+                val += advance();
             }
 
             if (!closed) {
@@ -292,18 +292,14 @@ namespace jon {
         }
 
         void lexNormalString() {
-            const auto quote = peek();
-
-            // Skip quote
-            advance();
+            const auto quote = advance();
 
             std::string val;
             while (not eof()) {
                 if (isNL() or is(quote)) {
                     break;
                 }
-                val += peek();
-                advance();
+                val += advance();
             }
 
             skip(quote);
@@ -328,8 +324,7 @@ namespace jon {
                     if (not isAnyOf('0', '1')) {
                         break;
                     }
-                    val += peek();
-                    advance();
+                    val += advance();
                 }
             }
 
@@ -345,8 +340,7 @@ namespace jon {
                     if (not isHexDigit()) {
                         break;
                     }
-                    val += peek();
-                    advance();
+                    val += advance();
                 }
             }
 
@@ -362,8 +356,7 @@ namespace jon {
                     if (not isOctDigit()) {
                         break;
                     }
-                    val += peek();
-                    advance();
+                    val += advance();
                 }
             }
 
@@ -417,8 +410,7 @@ namespace jon {
                 if (isAnyOf(',', ':', '{', '}', '[', ']', '\'', '"') or isNL()) {
                     break;
                 }
-                val += peek();
-                advance();
+                val += advance();
             }
 
             // Add identifier as string
