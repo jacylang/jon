@@ -95,6 +95,17 @@ namespace jon {
             return std::make_unique<Object>(std::move(entries));
         }
 
+        value_ptr parseArray() {
+            skip(TokenKind::LBracket, "[BUG] expected `[`");
+
+            value_list values;
+            while (not eof()) {
+                values.emplace_back(parseValue());
+            }
+
+            skip(TokenKind::RBracket, "Closing `]`");
+        }
+
         // Errors //
         void expectedError(const std::string & expected) {
             // TODO: Token to string
