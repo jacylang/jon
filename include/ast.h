@@ -8,6 +8,7 @@
 namespace jon {
     struct Value;
     using value_ptr = std::unique_ptr<Value>;
+    using value_list = std::vector<value_ptr>;
 
     struct Node {};
 
@@ -74,6 +75,12 @@ namespace jon {
         Object(Entries && entries) : Value(ValueKind::Object), entries(std::move(entries)) {}
 
         Entries entries;
+    };
+
+    struct Array : Value {
+        Array(value_list && values) : Value(ValueKind::Array), values(std::move(values)) {}
+
+        value_list values;
     };
 }
 
