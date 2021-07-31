@@ -23,6 +23,8 @@ namespace jon {
 
         Type type;
     };
+
+    const auto null = Value(Type::Null);
 }
 
 #endif // JON_VALUE_H

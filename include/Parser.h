@@ -10,7 +10,7 @@ namespace jon {
         Parser() {}
         ~Parser() = default;
 
-        n_value_ptr parse(TokenStream && tokens) {
+        value_ptr parse(TokenStream && tokens) {
             this->tokens = tokens;
             this->index = 0;
 
@@ -89,7 +89,7 @@ namespace jon {
             }
         }
 
-        n_value_ptr parseValue() {
+        value_ptr parseValue() {
             switch (peek().kind) {
                 case TokenKind::LBrace: {
                     return parseObject();
@@ -120,7 +120,7 @@ namespace jon {
             }
         }
 
-        n_value_ptr parseObject(bool root = false) {
+        value_ptr parseObject(bool root = false) {
             bool rootBraced = false;
             if (not root) {
                 skip(TokenKind::LBrace, "[BUG] expected `{`", true); // Skip `{`
@@ -148,10 +148,10 @@ namespace jon {
             return std::make_unique<NValue>(std::move(entries));
         }
 
-        n_value_ptr parseArray() {
+        value_ptr parseArray() {
             skip(TokenKind::LBracket, "[BUG] expected `[`", true);
 
-            n_value_list values;
+            value_list values;
             while (not eof()) {
                 values.emplace_back(parseValue());
                 skipSep();
