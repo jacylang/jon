@@ -78,10 +78,14 @@ namespace jon {
 
     class Lexer {
     public:
-        Lexer(std::string && source) : source(std::move(source)) {}
+        Lexer() = default;
         ~Lexer() = default;
 
-        TokenStream lex() {
+        TokenStream lex(std::string && source) {
+            this->source = std::move(source);
+            this->index = 0;
+            this->tokens.clear();
+
             while (not eof()) {
                 lexCurrent();
             }
