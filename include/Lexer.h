@@ -4,6 +4,7 @@
 #include <string>
 #include <stdexcept>
 #include <vector>
+#include <iostream>
 
 #include "utils.h"
 
@@ -155,26 +156,32 @@ namespace jon {
                     return lexString();
                 }
                 case ',': {
+                    advance();
                     addToken(TokenKind::Comma);
                     break;
                 }
                 case ':': {
+                    advance();
                     addToken(TokenKind::Colon);
                     break;
                 }
                 case '{': {
+                    advance();
                     addToken(TokenKind::LBrace);
                     break;
                 }
                 case '}': {
+                    advance();
                     addToken(TokenKind::RBrace);
                     break;
                 }
                 case '[': {
+                    advance();
                     addToken(TokenKind::LBracket);
                     break;
                 }
                 case ']': {
+                    advance();
                     addToken(TokenKind::RBracket);
                     break;
                 }
