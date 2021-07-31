@@ -28,6 +28,10 @@ namespace jon {
             out(_float.val);
         }
 
+        void print(const String & string) {
+            out(string.val);
+        }
+
     private:
         template<class ...Args>
         void out(Args && ...args) {
