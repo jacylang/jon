@@ -12,6 +12,29 @@ namespace jon {
         ((ss << args), ...);
         return ss.str();
     }
+
+    static std::string escstr(const std::string & str) {
+        std::string escaped;
+        for (const auto & c : str) {
+            switch (c) {
+                case '\n': {
+                    escaped += "\\n";
+                    break;
+                }
+                case '\r': {
+                    escaped += "\\r";
+                    break;
+                }
+                case '\t': {
+                    escaped += "\\t";
+                    break;
+                }
+                default: {
+                    escaped += c;
+                }
+            }
+        }
+    }
 }
 
 #endif // JON_UTILS_H
