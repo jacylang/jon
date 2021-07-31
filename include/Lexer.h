@@ -42,6 +42,9 @@ namespace jon {
 
         std::string toString() const {
             switch (kind) {
+                case TokenKind::Eof: {
+                    return "[EOF]";
+                }
                 case TokenKind::NL: {
                     return "new line";
                 }
