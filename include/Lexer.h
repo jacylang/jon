@@ -251,6 +251,8 @@ namespace jon {
                 expectedError(mstr(quote, quote, quote));
             }
 
+            advance(3);
+
             addToken(TokenKind::String, val);
         }
 
