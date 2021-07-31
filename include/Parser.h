@@ -74,6 +74,18 @@ namespace jon {
             return false;
         }
 
+        void skipSep() {
+            // Skip first new lines (optionally)
+            bool nl = skipNls(true);
+
+            // Skip comma, even if it goes after new lines, skipping next new lines optionally
+            bool comma = skipOpt(TokenKind::Comma, true);
+
+            if (not nl and not comma) {
+                expectedError("delimiter: `,` or new line");
+            }
+        }
+
         value_ptr parseValue() {
             switch (peek().kind) {
                 case TokenKind::LBrace: {
