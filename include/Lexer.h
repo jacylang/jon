@@ -267,10 +267,11 @@ namespace jon {
                 if (isNL()) {
                     expectedError("' at the end of string");
                 }
-                if (peek() == quote) {
+                if (is(quote)) {
                     break;
                 }
                 val += peek();
+                advance();
             }
 
             skip(quote);
