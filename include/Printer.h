@@ -13,9 +13,11 @@ namespace jon {
         ~Printer() = default;
 
         void printTokens(const TokenStream & tokens) {
+            out("Tokens: [");
             for (const auto & token : tokens) {
                 out(token.toString(), ", ");
             }
+            out("]");
             nl();
         }
 
