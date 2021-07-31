@@ -27,6 +27,10 @@ namespace jon {
 
         ValueKind kind;
     };
+
+    struct Null : Value {
+        Null() : Value(ValueKind::Null) {}
+    };
 }
 
 #endif // JON_AST_H
