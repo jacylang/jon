@@ -50,6 +50,12 @@ namespace jon {
                 }
             }
         }
+
+        // Errors //
+        void expectedError(const std::string & expected) {
+            // TODO: Token to string
+            throw std::runtime_error(mstr("Expected ", expected, ", got ..."));
+        }
     };
 }
 
