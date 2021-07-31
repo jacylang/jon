@@ -27,10 +27,11 @@ namespace jon {
             init();
         }
 
+
     private:
         void init() {
             auto tokens = lexer.lex(std::move(source));
-            auto ast = parser.parse(std::move(tokens));
+            ast = parser.parse(std::move(tokens));
         }
 
     private:
@@ -38,6 +39,7 @@ namespace jon {
         Lexer lexer;
         Parser parser;
         AstPrinter printer;
+        value_ptr ast;
     };
 }
 
