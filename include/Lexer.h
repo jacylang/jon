@@ -152,7 +152,7 @@ namespace jon {
 
         void skip(char c) {
             if (peek() != c) {
-                expectedError(mstr(c));
+                expectedError("`" + mstr(c) + "`");
             }
             advance();
         }
