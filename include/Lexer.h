@@ -275,10 +275,7 @@ namespace jon {
 
             std::string val;
             while (not eof()) {
-                if (isNL()) {
-                    expectedError("' at the end of string");
-                }
-                if (is(quote)) {
+                if (isNL() or is(quote)) {
                     break;
                 }
                 val += peek();
