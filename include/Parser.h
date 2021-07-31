@@ -15,6 +15,15 @@ namespace jon {
 
     private:
         TokenStream tokens;
+        size_t index;
+
+        Token peek() const {
+            return tokens.at(index);
+        }
+
+        Token advance() {
+            return tokens.at(++index);
+        }
     };
 }
 
