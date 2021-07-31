@@ -27,6 +27,9 @@ namespace jon {
             init();
         }
 
+        void print() {
+            ast->accept(printer);
+        }
 
     private:
         void init() {
