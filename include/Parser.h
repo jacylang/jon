@@ -119,6 +119,8 @@ namespace jon {
                 skip(TokenKind::Colon, "`:` delimiter", true);
                 auto val = parseValue();
 
+                skipSep();
+
                 entries.emplace_back(KeyValue{std::move(key), std::move(val)});
             }
 
@@ -135,6 +137,7 @@ namespace jon {
             value_list values;
             while (not eof()) {
                 values.emplace_back(parseValue());
+                skipSep();
             }
 
             skip(TokenKind::RBracket, "Closing `]`", false);
