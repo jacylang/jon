@@ -34,6 +34,7 @@ namespace jon {
                 }
             }
         }
+        return escaped;
     }
 }
 

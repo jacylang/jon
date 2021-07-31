@@ -50,7 +50,7 @@ namespace jon {
         }
 
         void visit(const String & string) override {
-            out("'", string.val, "'");
+            out("'", escstr(string.val), "'");
         }
 
         void visit(const Object & object) override {
@@ -60,7 +60,7 @@ namespace jon {
 
             for (const auto & entry : object.entries) {
                 printIndent();
-                out(entry.key.val, ": ");
+                out(escstr(entry.key.val), ": ");
                 entry.val->accept(*this);
                 nl();
             }

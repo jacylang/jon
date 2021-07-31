@@ -76,7 +76,7 @@ namespace jon {
                     return "`true`";
                 }
                 case TokenKind::String: {
-                    return "string '" + val + "'";
+                    return "string '" + escstr(val) + "'";
                 }
             }
         }
