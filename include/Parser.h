@@ -24,6 +24,14 @@ namespace jon {
         Token advance() {
             return tokens.at(++index);
         }
+
+        bool eof() const {
+            return index >= tokens.size();
+        }
+
+        bool is(TokenKind kind) const {
+            return peek().kind == kind;
+        }
     };
 }
 
