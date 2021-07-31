@@ -314,23 +314,12 @@ namespace jon {
         void lexNum() {
             std::string val;
 
-            // Hexadecimal //
-            if (peek() == '0' and (lookup() == 'x' or lookup() == 'X')) {
-                advance(2);
-                if (not isHexDigit()) {
-                    expectedError("hexadecimal digit");
-                }
-                while (not eof()) {
-                    if (not isHexDigit()) {
-                        break;
-                    }
-                    val += peek();
-                    advance();
-                }
-            }
+            bool baseSpecific = false;
 
             // Binary //
             if (peek() == '0' and (lookup() == 'b' or lookup() == 'B')) {
+                baseSpecific = true;
+
                 advance(2);
                 if (not isAnyOf('0', '1')) {
                     expectedError("binary digit");
@@ -344,8 +333,27 @@ namespace jon {
                 }
             }
 
+            // Hexadecimal //
+            if (peek() == '0' and (lookup() == 'x' or lookup() == 'X')) {
+                baseSpecific = true;
+
+                advance(2);
+                if (not isHexDigit()) {
+                    expectedError("hexadecimal digit");
+                }
+                while (not eof()) {
+                    if (not isHexDigit()) {
+                        break;
+                    }
+                    val += peek();
+                    advance();
+                }
+            }
+
             // Octodecimal //
             if (peek() == '0' and (lookup() == 'o' or lookup() == 'O')) {
+                baseSpecific = true;
+
                 advance(2);
                 if (not isOctDigit()) {
                     expectedError("octodecimal digit");
@@ -354,6 +362,13 @@ namespace jon {
                     if (not isOctDigit()) {
                         break;
                     }
+                    val += peek();
+                    advance();
+                }
+            }
+
+            if (not baseSpecific) {
+                while (isDigit()) {
                     val += peek();
                     advance();
                 }
