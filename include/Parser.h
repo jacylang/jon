@@ -30,7 +30,7 @@ namespace jon {
         }
 
         bool eof() const {
-            return index >= tokens.size();
+            return is(TokenKind::Eof);
         }
 
         bool is(TokenKind kind) const {
