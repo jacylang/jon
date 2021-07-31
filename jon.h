@@ -21,9 +21,20 @@ namespace jon {
             std::stringstream ss;
             ss << file.rdbuf();
             file.close();
+
+            source = std::move(ss.str());
+
+            init();
         }
 
     private:
+        void init() {
+            auto tokens = lexer.lex(std::move(source));
+            auto ast = parser.parse();
+        }
+
+    private:
+        std::string source;
         Lexer lexer;
         Parser parser;
     };
