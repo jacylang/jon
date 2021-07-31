@@ -8,6 +8,9 @@
 #include "utils.h"
 
 namespace jon {
+    struct Token;
+    using TokenStream = std::vector<Token>;
+
     enum class TokenKind {
         NL,
 
@@ -36,7 +39,7 @@ namespace jon {
         Lexer(std::string && source) : source(std::move(source)) {}
         ~Lexer() = default;
 
-        std::vector<Token> lex() {
+        TokenStream lex() {
             while (not eof()) {
                 lexCurrent();
             }
@@ -220,7 +223,7 @@ namespace jon {
         }
 
         // Tokens //
-        std::vector<Token> tokens;
+        TokenStream tokens;
 
         void addToken(TokenKind kind, const std::string & val = "") {
             tokens.emplace_back(kind, val);
