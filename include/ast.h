@@ -16,13 +16,13 @@ namespace jon {
 
     struct ValueVisitor {
     public:
-        virtual void accept(const Null&) = 0;
-        virtual void accept(const Bool&) = 0;
-        virtual void accept(const Int&) = 0;
-        virtual void accept(const Float&) = 0;
-        virtual void accept(const String&) = 0;
-        virtual void accept(const Object&) = 0;
-        virtual void accept(const Array&) = 0;
+        virtual void visit(const Null&) = 0;
+        virtual void visit(const Bool&) = 0;
+        virtual void visit(const Int&) = 0;
+        virtual void visit(const Float&) = 0;
+        virtual void visit(const String&) = 0;
+        virtual void visit(const Object&) = 0;
+        virtual void visit(const Array&) = 0;
     };
 }
 
@@ -53,34 +53,56 @@ namespace jon {
         Value(ValueKind kind) : kind(kind) {}
 
         ValueKind kind;
+
+        virtual void accept(ValueVisitor & visitor) const = 0;
     };
 
     struct Null : Value {
         Null() : Value(ValueKind::Null) {}
+        
+        void accept(ValueVisitor & visitor) const override {
+            visitor.visit(*this);
+        }
     };
 
     struct Bool : Value {
         Bool(bool val) : Value(ValueKind::Bool), val(val) {}
 
         bool val;
+
+        void accept(ValueVisitor & visitor) const override {
+            visitor.visit(*this);
+        }
     };
 
     struct Int : Value {
         Int(const std::string & val) : Value(ValueKind::Int), val(val) {}
 
         std::string val;
+
+        void accept(ValueVisitor & visitor) const override {
+            visitor.visit(*this);
+        }
     };
 
     struct Float : Value {
         Float(const std::string & val) : Value(ValueKind::Float), val(val) {}
 
         std::string val;
+
+        void accept(ValueVisitor & visitor) const override {
+            visitor.visit(*this);
+        }
     };
 
     struct String : Value {
         String(const std::string & val) : Value(ValueKind::String), val(val) {}
 
         std::string val;
+
+        void accept(ValueVisitor & visitor) const override {
+            visitor.visit(*this);
+        }
     };
 
     struct KeyValue {
@@ -96,12 +118,20 @@ namespace jon {
         Object(Entries && entries) : Value(ValueKind::Object), entries(std::move(entries)) {}
 
         Entries entries;
+
+        void accept(ValueVisitor & visitor) const override {
+            visitor.visit(*this);
+        }
     };
 
     struct Array : Value {
         Array(value_list && values) : Value(ValueKind::Array), values(std::move(values)) {}
 
         value_list values;
+
+        void accept(ValueVisitor & visitor) const override {
+            visitor.visit(*this);
+        }
     };
 }
 
