@@ -372,7 +372,11 @@ namespace jon {
             }
 
             if (not baseSpecific) {
-                while (isDigit()) {
+                while (not eof()) {
+                    skipOpt('_');
+                    if (not isDigit()) {
+                        break;
+                    }
                     val += advance();
                 }
 
@@ -381,8 +385,11 @@ namespace jon {
                     if (not isDigit()) {
                         expectedError("fractional part of number");
                     }
-                    while (isDigit()) {
+                    while (not eof()) {
                         skipOpt('_');
+                        if (not isDigit()) {
+                            break;
+                        }
                         val += advance();
                     }
                     addToken(TokenKind::Float, val);
