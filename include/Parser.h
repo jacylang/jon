@@ -34,10 +34,15 @@ namespace jon {
             return peek().kind == kind;
         }
 
-        Token skip(TokenKind kind, const std::string & expected) {
+        Token skip(TokenKind kind, const std::string & expected, bool rightNls) {
             auto token = peek();
             if (token.kind == kind) {
                 advance();
+
+                if (rightNls) {
+                    skipNls(true);
+                }
+
                 return token;
             }
             expectedError(expected);
