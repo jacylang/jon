@@ -37,7 +37,7 @@ namespace jon {
         value_ptr parseValue() {
             switch (peek().kind) {
                 case TokenKind::LBrace: {
-
+                    return parseObject();
                 }
                 case TokenKind::LBracket: {
 
@@ -49,6 +49,10 @@ namespace jon {
                     expectedError("value");
                 }
             }
+        }
+
+        value_ptr parseObject() {
+
         }
 
         // Errors //
