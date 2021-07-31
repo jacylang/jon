@@ -10,6 +10,8 @@
 
 namespace jon {
     enum class Mode : uint8_t {
+        Default,
+
         Debug,
     };
 
@@ -21,7 +23,7 @@ namespace jon {
 
     class jon {
     public:
-        jon(const std::filesystem::path & path, Mode mode) {
+        jon(const std::filesystem::path & path, Mode mode = Mode::Default) {
             this->mode = mode;
 
             std::fstream file(path);
