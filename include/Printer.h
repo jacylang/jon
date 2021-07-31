@@ -31,7 +31,7 @@ namespace jon {
         }
 
     private:
-        size_t indent;
+        uint16_t indent;
 
         void visit(const Null & null) override {
             out("null");
@@ -56,13 +56,16 @@ namespace jon {
         void visit(const Object & object) override {
             out("{");
             nl();
+            indent++;
 
             for (const auto & entry : object.entries) {
+                printIndent();
                 out(entry.key.val, ": ");
                 entry.val->accept(*this);
                 nl();
             }
 
+            indent--;
             nl();
             out("}");
         }
@@ -70,11 +73,14 @@ namespace jon {
         void visit(const Array & array) override {
             out("[");
             nl();
+            indent++;
 
             for (const auto & value : array.values) {
+                printIndent();
                 value->accept(*this);
             }
 
+            indent--;
             nl();
             out("]");
         }
@@ -87,6 +93,10 @@ namespace jon {
 
         void nl() {
             std::cout << std::endl;
+        }
+
+        void printIndent() {
+            out(std::string(' ', indent * 2));
         }
     };
 }
