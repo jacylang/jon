@@ -12,13 +12,17 @@ namespace jon {
         AstPrinter() {}
         ~AstPrinter() = default;
 
-        void print() {
+        void print(const Null & null) {
+            out("null");
+        }
 
+        void print(const Bool & bVal) {
+            out(bVal.val ? "true" : "false");
         }
 
     private:
         template<class ...Args>
-        void print(Args && ...args) {
+        void out(Args && ...args) {
             std::cout << mstr(std::forward<Args>(args)...);
         }
     };
