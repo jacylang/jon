@@ -29,6 +29,9 @@ namespace jon {
         False,
         True,
 
+        Int,
+        Float,
+
         /// Either string enclosed into quotes (maybe triple if multi-line) or identifier
         // Note: Separate with identifier if would be needed
         String,
@@ -74,6 +77,12 @@ namespace jon {
                 }
                 case TokenKind::True: {
                     return "`true`";
+                }
+                case TokenKind::Int: {
+                    return "integer `" + val + "`";
+                }
+                case TokenKind::Float: {
+                    return "float `" + val + "`";
                 }
                 case TokenKind::String: {
                     return "string '" + escstr(val) + "'";
