@@ -256,6 +256,7 @@ namespace jon {
 
         void lexMisc() {
             if (isNL()) {
+                advance();
                 addToken(TokenKind::NL);
                 return;
             }
@@ -290,6 +291,7 @@ namespace jon {
                     break;
                 }
                 val += peek();
+                advance();
             }
 
             // Add identifier as string
