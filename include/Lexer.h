@@ -261,6 +261,12 @@ namespace jon {
                 return;
             }
 
+            if (isSeq('n', 'u', 'l', 'l')) {
+                advance(4);
+                addToken(TokenKind::Null);
+                return;
+            }
+
             if (isSeq('t', 'r', 'u', 'e')) {
                 advance(4);
                 addToken(TokenKind::True);
