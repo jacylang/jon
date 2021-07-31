@@ -30,13 +30,14 @@ namespace jon {
     private:
         void init() {
             auto tokens = lexer.lex(std::move(source));
-            auto ast = parser.parse();
+            auto ast = parser.parse(std::move(tokens));
         }
 
     private:
         std::string source;
         Lexer lexer;
         Parser parser;
+        AstPrinter printer;
     };
 }
 
