@@ -38,15 +38,15 @@ namespace jon {
             switch (peek().kind) {
                 case TokenKind::LBrace: {
 
-                    break;
                 }
                 case TokenKind::LBracket: {
 
-                    break;
                 }
                 case TokenKind::String: {
 
-                    break;
+                }
+                default: {
+                    expectedError("value");
                 }
             }
         }
