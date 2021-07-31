@@ -107,6 +107,11 @@ namespace jon {
                     advance();
                     return std::make_unique<Bool>(boolVal.kind == TokenKind::True);
                 }
+                case TokenKind::Int: {
+                    auto intVal = peek();
+                    advance();
+                    return std::make_unique<Int>(intVal.val);
+                }
                 case TokenKind::String: {
                     auto str = peek();
                     advance();
