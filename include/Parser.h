@@ -107,8 +107,9 @@ namespace jon {
                     return std::make_unique<Bool>(peek().kind == TokenKind::True);
                 }
                 case TokenKind::String: {
+                    auto str = peek();
                     advance();
-                    return std::make_unique<String>(peek().val);
+                    return std::make_unique<String>(str.val);
                 }
                 default: {
                     expectedError("value");
