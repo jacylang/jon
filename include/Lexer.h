@@ -261,6 +261,12 @@ namespace jon {
                 return;
             }
 
+            if (isSeq('t', 'r', 'u', 'e')) {
+                advance(4);
+                addToken(TokenKind::True);
+                return;
+            }
+
             // Identifier is anything not containing specific tokens
             std::string val;
             while (not eof()) {
