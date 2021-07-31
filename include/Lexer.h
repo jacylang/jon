@@ -251,6 +251,12 @@ namespace jon {
                 val += peek();
             }
 
+            if (peek() != quote) {
+                expectedError("' at the end of string");
+            }
+
+            advance();
+
             addToken(TokenKind::String, val);
         }
 
