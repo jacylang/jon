@@ -67,6 +67,14 @@ namespace jon {
         Ident key;
         value_ptr val;
     };
+
+    struct Object : Value {
+        using Entries = std::vector<KeyValue>;
+
+        Object(Entries && entries) : Value(ValueKind::Object), entries(std::move(entries)) {}
+
+        Entries entries;
+    };
 }
 
 #endif // JON_AST_H
