@@ -307,14 +307,15 @@ namespace jon {
             addToken(TokenKind::String, val);
         }
 
-        void lexDecNum() {
-            // HEX //
+        void lexNum() {
+            std::string val;
+
+            // Hexadecimal //
             if (peek() == '0' and (lookup() == 'x' or lookup() == 'X')) {
                 advance(2);
                 if (not isHexDigit()) {
                     expectedError("hexadecimal digit");
                 }
-                std::string val;
                 while (not eof()) {
                     if (not isHexDigit()) {
                         break;
@@ -322,16 +323,14 @@ namespace jon {
                     val += peek();
                     advance();
                 }
-                addToken(TokenKind::Int, val);
-                return;
             }
 
+            // Binary //
             if (peek() == '0' and (lookup() == 'b' or lookup() == 'B')) {
                 advance(2);
                 if (not isAnyOf('0', '1')) {
                     expectedError("binary digit");
                 }
-                std::string val;
                 while (not eof()) {
                     if (not isAnyOf('0', '1')) {
                         break;
@@ -339,9 +338,9 @@ namespace jon {
                     val += peek();
                     advance();
                 }
-                addToken(TokenKind::Int);
-                return;
             }
+
+            addToken(TokenKind::Int, val);
         }
 
         void lexMisc() {
@@ -375,7 +374,7 @@ namespace jon {
             }
 
             if (isDigit()) {
-                return lexDecNum();
+                return lexNum();
             }
 
             // Identifier is anything not containing specific tokens
