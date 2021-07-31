@@ -31,6 +31,12 @@ namespace jon {
     struct Null : Value {
         Null() : Value(ValueKind::Null) {}
     };
+
+    struct Bool : Value {
+        Bool(bool val) : Value(ValueKind::Bool), val(val) {}
+
+        bool val;
+    };
 }
 
 #endif // JON_AST_H
