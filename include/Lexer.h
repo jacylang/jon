@@ -344,7 +344,13 @@ namespace jon {
         }
 
         void expectedError(const std::string & msg) {
-            throw std::runtime_error(mstr("Expected ", msg, ", got `", peek(), "`"));
+            std::string got;
+            if (isNL()) {
+                got = "new line";
+            } else {
+                got = mstr("`", peek(), "`");
+            }
+            throw std::runtime_error(mstr("Expected ", msg, ", got ", got));
         }
     };
 }
