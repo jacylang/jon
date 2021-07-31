@@ -7,32 +7,32 @@
 #include "utils.h"
 
 namespace jon {
-    class AstPrinter {
+    class AstPrinter : public ValueVisitor {
     public:
         AstPrinter() {}
         ~AstPrinter() = default;
 
-        void print(const Null & null) {
+        void visit(const Null & null) override {
             out("null");
         }
 
-        void print(const Bool & bVal) {
+        void visit(const Bool & bVal) override {
             out(bVal.val ? "true" : "false");
         }
 
-        void print(const Int & _int) {
+        void visit(const Int & _int) override {
             out(_int.val);
         }
 
-        void print(const Float & _float) {
+        void visit(const Float & _float) override {
             out(_float.val);
         }
 
-        void print(const String & string) {
+        void visit(const String & string) override {
             out(string.val);
         }
 
-        void print(const Object & object) {
+        void visit(const Object & object) override {
             out("{");
 
             for (const auto & entry : object.entries) {
