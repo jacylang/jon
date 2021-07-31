@@ -82,14 +82,15 @@ namespace jon {
                 case TokenKind::True: {
                     return "`true`";
                 }
-                case TokenKind::Int: {
-                    return "integer `" + val + "`";
-                }
-                case TokenKind::Float: {
-                    return "float `" + val + "`";
-                }
                 case TokenKind::String: {
                     return "string '" + escstr(val) + "'";
+                }
+                case TokenKind::BinInt:
+                case TokenKind::HexInt:
+                case TokenKind::OctoInt:
+                case TokenKind::DecInt:
+                case TokenKind::Float: {
+                    return "number `" + val + "`";
                 }
             }
         }
