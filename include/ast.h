@@ -49,6 +49,12 @@ namespace jon {
 
         std::string val;
     };
+
+    struct String : Value {
+        String(const std::string & val) : Value(ValueKind::String), val(val) {}
+
+        std::string val;
+    };
 }
 
 #endif // JON_AST_H
