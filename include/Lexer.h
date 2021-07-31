@@ -256,6 +256,7 @@ namespace jon {
                     break;
                 }
                 val += peek();
+                advance();
             }
 
             if (!closed) {

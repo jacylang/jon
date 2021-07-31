@@ -79,6 +79,7 @@ namespace jon {
                 return;
             }
             printer.out(std::forward<Args>(args)...);
+            printer.nl();
         }
     };
 }
