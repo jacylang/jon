@@ -13,6 +13,8 @@ namespace jon {
     using TokenStream = std::vector<Token>;
 
     enum class TokenKind {
+        Eof,
+
         NL,
 
         // Punctuations
@@ -90,6 +92,9 @@ namespace jon {
             while (not eof()) {
                 lexCurrent();
             }
+
+            addToken(TokenKind::Eof);
+
             return std::move(tokens);
         }
 
