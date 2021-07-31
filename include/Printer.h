@@ -7,7 +7,7 @@
 #include "utils.h"
 
 namespace jon {
-    class Printer : public ValueVisitor {
+    class Printer : public ast::ValueVisitor {
     public:
         Printer() {}
         ~Printer() = default;
@@ -53,7 +53,7 @@ namespace jon {
             out("'", escstr(string.val), "'");
         }
 
-        void visit(const NValue & object) override {
+        void visit(const Object & object) override {
             out("{");
             nl();
             indent++;

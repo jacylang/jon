@@ -21,7 +21,7 @@ namespace jon::ast {
         virtual void visit(const Int&) = 0;
         virtual void visit(const Float&) = 0;
         virtual void visit(const String&) = 0;
-        virtual void visit(const Object) = 0;
+        virtual void visit(const Object&) = 0;
         virtual void visit(const Array&) = 0;
     };
 }
