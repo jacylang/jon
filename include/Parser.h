@@ -26,7 +26,7 @@ namespace jon {
         }
 
         Token advance() {
-            return tokens.at(++index);
+            return tokens.at(index++);
         }
 
         bool eof() const {
@@ -103,23 +103,19 @@ namespace jon {
                 }
                 case TokenKind::True:
                 case TokenKind::False: {
-                    auto boolVal = peek();
-                    advance();
+                    auto boolVal = advance();
                     return std::make_unique<Bool>(boolVal.kind == TokenKind::True);
                 }
                 case TokenKind::Int: {
-                    auto intVal = peek();
-                    advance();
+                    auto intVal = advance();
                     return std::make_unique<Int>(intVal.val);
                 }
                 case TokenKind::Float: {
-                    auto floatVal = peek();
-                    advance();
+                    auto floatVal = advance();
                     return std::make_unique<Float>(floatVal.val);
                 }
                 case TokenKind::String: {
-                    auto str = peek();
-                    advance();
+                    auto str = advance();
                     return std::make_unique<String>(str.val);
                 }
                 default: {
