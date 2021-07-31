@@ -16,6 +16,7 @@ namespace jon {
             for (const auto & token : tokens) {
                 out(token.toString(), ", ");
             }
+            nl();
         }
 
         void visit(const Null & null) override {
