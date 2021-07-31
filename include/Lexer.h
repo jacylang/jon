@@ -329,6 +329,7 @@ namespace jon {
                     expectedError("binary digit");
                 }
                 while (not eof()) {
+                    skipOpt('_');
                     if (not isAnyOf('0', '1')) {
                         break;
                     }
@@ -345,6 +346,7 @@ namespace jon {
                     expectedError("hexadecimal digit");
                 }
                 while (not eof()) {
+                    skipOpt('_');
                     if (not isHexDigit()) {
                         break;
                     }
@@ -361,6 +363,7 @@ namespace jon {
                     expectedError("octodecimal digit");
                 }
                 while (not eof()) {
+                    skipOpt('_');
                     if (not isOctDigit()) {
                         break;
                     }
@@ -375,7 +378,11 @@ namespace jon {
 
                 if (is('.')) {
                     val += advance();
+                    if (not isDigit()) {
+                        expectedError("fractional part of number");
+                    }
                     while (isDigit()) {
+                        skipOpt('_');
                         val += advance();
                     }
                     addToken(TokenKind::Float, val);
