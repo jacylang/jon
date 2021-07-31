@@ -91,6 +91,8 @@ namespace jon {
             if (not root or rootBraced) {
                 skip(TokenKind::RBrace, "closing `}`");
             }
+
+            return std::make_unique<Object>(std::move(entries));
         }
 
         // Errors //
