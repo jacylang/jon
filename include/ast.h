@@ -43,6 +43,12 @@ namespace jon {
 
         std::string val;
     };
+
+    struct Float : Value {
+        Float(const std::string & val) : Value(ValueKind::Float), val(val) {}
+
+        std::string val;
+    };
 }
 
 #endif // JON_AST_H
