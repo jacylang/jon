@@ -2,6 +2,7 @@
 #define JON_PARSER_H
 
 #include "Lexer.h"
+#include "ast.h"
 
 namespace jon {
     class Parser {
@@ -31,6 +32,23 @@ namespace jon {
 
         bool is(TokenKind kind) const {
             return peek().kind == kind;
+        }
+
+        value_ptr parseValue() {
+            switch (peek().kind) {
+                case TokenKind::LBrace: {
+
+                    break;
+                }
+                case TokenKind::LBracket: {
+
+                    break;
+                }
+                case TokenKind::String: {
+
+                    break;
+                }
+            }
         }
     };
 }
