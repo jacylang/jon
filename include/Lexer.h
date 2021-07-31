@@ -140,7 +140,7 @@ namespace jon {
 
         void skip(char c) {
             if (peek() != c) {
-                expectedError(mstr("Expected '", c, "', got '", peek(), "'"));
+                expectedError(mstr(c));
             }
             advance();
         }
@@ -230,12 +230,18 @@ namespace jon {
             // Note: Skip triple quote
             advance(3);
 
+            bool closed = false;
             std::string val;
             while (not eof()) {
                 if (isSeq(quote, quote, quote)) {
+                    closed = true;
                     break;
                 }
                 val += peek();
+            }
+
+            if (!closed) {
+                expectedError(mstr(quote, quote, quote));
             }
 
             addToken(TokenKind::String, val);
