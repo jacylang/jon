@@ -255,6 +255,11 @@ namespace jon {
                 return;
             }
 
+            if (isHidden()) {
+                advance();
+                return;
+            }
+
             // Identifier is anything not containing specific tokens
             std::string val;
             while (not eof()) {
