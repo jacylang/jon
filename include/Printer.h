@@ -25,6 +25,14 @@ namespace jon {
             nl();
         }
 
+        void printAst(const value_ptr & ast) {
+            indent = 0;
+            ast->accept(*this);
+        }
+
+    private:
+        size_t indent;
+
         void visit(const Null & null) override {
             out("null");
         }
