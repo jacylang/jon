@@ -50,7 +50,7 @@ namespace jon {
         }
 
         void visit(const String & string) override {
-            out(string.val);
+            out("'", string.val, "'");
         }
 
         void visit(const Object & object) override {
@@ -66,7 +66,6 @@ namespace jon {
             }
 
             indent--;
-            nl();
             out("}");
         }
 
