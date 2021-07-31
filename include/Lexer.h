@@ -22,6 +22,10 @@ namespace jon {
         LBracket,
         RBracket,
 
+        Null,
+        False,
+        True,
+
         /// Either string enclosed into quotes (maybe triple if multi-line) or identifier
         // Note: Separate with identifier if would be needed
         String,
