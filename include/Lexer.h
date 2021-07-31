@@ -138,6 +138,13 @@ namespace jon {
             return isAnyOf(' ', '\t', '\r');
         }
 
+        void skip(char c) {
+            if (peek() != c) {
+                expectedError(mstr("Expected '", c, "', got '", peek(), "'"));
+            }
+            advance();
+        }
+
         void lexCurrent() {
             switch (peek()) {
                 case '/': {
