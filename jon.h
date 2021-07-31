@@ -60,6 +60,7 @@ namespace jon {
             ast = parser.parse(std::move(tokens));
 
             if (mode == Mode::Debug) {
+                logDebug("AST:");
                 ast->accept(printer);
             }
         }
