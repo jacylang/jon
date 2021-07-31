@@ -6,6 +6,27 @@
 #include <memory>
 
 namespace jon {
+    struct Null;
+    struct Bool;
+    struct Int;
+    struct Float;
+    struct String;
+    struct Object;
+    struct Array;
+
+    struct ValueVisitor {
+    public:
+        virtual void accept(const Null&) = 0;
+        virtual void accept(const Bool&) = 0;
+        virtual void accept(const Int&) = 0;
+        virtual void accept(const Float&) = 0;
+        virtual void accept(const String&) = 0;
+        virtual void accept(const Object&) = 0;
+        virtual void accept(const Array&) = 0;
+    };
+}
+
+namespace jon {
     struct Value;
     using value_ptr = std::unique_ptr<Value>;
     using value_list = std::vector<value_ptr>;
