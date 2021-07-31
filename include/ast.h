@@ -1,8 +1,16 @@
 #ifndef JON_AST_H
 #define JON_AST_H
 
+#include <string>
+
 namespace jon {
     struct Node {};
+
+    struct Ident : Node {
+        Ident(const std::string & val) : val(val) {}
+
+        std::string val;
+    };
 
     enum class ValueKind {
         Null,
