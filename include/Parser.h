@@ -103,8 +103,9 @@ namespace jon {
                 }
                 case TokenKind::True:
                 case TokenKind::False: {
+                    auto boolVal = peek();
                     advance();
-                    return std::make_unique<Bool>(peek().kind == TokenKind::True);
+                    return std::make_unique<Bool>(boolVal.kind == TokenKind::True);
                 }
                 case TokenKind::String: {
                     auto str = peek();
