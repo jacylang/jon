@@ -21,11 +21,11 @@ namespace jon {
         TokenStream tokens;
         size_t index;
 
-        Token peek() const {
+        const Token & peek() const {
             return tokens.at(index);
         }
 
-        Token advance() {
+        const Token & advance() {
             return tokens.at(index++);
         }
 
@@ -103,20 +103,16 @@ namespace jon {
                 }
                 case TokenKind::True:
                 case TokenKind::False: {
-                    auto boolVal = advance();
-                    return std::make_unique<Bool>(boolVal.kind == TokenKind::True);
+                    return std::make_unique<Bool>(advance().kind == TokenKind::True);
                 }
                 case TokenKind::Int: {
-                    auto intVal = advance();
-                    return std::make_unique<Int>(intVal.val);
+                    return std::make_unique<Int>(advance().val);
                 }
                 case TokenKind::Float: {
-                    auto floatVal = advance();
-                    return std::make_unique<Float>(floatVal.val);
+                    return std::make_unique<Float>(advance().val);
                 }
                 case TokenKind::String: {
-                    auto str = advance();
-                    return std::make_unique<String>(str.val);
+                    return std::make_unique<String>(advance().val);
                 }
                 default: {
                     expectedError("value");
