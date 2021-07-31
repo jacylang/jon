@@ -2,8 +2,13 @@
 #define JON_AST_H
 
 #include <string>
+#include <vector>
+#include <memory>
 
 namespace jon {
+    struct Value;
+    using value_ptr = std::unique_ptr<Value>;
+
     struct Node {};
 
     struct Ident : Node {
@@ -54,6 +59,13 @@ namespace jon {
         String(const std::string & val) : Value(ValueKind::String), val(val) {}
 
         std::string val;
+    };
+
+    struct KeyValue {
+        KeyValue(Ident && key, value_ptr && val) : key(std::move(key)), val(std::move(val)) {}
+
+        Ident key;
+        value_ptr val;
     };
 }
 
