@@ -96,7 +96,7 @@ namespace jon {
         }
 
         void printIndent() {
-            out(std::string(' ', indent * 2));
+            out(std::string(indent * 2, ' '));
         }
     };
 }
