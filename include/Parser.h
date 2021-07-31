@@ -54,6 +54,8 @@ namespace jon {
                     advance();
                 }
                 return true;
+            } else if (not optional) {
+                expectedError("new line");
             }
             return false;
         }
