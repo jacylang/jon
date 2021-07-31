@@ -85,10 +85,18 @@ namespace jon {
                 case TokenKind::String: {
                     return "string '" + escstr(val) + "'";
                 }
-                case TokenKind::BinInt:
-                case TokenKind::HexInt:
-                case TokenKind::OctoInt:
-                case TokenKind::DecInt:
+                case TokenKind::BinInt: {
+                    return "number `0b" + val + "`";
+                }
+                case TokenKind::OctoInt: {
+                    return "number `0o" + val + "`";
+                }
+                case TokenKind::HexInt: {
+                    return "number `0x" + val + "`";
+                }
+                case TokenKind::DecInt: {
+                    return "number `" + val + "`";
+                }
                 case TokenKind::Float: {
                     return "number `" + val + "`";
                 }
