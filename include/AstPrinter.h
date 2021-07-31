@@ -12,7 +12,10 @@ namespace jon {
         AstPrinter() {}
         ~AstPrinter() = default;
 
-        // Values //
+        void print(value_ptr ast) {
+            ast->accept(*this);
+        }
+
         void visit(const Null & null) override {
             out("null");
         }
