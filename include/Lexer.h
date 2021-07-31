@@ -60,6 +60,15 @@ namespace jon {
                 case TokenKind::RBracket: {
                     return "]";
                 }
+                case TokenKind::Null: {
+                    return "null";
+                }
+                case TokenKind::False: {
+                    return "false";
+                }
+                case TokenKind::True: {
+                    return "true";
+                }
                 case TokenKind::String: {
                     return "string '" + val + "'";
                 }
