@@ -362,8 +362,16 @@ namespace jon {
 
             if (not baseSpecific) {
                 while (isDigit()) {
-                    val += peek();
-                    advance();
+                    val += advance();
+                }
+
+                if (is('.')) {
+                    val += advance();
+                    while (isDigit()) {
+                        val += advance();
+                    }
+                    addToken(TokenKind::Float, val);
+                    return;
                 }
             }
 
