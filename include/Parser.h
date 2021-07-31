@@ -77,6 +77,17 @@ namespace jon {
                 rootBraced = skipOpt(TokenKind::LBrace);
             }
 
+            Object::Entries entries;
+            while (not eof()) {
+                auto key = Ident {
+                    skip(TokenKind::String, "key").val
+                };
+                skip(TokenKind::Colon, "`:` delimiter");
+                auto val = parseValue();
+
+                entries.emplace_back(KeyValue{std::move(key), std::move(val)});
+            }
+
             if (not root or rootBraced) {
                 skip(TokenKind::RBrace, "closing `}`");
             }
