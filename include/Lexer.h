@@ -270,7 +270,7 @@ namespace jon {
             }
 
             // Add identifier as string
-            addToken(TokenKind::String, val);
+            addToken(TokenKind::String, std::move(val));
         }
 
         // Tokens //
