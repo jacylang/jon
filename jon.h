@@ -9,9 +9,15 @@
 #include "Printer.h"
 
 namespace jon {
+    enum class Mode {
+        Debug,
+    };
+
     class jon {
     public:
-        jon(const std::filesystem::path & path) {
+        jon(const std::filesystem::path & path, Mode mode) {
+            this->mode = mode;
+
             std::fstream file(path);
 
             if (not file.is_open()) {
@@ -38,6 +44,7 @@ namespace jon {
         }
 
     private:
+        Mode mode;
         std::string source;
         Lexer lexer;
         Parser parser;
