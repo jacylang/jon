@@ -29,7 +29,11 @@ namespace jon {
         False,
         True,
 
-        Int,
+        BinInt,
+        HexInt,
+        OctoInt,
+        DecInt,
+
         Float,
 
         /// Either string enclosed into quotes (maybe triple if multi-line) or identifier
@@ -316,6 +320,7 @@ namespace jon {
         }
 
         void lexNum() {
+            TokenKind kind;
             std::string val;
 
             bool baseSpecific = false;
@@ -335,6 +340,8 @@ namespace jon {
                     }
                     val += advance();
                 }
+
+                kind = TokenKind::OctoInt;
             }
 
             // Hexadecimal //
@@ -352,6 +359,8 @@ namespace jon {
                     }
                     val += advance();
                 }
+
+                kind = TokenKind::HexInt;
             }
 
             // Octodecimal //
@@ -369,6 +378,8 @@ namespace jon {
                     }
                     val += advance();
                 }
+
+                kind = TokenKind::OctoInt;
             }
 
             if (not baseSpecific) {
@@ -379,6 +390,8 @@ namespace jon {
                     }
                     val += advance();
                 }
+
+                kind = TokenKind::DecInt;
 
                 if (is('.')) {
                     val += advance();
@@ -392,12 +405,11 @@ namespace jon {
                         }
                         val += advance();
                     }
-                    addToken(TokenKind::Float, val);
-                    return;
+                    kind = TokenKind::Float;
                 }
             }
 
-            addToken(TokenKind::Int, val);
+            addToken(kind, val);
         }
 
         void lexMisc() {
