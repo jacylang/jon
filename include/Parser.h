@@ -70,14 +70,14 @@ namespace jon {
         }
 
         value_ptr parseObject(bool root = false) {
-            bool braced = false;
+            bool rootBraced = false;
             if (not root) {
                 skip(TokenKind::LBrace, "[BUG] expected `{`"); // Skip `{`
             } else {
-                if
+                rootBraced = skipOpt(TokenKind::LBrace);
             }
 
-            if (not root) {
+            if (not root or rootBraced) {
                 skip(TokenKind::RBrace, "closing `}`");
             }
         }
