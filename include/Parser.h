@@ -94,8 +94,13 @@ namespace jon {
                 case TokenKind::LBracket: {
                     return parseArray();
                 }
+                case TokenKind::Null: {
+                    advance();
+                    return std::make_unique<Null>();
+                }
                 case TokenKind::True:
                 case TokenKind::False: {
+                    advance();
                     return std::make_unique<Bool>(peek().kind == TokenKind::True);
                 }
                 case TokenKind::String: {
