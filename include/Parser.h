@@ -10,7 +10,10 @@ namespace jon {
         Parser() {}
         ~Parser() = default;
 
-        value_ptr parse() {
+        value_ptr parse(TokenStream && tokens) {
+            this->tokens = tokens;
+            this->index = 0;
+
             return parseObject(true);
         }
 
