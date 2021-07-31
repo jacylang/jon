@@ -20,6 +20,14 @@ namespace jon {
             out(bVal.val ? "true" : "false");
         }
 
+        void print(const Int & _int) {
+            out(_int.val);
+        }
+
+        void print(const Float & _float) {
+            out(_float.val);
+        }
+
     private:
         template<class ...Args>
         void out(Args && ...args) {
