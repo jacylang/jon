@@ -9,14 +9,14 @@
 #include "Printer.h"
 
 namespace jon {
-    using ModeRepr = uint8_t;
-
-    enum class Mode : ModeRepr {
+    enum class Mode : uint8_t {
         Debug,
     };
 
     inline Mode operator|(Mode lhs, Mode rhs) {
-        return static_cast<Mode>(static_cast<ModeRepr>(lhs) | static_cast<ModeRepr>(rhs));
+        return static_cast<Mode>(
+            static_cast<std::underlying_type_t<Mode>>(lhs) | static_cast<std::underlying_type_t<Mode>>(rhs)
+        );
     }
 
     class jon {
