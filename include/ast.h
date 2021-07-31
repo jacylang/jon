@@ -37,6 +37,12 @@ namespace jon {
 
         bool val;
     };
+
+    struct Int : Value {
+        Int(const std::string & val) : Value(ValueKind::Int), val(val) {}
+
+        std::string val;
+    };
 }
 
 #endif // JON_AST_H
