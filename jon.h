@@ -359,6 +359,10 @@ namespace jon {
         }
 
     public:
+        str_t stringify(const std::string & indentStr) const {
+            return stringify(Indent {indentStr, 0});
+        }
+
         str_t stringify(const Indent & indent = {"", -1}) const {
             bool pretty = indent.size != -1;
 
