@@ -224,6 +224,26 @@ namespace jon {
             *this = Value {type()};
         }
 
+        size_t size() const noexcept {
+            if (isNull()) {
+                return 0;
+            }
+
+            if (isString()) {
+                return get<str_t>().size();
+            }
+
+            if (isObject()) {
+                return get<obj_t>().size();
+            }
+
+            if (isArray()) {
+                return get<arr_t>().size();
+            }
+
+            return 1;
+        }
+
         // Type checks //
     public:
         Type type() const noexcept {
