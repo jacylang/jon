@@ -1,9 +1,11 @@
 #include "jon.h"
 
 int main(const int argc, const char ** argv) {
-    jon::jon file = jon::jon::fromFile(std::filesystem::path("F:/projects/Jacy/JON/examples/sample_1.jon"));
+    using namespace jon;
 
-    std::cout << file["val"].get<int64_t>();
+    auto val = "key: 'value'"_jon;
+
+    std::cout << val["key"].get<std::string>();
 
     return 0;
 }
