@@ -203,8 +203,10 @@ namespace jon {
         Value value;
     };
 
-    jon operator""_jon(const char * str, std::size_t n) {
-        return jon::fromSource(std::string(str, n));
+    namespace literals {
+        jon operator""_jon(const char * str, std::size_t n) {
+            return jon::fromSource(std::string(str, n));
+        }
     }
 }
 

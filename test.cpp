@@ -1,7 +1,7 @@
 #include "jon.h"
 
 int main(const int argc, const char ** argv) {
-    using namespace jon;
+    using namespace jon::literals;
 
     auto val = "key: 'value'"_jon;
 
