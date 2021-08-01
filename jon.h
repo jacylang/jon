@@ -161,6 +161,22 @@ namespace jon {
             return value.get<T>();
         }
 
+        bool empty() const {
+            if (isNull()) {
+                return true;
+            }
+
+            if (isObject()) {
+                return get<obj_t>().empty();
+            }
+
+            if (isArray()) {
+                return get<arr_t>().empty();
+            }
+
+            return false;
+        }
+
         // Type checks //
     public:
         Type type() const {
