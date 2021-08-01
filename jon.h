@@ -48,6 +48,39 @@ namespace jon {
             Value(const arr_t & v) noexcept : v(v), t(Type::Array) {}
             Value(arr_t && v) noexcept : v(std::move(v)), t(Type::Array) {}
 
+            Value(Type t) noexcept : t(t) {
+                switch (t) {
+                    case Type::Null: {
+                        v = std::monostate {};
+                        break;
+                    }
+                    case Type::Bool: {
+                        v = false;
+                        break;
+                    }
+                    case Type::Int: {
+                        v = 0;
+                        break;
+                    }
+                    case Type::Float: {
+                        v = 0.0;
+                        break;
+                    }
+                    case Type::String: {
+                        v = "";
+                        break;
+                    }
+                    case Type::Object: {
+                        v = obj_t {};
+                        break;
+                    }
+                    case Type::Array: {
+                        v = arr_t {};
+                        break;
+                    }
+                }
+            }
+
             Type type() const noexcept {
                 return t;
             }
