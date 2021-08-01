@@ -27,6 +27,14 @@ namespace jon {
     }
 
     class jon {
+        using null_t = std::monostate;
+        using bool_t = bool;
+        using int_t = int64_t;
+        using float_t = double;
+        using str_t = std::string;
+        using obj_t = std::map<str_t, jon>;
+        using arr_t = std::vector<jon>;
+
         enum class Type {
             Null,
             Bool,
@@ -38,14 +46,6 @@ namespace jon {
         };
 
         struct Value {
-            using null_t = std::monostate;
-            using bool_t = bool;
-            using int_t = int64_t;
-            using float_t = double;
-            using str_t = std::string;
-            using obj_t = std::map<str_t, jon>;
-            using arr_t = std::vector<jon>;
-
             Value() = default;
             Value(bool_t v) noexcept : v(v), t(Type::Bool) {}
             Value(int_t v) noexcept : v(v), t(Type::Int) {}
@@ -76,6 +76,11 @@ namespace jon {
 
             template<class T>
             T & get() {
+                return std::get<T>(v);
+            }
+
+            template<class T>
+            const T & get() const {
                 return std::get<T>(v);
             }
 
@@ -128,10 +133,22 @@ namespace jon {
         // Object access //
         const jon & operator[](const std::string & key) const {
             value.assertObjectFirstAccess(key);
+            return value.get<obj_t>().at(key);
         }
 
         jon & operator[](const std::string & key) {
             value.assertObjectFirstAccess(key);
+            return value.get<obj_t>()[key];
+        }
+
+        const jon & at(const std::string & key) const {
+            value.assertObjectFirstAccess(key);
+            return value.get<obj_t>().at(key);
+        }
+
+        jon & at(const std::string & key) {
+            value.assertObjectFirstAccess(key);
+            return value.get<obj_t>().at(key);
         }
 
     private:
