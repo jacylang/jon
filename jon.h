@@ -14,18 +14,6 @@
 #include "Printer.h"
 
 namespace jon {
-    enum class Mode : uint8_t {
-        Default,
-
-        Debug,
-    };
-
-    inline Mode operator|(Mode lhs, Mode rhs) {
-        return static_cast<Mode>(
-            static_cast<std::underlying_type_t<Mode>>(lhs) | static_cast<std::underlying_type_t<Mode>>(rhs)
-        );
-    }
-
     class jon {
         using null_t = std::monostate;
         using bool_t = bool;
@@ -114,21 +102,35 @@ namespace jon {
     public:
         jon() {}
 
-//        explicit jon(const std::filesystem::path & path, Mode mode = Mode::Default) {
-//            this->mode = mode;
-//
-//            std::fstream file(path);
-//
-//            if (not file.is_open()) {
-//                throw std::runtime_error(mstr("File '", path.string(), "' not found"));
-//            }
-//
-//            std::stringstream ss;
-//            ss << file.rdbuf();
-//            file.close();
-//
-//            fromSource(ss.str());
-//        }
+        static jon fromFile(const std::filesystem::path & path) {
+            std::fstream file(path);
+
+            if (not file.is_open()) {
+                throw std::runtime_error(mstr("File '", path.string(), "' not found"));
+            }
+
+            std::stringstream ss;
+            ss << file.rdbuf();
+            file.close();
+
+            return fromSource(ss.str());
+        }
+
+        static jon fromSource(const std::string & source) {
+            Lexer lexer;
+            Parser parser;
+
+            auto tokens = lexer.lex(source);
+            auto ast = parser.parse(std::move(tokens));
+
+            return jon {fromAst(std::move(ast))};
+        }
+
+        // Common methods //
+        template<class T>
+        T get() const noexcept {
+            return value.get<T>();
+        }
 
         // Object access //
         const jon & operator[](const std::string & key) const {
@@ -152,36 +154,10 @@ namespace jon {
         }
 
     private:
-        void fromSource(const std::string & source) {
-            Lexer lexer;
-            Parser parser;
-            Printer printer;
-
-            logDebug("Lexing...");
-
-            auto tokens = lexer.lex(source);
-
-            if (mode == Mode::Debug) {
-                printer.printTokens(tokens);
-            }
-
-            logDebug("Parsing...");
-
-            auto ast = parser.parse(std::move(tokens));
-
-            if (mode == Mode::Debug) {
-                logDebug("AST:");
-                ast->accept(printer);
-            }
-
-            value = fromAst(std::move(ast));
-        }
-
-    private:
 
         // Serialization/Deserialization //
     private:
-        Value fromAst(ast::value_ptr && ast) {
+        static Value fromAst(ast::value_ptr && ast) {
             switch (ast->kind) {
                 case ast::ValueKind::Null: {
                     return {};
@@ -199,14 +175,14 @@ namespace jon {
                     return {ast::Value::as<ast::String>(std::move(ast))->val};
                 }
                 case ast::ValueKind::Object: {
-                    Value::obj_t entries;
+                    obj_t entries;
                     for (auto && keyVal : ast::Value::as<ast::Object>(std::move(ast))->entries) {
                         entries.emplace(keyVal.key.val, jon {fromAst(std::move(keyVal.val))});
                     }
                     return {entries};
                 }
                 case ast::ValueKind::Array: {
-                    Value::arr_t values;
+                    arr_t values;
                     for (auto && val : ast::Value::as<ast::Array>(std::move(ast))->values) {
                         values.emplace_back(jon {fromAst(std::move(val))});
                     }
@@ -216,17 +192,7 @@ namespace jon {
         }
 
     private:
-        Mode mode;
         Value value;
-
-    private:
-        template<class ...Args>
-        void logDebug(Args && ...args) {
-            if (mode != Mode::Debug) {
-                return;
-            }
-            std::cout << mstr(std::forward<Args>(args)...) << std::endl;
-        }
     };
 }
 
