@@ -48,6 +48,12 @@ namespace jon {
             value->accept(printer);
         }
 
+        jon & operator[](const std::string & key) {
+            if (value->kind != ast::ValueKind::Object) {
+                throw std::runtime_error(mstr("Type mismatch: cannot set property ", key, " of "));
+            }
+        }
+
     private:
         void fromSource(const std::string & source) {
             Lexer lexer;

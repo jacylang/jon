@@ -51,7 +51,10 @@ namespace jon::val {
     };
 
     struct Float : Value {
-        Float(double val) : Value(Type::Float), val(val) {}
+        Float(const Token & token) : Value(Type::Float) {
+            assert(token.kind == TokenKind::Float);
+            val = std::stod(token.val);
+        }
 
         double val;
     };
