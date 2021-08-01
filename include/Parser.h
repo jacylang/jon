@@ -181,10 +181,18 @@ namespace jon {
             bool first = true;
             ast::value_list values;
             while (not eof()) {
+                if (is(TokenKind::RBracket)) {
+                    break;
+                }
+
                 if (first) {
                     first = false;
                 } else {
                     skipSep();
+                }
+
+                if (is(TokenKind::RBracket)) {
+                    break;
                 }
 
                 values.emplace_back(parseValue());
