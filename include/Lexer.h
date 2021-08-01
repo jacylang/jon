@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <vector>
 #include <iostream>
+#include <assert.h>
 
 #include "utils.h"
 
@@ -99,6 +100,26 @@ namespace jon {
                 }
                 case TokenKind::Float: {
                     return "number `" + val + "`";
+                }
+            }
+        }
+        
+        uint8_t intBase() const {
+            switch (kind) {
+                case TokenKind::DecInt: {
+                    return 0;
+                }
+                case TokenKind::HexInt: {
+                    return 16;
+                }
+                case TokenKind::OctoInt: {
+                    return 8;
+                }
+                case TokenKind::BinInt: {
+                    return 2;
+                }
+                default: {
+                    throw std::logic_error("Called `Token::intBase` with non-int token");
                 }
             }
         }
