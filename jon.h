@@ -161,8 +161,38 @@ namespace jon {
             return value.get<T>();
         }
 
+        // Type checks //
     public:
+        bool isNull() const {
+            return value.type() == Type::Null;
+        }
+
+        bool isBool() const {
+            return value.type() == Type::Bool;
+        }
+
+        bool isInt() const {
+            return value.type() == Type::Int;
+        }
+
+        bool isFloat() const {
+            return value.type() == Type::Float;
+        }
+
+        bool isString() const {
+            return value.type() == Type::String;
+        }
+
+        bool isObject() const {
+            return value.type() == Type::Object;
+        }
+
+        bool isArray() const {
+            return value.type() == Type::Array;
+        }
+
         // Object interface //
+    public:
         const jon & operator[](const std::string & key) const {
             value.assertTypeObject(key);
             return value.get<obj_t>().at(key);
@@ -184,6 +214,7 @@ namespace jon {
         }
 
         // Array interface //
+    public:
         const jon & operator[](size_t idx) const {
             value.assertTypeArray();
             return value.get<arr_t>().at(idx);
