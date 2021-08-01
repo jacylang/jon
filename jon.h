@@ -42,14 +42,13 @@ namespace jon {
             fromSource(ss.str());
         }
 
+        // Object access //
         const jon & operator[](const std::string & key) const {
             value.assertObjectFirstAccess(key);
         }
 
         jon & operator[](const std::string & key) {
-            if (value.type() != val::Type::Object) {
-                throw std::runtime_error(mstr("Type mismatch: cannot set property ", key, " of "));
-            }
+            value.assertObjectFirstAccess(key);
         }
 
     private:

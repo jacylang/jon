@@ -20,8 +20,7 @@ namespace jon::val {
         Array,
     };
 
-    class Value {
-    public:
+    struct Value {
         using null_t = std::monostate;
         using bool_t = bool;
         using int_t = int64_t;
@@ -30,7 +29,6 @@ namespace jon::val {
         using obj_t = std::map<str_t, Value>;
         using arr_t = std::vector<Value>;
 
-    public:
         Value() = default;
         Value(bool_t v) noexcept : v(v), t(Type::Bool) {}
         Value(int_t v) noexcept : v(v), t(Type::Int) {}
@@ -79,7 +77,6 @@ namespace jon::val {
             }
         }
 
-    private:
         Type t;
         std::variant<null_t, bool_t, int_t, float_t, str_t, obj_t, arr_t> v;
     };
