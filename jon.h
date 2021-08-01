@@ -177,6 +177,16 @@ namespace jon {
             return false;
         }
 
+        template<class K>
+        bool contains(K && key) const {
+            if (isObject()) {
+                const auto & obj = get<obj_t>();
+                return obj.find(key) != obj.end();
+            }
+
+            return false;
+        }
+
         // Type checks //
     public:
         Type type() const {
