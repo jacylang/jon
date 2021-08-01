@@ -1,7 +1,6 @@
 #ifndef JON_SERDES_H
 #define JON_SERDES_H
 
-#include "Value.h"
 #include "ast.h"
 
 namespace jon {

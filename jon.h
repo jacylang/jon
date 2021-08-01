@@ -9,7 +9,6 @@
 #include <assert.h>
 #include <map>
 
-
 #include "Lexer.h"
 #include "Parser.h"
 #include "Printer.h"
@@ -84,7 +83,6 @@ namespace jon {
         }
 
     private:
-
         enum class Type {
             Null,
             Bool,
@@ -129,7 +127,7 @@ namespace jon {
             }
 
             void assertObjectFirstAccess(const std::string & key) const {
-                assertType(val::Type::Object, mstr("cannot access property ", key, " of ", typeStr()));
+                assertType(Type::Object, mstr("cannot access property ", key, " of ", typeStr()));
             }
 
             std::string typeStr() const {
@@ -158,6 +156,7 @@ namespace jon {
 
     private:
         Mode mode;
+        Value value;
 
     private:
         template<class ...Args>
