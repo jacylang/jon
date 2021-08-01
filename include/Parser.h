@@ -77,14 +77,18 @@ namespace jon {
             return false;
         }
 
-        void skipSep() {
+        bool skipOptSep() {
             // Skip first new lines (optionally)
             bool nl = skipNls(true);
 
             // Skip comma, even if it goes after new lines, skipping next new lines optionally
             bool comma = skipOpt(TokenKind::Comma, true);
 
-            if (not nl and not comma) {
+            return nl or comma;
+        }
+
+        void skipSep() {
+            if (not skipOptSep()) {
                 expectedError("delimiter: `,` or new line");
             }
         }
