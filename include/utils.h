@@ -18,10 +18,16 @@ namespace jon {
         }
 
         friend Indent operator+(const Indent & indent, size_type offset) {
+            if (indent.size == -1) {
+                return indent;
+            }
             return Indent(indent.val, indent.size + offset);
         }
 
         friend Indent operator-(const Indent & indent, size_type offset) {
+            if (indent.size == -1) {
+                return indent;
+            }
             return Indent(indent.val, indent.size - offset);
         }
 

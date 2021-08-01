@@ -5,7 +5,7 @@ int main(const int argc, const char ** argv) {
 
     auto val = "key: 'value'"_jon;
 
-    std::cout << val.stringify({"  "});
+    std::cout << val.stringify({"  ", 0});
 
     return 0;
 }

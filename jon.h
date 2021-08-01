@@ -359,8 +359,8 @@ namespace jon {
         }
 
     public:
-        str_t stringify(const Indent & indent = {"", 0}) const {
-            bool pretty = indent.size != 0;
+        str_t stringify(const Indent & indent = {"", -1}) const {
+            bool pretty = indent.size != -1;
 
             // TODO: Support multi-line strings
 
