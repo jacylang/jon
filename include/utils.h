@@ -5,6 +5,21 @@
 #include <sstream>
 
 namespace jon {
+    struct Indent {
+        Indent(const std::string & val, uint16_t size) : val(val), size(size) {}
+
+        friend std::ostream & operator<<(std::ostream & os, const Indent & indent) {
+            for (uint16_t i = 0; i < indent.size; i++) {
+                os << indent.val;
+            }
+            return os;
+        }
+
+    private:
+        std::string val;
+        uint16_t size;
+    };
+
     // Merges arguments overloaded ostream::operator<<
     template<class ...Args>
     static std::string mstr(Args && ...args) {
