@@ -66,9 +66,7 @@ namespace jon::val {
     };
 
     struct Object : Value {
-        String() : Value(Type::String), val(val) {}
-
-        std::string val;
+        Object() : Value(Type::Object) {}
     };
 }
 

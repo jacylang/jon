@@ -103,7 +103,7 @@ namespace jon {
                 }
             }
         }
-        
+
         uint8_t intBase() const {
             switch (kind) {
                 case TokenKind::DecInt: {
