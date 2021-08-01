@@ -194,7 +194,7 @@ namespace jon {
             return value.get<T>();
         }
 
-        bool empty() const {
+        bool empty() const noexcept {
             if (isNull()) {
                 return true;
             }
@@ -211,7 +211,7 @@ namespace jon {
         }
 
         template<class K>
-        bool contains(K && key) const {
+        bool contains(K && key) const noexcept {
             if (isObject()) {
                 const auto & obj = get<obj_t>();
                 return obj.find(key) != obj.end();
@@ -222,35 +222,35 @@ namespace jon {
 
         // Type checks //
     public:
-        Type type() const {
+        Type type() const noexcept {
             return value.type();
         }
 
-        bool isNull() const {
+        bool isNull() const noexcept {
             return type() == Type::Null;
         }
 
-        bool isBool() const {
+        bool isBool() const noexcept {
             return type() == Type::Bool;
         }
 
-        bool isInt() const {
+        bool isInt() const noexcept {
             return type() == Type::Int;
         }
 
-        bool isFloat() const {
+        bool isFloat() const noexcept {
             return type() == Type::Float;
         }
 
-        bool isString() const {
+        bool isString() const noexcept {
             return type() == Type::String;
         }
 
-        bool isObject() const {
+        bool isObject() const noexcept {
             return type() == Type::Object;
         }
 
-        bool isArray() const {
+        bool isArray() const noexcept {
             return type() == Type::Array;
         }
 
