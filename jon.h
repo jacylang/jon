@@ -34,21 +34,21 @@ namespace jon {
         };
 
         struct Value {
-            Value() = default;
-            Value(bool_t v) noexcept : v(v), t(Type::Bool) {}
-            Value(int_t v) noexcept : v(v), t(Type::Int) {}
-            Value(float_t v) noexcept : v(v), t(Type::Float) {}
+            explicit Value() = default;
+            explicit Value(bool_t v) noexcept : v(v), t(Type::Bool) {}
+            explicit Value(int_t v) noexcept : v(v), t(Type::Int) {}
+            explicit Value(float_t v) noexcept : v(v), t(Type::Float) {}
 
-            Value(const str_t & v) noexcept : v(v), t(Type::String) {}
-            Value(str_t && v) noexcept : v(std::move(v)), t(Type::String) {}
+            explicit Value(const str_t & v) noexcept : v(v), t(Type::String) {}
+            explicit Value(str_t && v) noexcept : v(std::move(v)), t(Type::String) {}
 
-            Value(const obj_t & v) noexcept : v(v), t(Type::Object) {}
-            Value(obj_t && v) noexcept : v(std::move(v)), t(Type::Object) {}
+            explicit Value(const obj_t & v) noexcept : v(v), t(Type::Object) {}
+            explicit Value(obj_t && v) noexcept : v(std::move(v)), t(Type::Object) {}
 
-            Value(const arr_t & v) noexcept : v(v), t(Type::Array) {}
-            Value(arr_t && v) noexcept : v(std::move(v)), t(Type::Array) {}
+            explicit Value(const arr_t & v) noexcept : v(v), t(Type::Array) {}
+            explicit Value(arr_t && v) noexcept : v(std::move(v)), t(Type::Array) {}
 
-            Value(Type t) noexcept : t(t) {
+            explicit Value(Type t) noexcept : t(t) {
                 switch (t) {
                     case Type::Null: {
                         v = std::monostate {};
