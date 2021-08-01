@@ -164,11 +164,19 @@ namespace jon {
         ast::value_ptr parseArray() {
             skip(TokenKind::LBracket, "[BUG] expected `[`", true);
 
+            bool first = true;
             ast::value_list values;
             while (not eof()) {
+                if (first) {
+                    first = false;
+                } else {
+                    skipSep();
+                }
+
                 values.emplace_back(parseValue());
-                skipSep();
             }
+
+            skipOptSep();
 
             skip(TokenKind::RBracket, "Closing `]`", false);
 
