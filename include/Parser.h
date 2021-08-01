@@ -138,16 +138,24 @@ namespace jon {
             if (not root) {
                 skip(TokenKind::LBrace, "[BUG] expected `{`", true); // Skip `{`
             } else {
-                rootBraced = skipOpt(TokenKind::LBrace);
+                rootBraced = skipOpt(TokenKind::LBrace, true);
             }
 
             bool first = true;
             ast::Object::Entries entries;
             while (not eof()) {
+                if (is(TokenKind::LBrace)) {
+                    break;
+                }
+
                 if (first) {
                     first = false;
                 } else {
                     skipSep();
+                }
+
+                if (is(TokenKind::LBrace)) {
+                    break;
                 }
 
                 auto key = ast::Ident {
@@ -158,8 +166,6 @@ namespace jon {
 
                 entries.emplace_back(ast::KeyValue{std::move(key), std::move(val)});
             }
-
-            skipOptSep(); // Trailing separator
 
             if (not root or rootBraced) {
                 skip(TokenKind::RBrace, "closing `}`", false);

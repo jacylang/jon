@@ -3,7 +3,13 @@
 int main(const int argc, const char ** argv) {
     using namespace jon::literals;
 
-    auto val = "key: 'value'"_jon;
+    auto val = R"(
+        {
+            hello: {
+                hi: 'killurself'
+            }
+        }
+    )"_jon;
 
     std::cout << val.stringify({"  ", 0});
 
