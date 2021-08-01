@@ -48,7 +48,7 @@ namespace jon {
             Value(const arr_t & v) noexcept : v(v), t(Type::Array) {}
             Value(arr_t && v) noexcept : v(std::move(v)), t(Type::Array) {}
 
-            Type type() const {
+            Type type() const noexcept {
                 return t;
             }
 
@@ -63,12 +63,12 @@ namespace jon {
             }
 
             template<class T>
-            T & get() {
+            T & get() noexcept {
                 return std::get<T>(v);
             }
 
             template<class T>
-            const T & get() const {
+            const T & get() const noexcept {
                 return std::get<T>(v);
             }
 
@@ -144,8 +144,6 @@ namespace jon {
             value.assertObjectFirstAccess(key);
             return value.get<obj_t>().at(key);
         }
-
-    private:
 
         // Serialization/Deserialization //
     private:
