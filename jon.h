@@ -134,6 +134,10 @@ namespace jon {
             return jon {fromAst(std::move(ast))};
         }
 
+        friend jon operator""_jon(const char * str, std::size_t n) {
+            return fromSource(std::string(str, n));
+        }
+
         // Common methods //
     public:
         template<class T>
