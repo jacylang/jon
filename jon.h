@@ -27,61 +27,6 @@ namespace jon {
     }
 
     class jon {
-    public:
-        jon() {}
-
-        jon(const std::filesystem::path & path, Mode mode = Mode::Default) {
-            this->mode = mode;
-
-            std::fstream file(path);
-
-            if (not file.is_open()) {
-                throw std::runtime_error(mstr("File '", path.string(), "' not found"));
-            }
-
-            std::stringstream ss;
-            ss << file.rdbuf();
-            file.close();
-
-            fromSource(ss.str());
-        }
-
-        // Object access //
-        const jon & operator[](const std::string & key) const {
-            value.assertObjectFirstAccess(key);
-        }
-
-        jon & operator[](const std::string & key) {
-            value.assertObjectFirstAccess(key);
-        }
-
-    private:
-        void fromSource(const std::string & source) {
-            Lexer lexer;
-            Parser parser;
-            Printer printer;
-
-            logDebug("Lexing...");
-
-            auto tokens = lexer.lex(source);
-
-            if (mode == Mode::Debug) {
-                printer.printTokens(tokens);
-            }
-
-            logDebug("Parsing...");
-
-            auto ast = parser.parse(std::move(tokens));
-
-            if (mode == Mode::Debug) {
-                logDebug("AST:");
-                ast->accept(printer);
-            }
-
-            value = fromAst(std::move(ast));
-        }
-
-    private:
         enum class Type {
             Null,
             Bool,
@@ -98,8 +43,8 @@ namespace jon {
             using int_t = int64_t;
             using float_t = double;
             using str_t = std::string;
-            using obj_t = std::map<str_t, Value>;
-            using arr_t = std::vector<Value>;
+            using obj_t = std::map<str_t, jon>;
+            using arr_t = std::vector<jon>;
 
             Value() = default;
             Value(bool_t v) noexcept : v(v), t(Type::Bool) {}
@@ -153,6 +98,65 @@ namespace jon {
             std::variant<null_t, bool_t, int_t, float_t, str_t, obj_t, arr_t> v;
         };
 
+    private:
+        jon(Value && value) : value(std::move(value)) {}
+
+    public:
+        jon() {}
+
+//        explicit jon(const std::filesystem::path & path, Mode mode = Mode::Default) {
+//            this->mode = mode;
+//
+//            std::fstream file(path);
+//
+//            if (not file.is_open()) {
+//                throw std::runtime_error(mstr("File '", path.string(), "' not found"));
+//            }
+//
+//            std::stringstream ss;
+//            ss << file.rdbuf();
+//            file.close();
+//
+//            fromSource(ss.str());
+//        }
+
+        // Object access //
+        const jon & operator[](const std::string & key) const {
+            value.assertObjectFirstAccess(key);
+        }
+
+        jon & operator[](const std::string & key) {
+            value.assertObjectFirstAccess(key);
+        }
+
+    private:
+        void fromSource(const std::string & source) {
+            Lexer lexer;
+            Parser parser;
+            Printer printer;
+
+            logDebug("Lexing...");
+
+            auto tokens = lexer.lex(source);
+
+            if (mode == Mode::Debug) {
+                printer.printTokens(tokens);
+            }
+
+            logDebug("Parsing...");
+
+            auto ast = parser.parse(std::move(tokens));
+
+            if (mode == Mode::Debug) {
+                logDebug("AST:");
+                ast->accept(printer);
+            }
+
+            value = fromAst(std::move(ast));
+        }
+
+    private:
+
         // Serialization/Deserialization //
     private:
         Value fromAst(ast::value_ptr && ast) {
@@ -175,14 +179,14 @@ namespace jon {
                 case ast::ValueKind::Object: {
                     Value::obj_t entries;
                     for (auto && keyVal : ast::Value::as<ast::Object>(std::move(ast))->entries) {
-                        entries.emplace(keyVal.key.val, fromAst(std::move(keyVal.val)));
+                        entries.emplace(keyVal.key.val, jon {fromAst(std::move(keyVal.val))});
                     }
                     return {entries};
                 }
                 case ast::ValueKind::Array: {
                     Value::arr_t values;
                     for (auto && val : ast::Value::as<ast::Array>(std::move(ast))->values) {
-                        values.emplace_back(fromAst(std::move(val)));
+                        values.emplace_back(jon {fromAst(std::move(val))});
                     }
                     return {values};
                 }
