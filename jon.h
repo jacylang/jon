@@ -358,6 +358,53 @@ namespace jon {
             }
         }
 
+    public:
+        str_t stringify(const Indent & indent) const {
+            bool pretty = indent.size != 0;
+
+            // TODO: Support multi-line strings
+
+            switch (type()) {
+                case Type::Null: return "null";
+                case Type::Bool: return get<bool_t>() ? "true" : "false";
+                case Type::Int: return std::to_string(get<int_t>());
+                case Type::Float: return std::to_string(get<float_t>());
+                case Type::String: {
+                    if (not pretty) {
+                        return "'" + escstr(get<str_t>()) + "'";
+                    }
+                    return "'" + get<str_t>() + "'";
+                }
+                case Type::Object: {
+                    std::stringstream ss;
+                    ss << "{";
+                    if (pretty) {
+                        ss << "\n";
+                    }
+                    for (const auto & el : get<obj_t>()) {
+                        ss << indent << el.first << ":";
+                        if (pretty) {
+                            ss << " ";
+                        }
+                        ss << el.second.stringify(indent + 1);
+                        if (pretty) {
+                            ss << "\n";
+                        } else {
+                            ss << ",";
+                        }
+                    }
+                    if (pretty) {
+                        ss << "\n";
+                    }
+                    ss << "}";
+                    return ss.str();
+                }
+                case Type::Array: {
+
+                }
+            }
+        }
+
     private:
         Value value;
     };
