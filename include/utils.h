@@ -6,9 +6,9 @@
 
 namespace jon {
     struct Indent {
-        using size_type = uint16_t;
+        using size_type = int32_t;
 
-        Indent(const std::string & val, uint16_t size = 1) : val(val), size(size) {}
+        Indent(const std::string & val, size_type size = -1) : val(val), size(size) {}
 
         friend std::ostream & operator<<(std::ostream & os, const Indent & indent) {
             for (size_type i = 0; i < indent.size; i++) {
