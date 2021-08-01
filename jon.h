@@ -91,9 +91,12 @@ namespace jon {
     private:
         jon(Value && value) : value(std::move(value)) {}
 
+        // Constructors //
     public:
         jon() {}
 
+        // Custom constructors //
+    public:
         static jon fromFile(const std::filesystem::path & path) {
             std::fstream file(path);
 
@@ -119,11 +122,13 @@ namespace jon {
         }
 
         // Common methods //
+    public:
         template<class T>
         T get() const noexcept {
             return value.get<T>();
         }
 
+    public:
         // Object access //
         const jon & operator[](const std::string & key) const {
             value.assertObjectFirstAccess(key);
