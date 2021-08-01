@@ -177,7 +177,7 @@ namespace jon {
             return fromSource(ss.str());
         }
 
-        static jon fromSource(const std::string & source) {
+        static jon fromSource(const str_t & source) {
             Lexer lexer;
             Parser parser;
 
@@ -210,8 +210,7 @@ namespace jon {
             return false;
         }
 
-        template<class K>
-        bool contains(K && key) const noexcept {
+        bool contains(const str_t & key) const noexcept {
             if (isObject()) {
                 const auto & obj = get<obj_t>();
                 return obj.find(key) != obj.end();
@@ -280,22 +279,22 @@ namespace jon {
 
         // Object interface //
     public:
-        const jon & operator[](const std::string & key) const {
+        const jon & operator[](const str_t & key) const {
             value.assertTypeObject(key);
             return value.get<obj_t>().at(key);
         }
 
-        jon & operator[](const std::string & key) {
+        jon & operator[](const str_t & key) {
             value.assertObjectFirstAccess(key);
             return value.get<obj_t>()[key];
         }
 
-        const jon & at(const std::string & key) const {
+        const jon & at(const str_t & key) const {
             value.assertTypeObject(key);
             return value.get<obj_t>().at(key);
         }
 
-        jon & at(const std::string & key) {
+        jon & at(const str_t & key) {
             value.assertObjectFirstAccess(key);
             return value.get<obj_t>().at(key);
         }
@@ -359,11 +358,11 @@ namespace jon {
         }
 
     public:
-        str_t stringify(const std::string & indentStr) const {
+        std::string stringify(const std::string & indentStr) const {
             return stringify(Indent {indentStr, 0});
         }
 
-        str_t stringify(const Indent & indent = {"", -1}) const {
+        std::string stringify(const Indent & indent = {"", -1}) const {
             bool pretty = indent.size != -1;
 
             // TODO: Support multi-line strings
@@ -442,7 +441,7 @@ namespace jon {
         Value value;
     };
 
-    namespace literals {
+    namespace literal {
         jon operator""_jon(const char * str, std::size_t n) {
             return jon::fromSource(std::string(str, n));
         }

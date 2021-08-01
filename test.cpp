@@ -1,7 +1,7 @@
 #include "jon.h"
 
 int main(const int argc, const char ** argv) {
-    using namespace jon::literals;
+    using namespace jon::literal;
 
     auto val = R"(
         {
