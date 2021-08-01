@@ -55,6 +55,10 @@ namespace jon::val {
             }
         }
 
+        void assertObjectFirstAccess(const std::string & key) const {
+            assertType(val::Type::Object, mstr("cannot access property ", key, " of ", typeStr()));
+        }
+
         std::string typeStr() const {
             switch (t) {
                 case Type::Null: {

@@ -43,7 +43,7 @@ namespace jon {
         }
 
         const jon & operator[](const std::string & key) const {
-            value.assertType(val::Type::Object, mstr("cannot access property ", key, " of ", value.typeStr()));
+            value.assertObjectFirstAccess(key);
         }
 
         jon & operator[](const std::string & key) {
