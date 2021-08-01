@@ -32,22 +32,26 @@ namespace jon::val {
 
     public:
         Value() = default;
-        Value(bool_t v) noexcept : storage(v), type(Type::Bool) {}
-        Value(int_t v) noexcept : storage(v), type(Type::Int) {}
-        Value(float_t v) noexcept : storage(v), type(Type::Float) {}
+        Value(bool_t v) noexcept : v(v), t(Type::Bool) {}
+        Value(int_t v) noexcept : v(v), t(Type::Int) {}
+        Value(float_t v) noexcept : v(v), t(Type::Float) {}
 
-        Value(const str_t & v) noexcept : storage(v), type(Type::String) {}
-        Value(str_t && v) noexcept : storage(std::move(v)), type(Type::String) {}
+        Value(const str_t & v) noexcept : v(v), t(Type::String) {}
+        Value(str_t && v) noexcept : v(std::move(v)), t(Type::String) {}
 
-        Value(const obj_t & v) noexcept : storage(v), type(Type::Object) {}
-        Value(obj_t && v) noexcept : storage(std::move(v)), type(Type::Object) {}
+        Value(const obj_t & v) noexcept : v(v), t(Type::Object) {}
+        Value(obj_t && v) noexcept : v(std::move(v)), t(Type::Object) {}
 
-        Value(const arr_t & v) noexcept : storage(v), type(Type::Array) {}
-        Value(arr_t && v) noexcept : storage(std::move(v)), type(Type::Array) {}
+        Value(const arr_t & v) noexcept : v(v), t(Type::Array) {}
+        Value(arr_t && v) noexcept : v(std::move(v)), t(Type::Array) {}
+
+        Type type() const {
+            return t;
+        }
 
     private:
-        Type type;
-        std::variant<null_t, bool_t, int_t, float_t, str_t, obj_t, arr_t> storage;
+        Type t;
+        std::variant<null_t, bool_t, int_t, float_t, str_t, obj_t, arr_t> v;
     };
 }
 

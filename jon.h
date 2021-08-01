@@ -45,7 +45,7 @@ namespace jon {
         }
 
         jon & operator[](const std::string & key) {
-            if (value->kind != ast::ValueKind::Object) {
+            if (value.type() != val::Type::Object) {
                 throw std::runtime_error(mstr("Type mismatch: cannot set property ", key, " of "));
             }
         }
