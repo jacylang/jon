@@ -5,14 +5,11 @@
 #include <memory>
 #include <string>
 #include <assert.h>
+#include <map>
 
 #include "Lexer.h"
 
 namespace jon::val {
-    struct Value;
-    using value_ptr = std::unique_ptr<Value>;
-    using int_t = int64_t;
-
     enum class Type {
         Null,
         Bool,
@@ -23,50 +20,32 @@ namespace jon::val {
         Array,
     };
 
-    struct Value {
-        Value(Type type) : type(type) {}
+    class Value {
+        using null_t = std::monostate;
+        using bool_t = bool;
+        using int_t = int64_t;
+        using float_t = double;
+        using str_t = std::string;
+        using obj_t = std::map<str_t, Value>;
+        using arr_t = std::vector<Value>;
 
-        Type type;
-    };
+    public:
+        Value() = default;
+        Value(bool_t v) noexcept : storage(v) {}
+        Value(int_t v) noexcept : storage(v) {}
+        Value(float_t v) noexcept : storage(v) {}
 
-    const auto null = Value(Type::Null);
+        Value(const str_t & v) noexcept : storage(v) {}
+        Value(str_t && v) noexcept : storage(std::move(v)) {}
 
-    struct Bool : Value {
-        Bool(const Token & token) : Value(Type::Bool) {
-            assert(token.kind == TokenKind::True or token.kind == TokenKind::False);
-            val = token.kind == TokenKind::True;
-        }
+        Value(const obj_t & v) noexcept : storage(v) {}
+        Value(obj_t && v) noexcept : storage(std::move(v)) {}
 
-        bool val;
-    };
+        Value(const arr_t & v) noexcept : storage(v) {}
+        Value(arr_t && v) noexcept : storage(std::move(v)) {}
 
-    struct Int : Value {
-        Int(const Token & token) : Value(Type::Int) {
-            assert(token.kind == TokenKind::DecInt or token.kind == TokenKind::HexInt or
-                   token.kind == TokenKind::OctoInt or token.kind == TokenKind::BinInt);
-            val = std::stoull(token.val, nullptr, token.intBase());
-        }
-
-        int_t val;
-    };
-
-    struct Float : Value {
-        Float(const Token & token) : Value(Type::Float) {
-            assert(token.kind == TokenKind::Float);
-            val = std::stod(token.val);
-        }
-
-        double val;
-    };
-
-    struct String : Value {
-        String(const std::string & val) : Value(Type::String), val(val) {}
-
-        std::string val;
-    };
-
-    struct Object : Value {
-        Object() : Value(Type::Object) {}
+    private:
+        std::variant<null_t, bool_t, int_t, float_t, str_t, obj_t, arr_t> storage;
     };
 }
 
