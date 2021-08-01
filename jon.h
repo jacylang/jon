@@ -58,8 +58,12 @@ namespace jon {
                 }
             }
 
-            void assertObjectFirstAccess(const std::string & key) const {
-                assertType(Type::Object, mstr("cannot access property ", key, " of ", typeStr()));
+            void assertObjectFirstAccess(const std::string & key) {
+                if (t == Type::Null) {
+                    v = obj_t {};
+                } else {
+                    assertType(Type::Object, mstr("cannot access property ", key, " of ", typeStr()));
+                }
             }
 
             template<class T>
@@ -142,7 +146,7 @@ namespace jon {
         }
 
     public:
-        // Object access //
+        // Object interface //
         const jon & operator[](const std::string & key) const {
             value.assertObjectFirstAccess(key);
             return value.get<obj_t>().at(key);
@@ -161,6 +165,11 @@ namespace jon {
         jon & at(const std::string & key) {
             value.assertObjectFirstAccess(key);
             return value.get<obj_t>().at(key);
+        }
+
+        // Array interface //
+        const jon & operator[](size_t idx) const {
+
         }
 
         // Serialization/Deserialization //
