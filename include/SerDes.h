@@ -11,7 +11,7 @@ namespace jon {
         SerDes() {}
         ~SerDes() = default;
 
-        val::Value fromAst(ast::value_ptr && ast) {
+        static val::Value fromAst(ast::value_ptr && ast) {
             switch (ast->kind) {
                 case ast::ValueKind::Null: {
                     return {};

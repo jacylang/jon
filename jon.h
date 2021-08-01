@@ -7,6 +7,7 @@
 #include "Lexer.h"
 #include "Parser.h"
 #include "Printer.h"
+#include "SerDes.h"
 
 namespace jon {
     enum class Mode : uint8_t {
@@ -70,17 +71,19 @@ namespace jon {
 
             logDebug("Parsing...");
 
-            value = parser.parse(std::move(tokens));
+            auto ast = parser.parse(std::move(tokens));
 
             if (mode == Mode::Debug) {
                 logDebug("AST:");
-                value->accept(printer);
+                ast->accept(printer);
             }
+
+            value = SerDes::fromAst(std::move(ast));
         }
 
     private:
         Mode mode;
-        ast::value_ptr value;
+        val::Value value;
 
     private:
         template<class ...Args>
