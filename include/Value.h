@@ -55,6 +55,26 @@ namespace jon::val {
             }
         }
 
+        std::string typeStr() const {
+            switch (t) {
+                case Type::Null: {
+                    return "null";
+                }
+                case Type::Bool:
+                    return "boolean";
+                case Type::Int:
+                    return "integer";
+                case Type::Float:
+                    return "float";
+                case Type::String:
+                    return "string";
+                case Type::Object:
+                    return "object";
+                case Type::Array:
+                    return "array";
+            }
+        }
+
     private:
         Type t;
         std::variant<null_t, bool_t, int_t, float_t, str_t, obj_t, arr_t> v;
