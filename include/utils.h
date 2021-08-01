@@ -17,12 +17,12 @@ namespace jon {
             return os;
         }
 
-        Indent operator+(size_type offset) {
-            return Indent(val, size + offset);
+        friend Indent operator+(const Indent & indent, size_type offset) {
+            return Indent(indent.val, indent.size + offset);
         }
 
-        Indent operator-(size_type offset) {
-            return Indent(val, size - offset);
+        friend Indent operator-(const Indent & indent, size_type offset) {
+            return Indent(indent.val, indent.size - offset);
         }
 
         const std::string val;
