@@ -359,7 +359,7 @@ namespace jon {
         }
 
     public:
-        str_t stringify(const Indent & indent) const {
+        str_t stringify(const Indent & indent = {"", 0}) const {
             bool pretty = indent.size != 0;
 
             // TODO: Support multi-line strings
@@ -382,7 +382,7 @@ namespace jon {
                         ss << "\n";
                     }
                     for (const auto & el : get<obj_t>()) {
-                        ss << indent << el.first << ":";
+                        ss << indent + 1 << el.first << ":";
                         if (pretty) {
                             ss << " ";
                         }
@@ -400,7 +400,24 @@ namespace jon {
                     return ss.str();
                 }
                 case Type::Array: {
-
+                    std::stringstream ss;
+                    ss << "[";
+                    if (pretty) {
+                        ss << "\n";
+                    }
+                    for (const auto & el : get<arr_t>()) {
+                        ss << indent + 1 << el.stringify(indent + 1);
+                        if (pretty) {
+                            ss << "\n";
+                        } else {
+                            ss << ",";
+                        }
+                    }
+                    if (pretty) {
+                        ss << "\n";
+                    }
+                    ss << "]";
+                    return ss.str();
                 }
             }
         }
