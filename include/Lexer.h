@@ -109,8 +109,8 @@ namespace jon {
         Lexer() = default;
         ~Lexer() = default;
 
-        TokenStream lex(std::string && source) {
-            this->source = std::move(source);
+        TokenStream lex(const std::string & source) {
+            this->source = source;
             this->index = 0;
             this->tokens.clear();
 

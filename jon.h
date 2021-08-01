@@ -36,20 +36,23 @@ namespace jon {
             ss << file.rdbuf();
             file.close();
 
-            source = std::move(ss.str());
-
-            init();
+            fromSource(ss.str());
         }
 
         void print() {
-            ast->accept(printer);
+            Printer printer;
+            value->accept(printer);
         }
 
     private:
-        void init() {
+        void fromSource(const std::string & source) {
+            Lexer lexer;
+            Parser parser;
+            Printer printer;
+
             logDebug("Lexing...");
 
-            auto tokens = lexer.lex(std::move(source));
+            auto tokens = lexer.lex(source);
 
             if (mode == Mode::Debug) {
                 printer.printTokens(tokens);
@@ -57,21 +60,17 @@ namespace jon {
 
             logDebug("Parsing...");
 
-            ast = parser.parse(std::move(tokens));
+            value = parser.parse(std::move(tokens));
 
             if (mode == Mode::Debug) {
                 logDebug("AST:");
-                ast->accept(printer);
+                value->accept(printer);
             }
         }
 
     private:
         Mode mode;
-        std::string source;
-        Lexer lexer;
-        Parser parser;
-        Printer printer;
-        value_ptr ast;
+        value_ptr value;
 
     private:
         template<class ...Args>
@@ -79,8 +78,7 @@ namespace jon {
             if (mode != Mode::Debug) {
                 return;
             }
-            printer.out(std::forward<Args>(args)...);
-            printer.nl();
+            std::cout << mstr(std::forward<Args>(args)...) << std::endl;
         }
     };
 }
