@@ -220,6 +220,10 @@ namespace jon {
             return false;
         }
 
+        void clear() noexcept {
+            *this = Value {type()};
+        }
+
         // Type checks //
     public:
         Type type() const noexcept {
