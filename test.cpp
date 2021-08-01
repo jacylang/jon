@@ -13,7 +13,7 @@ int main(const int argc, const char ** argv) {
         }
     )"_jon;
 
-    std::cout << val.stringify({"  ", 0});
+    std::cout << val.stringify({"  "});
 
     return 0;
 }
