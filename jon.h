@@ -381,12 +381,18 @@ namespace jon {
                     if (pretty) {
                         ss << "\n";
                     }
-                    for (const auto & el : get<obj_t>()) {
-                        ss << indent + 1 << el.first << ":";
+                    const auto & obj = get<obj_t>();
+                    for (auto it = obj.begin(); it != obj.end(); it++) {
+                        ss << indent + 1 << it->first << ":";
                         if (pretty) {
                             ss << " ";
                         }
-                        ss << el.second.stringify(indent + 1);
+                        ss << it->second.stringify(indent + 1);
+
+                        if (it == std::prev(obj.end())) {
+                            continue;
+                        }
+
                         if (pretty) {
                             ss << "\n";
                         } else {
