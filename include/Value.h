@@ -49,6 +49,12 @@ namespace jon::val {
             return t;
         }
 
+        void assertType(Type check, const std::string & errorMsg) const {
+            if (this->type() != check) {
+                throw std::runtime_error(mstr("Type mismatch: ", errorMsg));
+            }
+        }
+
     private:
         Type t;
         std::variant<null_t, bool_t, int_t, float_t, str_t, obj_t, arr_t> v;

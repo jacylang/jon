@@ -24,9 +24,7 @@ namespace jon {
 
     class jon {
     public:
-        jon() {
-            value = std::make_unique<ast::Null>();
-        }
+        jon() {}
 
         jon(const std::filesystem::path & path, Mode mode = Mode::Default) {
             this->mode = mode;
