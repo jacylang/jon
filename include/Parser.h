@@ -5,14 +5,12 @@
 #include "ast.h"
 
 namespace jon {
-    using namespace ast;
-
     class Parser {
     public:
         Parser() {}
         ~Parser() = default;
 
-        value_ptr parse(TokenStream && tokens) {
+        ast::value_ptr parse(TokenStream && tokens) {
             this->tokens = tokens;
             this->index = 0;
 
@@ -91,7 +89,7 @@ namespace jon {
             }
         }
 
-        value_ptr parseValue() {
+        ast::value_ptr parseValue() {
             switch (peek().kind) {
                 case TokenKind::LBrace: {
                     return parseObject();
@@ -101,29 +99,29 @@ namespace jon {
                 }
                 case TokenKind::Null: {
                     advance();
-                    return std::make_unique<Null>();
+                    return std::make_unique<ast::Null>();
                 }
                 case TokenKind::True:
                 case TokenKind::False: {
-                    return std::make_unique<Bool>(advance().kind == TokenKind::True);
+                    return std::make_unique<ast::Bool>(advance().kind == TokenKind::True);
                 }
                 case TokenKind::BinInt: {
-                    return std::make_unique<Int>(std::stoul(advance().val, nullptr, 2));
+                    return std::make_unique<ast::Int>(std::stoul(advance().val, nullptr, 2));
                 }
                 case TokenKind::OctoInt: {
-                    return std::make_unique<Int>(std::stoul(advance().val, nullptr, 8));
+                    return std::make_unique<ast::Int>(std::stoul(advance().val, nullptr, 8));
                 }
                 case TokenKind::HexInt: {
-                    return std::make_unique<Int>(std::stoul(advance().val, nullptr, 16));
+                    return std::make_unique<ast::Int>(std::stoul(advance().val, nullptr, 16));
                 }
                 case TokenKind::DecInt: {
-                    return std::make_unique<Int>(std::stoul(advance().val));
+                    return std::make_unique<ast::Int>(std::stoul(advance().val));
                 }
                 case TokenKind::Float: {
-                    return std::make_unique<Float>(std::stod(advance().val));
+                    return std::make_unique<ast::Float>(std::stod(advance().val));
                 }
                 case TokenKind::String: {
-                    return std::make_unique<String>(advance().val);
+                    return std::make_unique<ast::String>(advance().val);
                 }
                 default: {
                     expectedError("value");
@@ -131,7 +129,7 @@ namespace jon {
             }
         }
 
-        value_ptr parseObject(bool root = false) {
+        ast::value_ptr parseObject(bool root = false) {
             bool rootBraced = false;
             if (not root) {
                 skip(TokenKind::LBrace, "[BUG] expected `{`", true); // Skip `{`
@@ -139,9 +137,9 @@ namespace jon {
                 rootBraced = skipOpt(TokenKind::LBrace);
             }
 
-            Object::Entries entries;
+            ast::Object::Entries entries;
             while (not eof()) {
-                auto key = Ident {
+                auto key = ast::Ident {
                     skip(TokenKind::String, "key", true).val
                 };
                 skip(TokenKind::Colon, "`:` delimiter", true);
@@ -149,20 +147,20 @@ namespace jon {
 
                 skipSep();
 
-                entries.emplace_back(KeyValue{std::move(key), std::move(val)});
+                entries.emplace_back(ast::KeyValue{std::move(key), std::move(val)});
             }
 
             if (not root or rootBraced) {
                 skip(TokenKind::RBrace, "closing `}`", false);
             }
 
-            return std::make_unique<Object>(std::move(entries));
+            return std::make_unique<ast::Object>(std::move(entries));
         }
 
-        value_ptr parseArray() {
+        ast::value_ptr parseArray() {
             skip(TokenKind::LBracket, "[BUG] expected `[`", true);
 
-            value_list values;
+            ast::value_list values;
             while (not eof()) {
                 values.emplace_back(parseValue());
                 skipSep();
@@ -170,7 +168,7 @@ namespace jon {
 
             skip(TokenKind::RBracket, "Closing `]`", false);
 
-            return std::make_unique<Array>(std::move(values));
+            return std::make_unique<ast::Array>(std::move(values));
         }
 
         // Errors //

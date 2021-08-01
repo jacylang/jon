@@ -25,7 +25,7 @@ namespace jon {
             nl();
         }
 
-        void printAst(const value_ptr & ast) {
+        void printAst(const ast::value_ptr & ast) {
             indent = 0;
             ast->accept(*this);
         }
@@ -33,27 +33,27 @@ namespace jon {
     private:
         uint16_t indent;
 
-        void visit(const Null & null) override {
+        void visit(const ast::Null & null) override {
             out("null");
         }
 
-        void visit(const Bool & bVal) override {
+        void visit(const ast::Bool & bVal) override {
             out(bVal.val ? "true" : "false");
         }
 
-        void visit(const Int & _int) override {
+        void visit(const ast::Int & _int) override {
             out(_int.val);
         }
 
-        void visit(const Float & _float) override {
+        void visit(const ast::Float & _float) override {
             out(_float.val);
         }
 
-        void visit(const String & string) override {
+        void visit(const ast::String & string) override {
             out("'", escstr(string.val), "'");
         }
 
-        void visit(const Object & object) override {
+        void visit(const ast::Object & object) override {
             out("{");
             nl();
             indent++;
@@ -69,7 +69,7 @@ namespace jon {
             out("}");
         }
 
-        void visit(const Array & array) override {
+        void visit(const ast::Array & array) override {
             out("[");
             nl();
             indent++;

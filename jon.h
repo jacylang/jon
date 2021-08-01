@@ -23,6 +23,11 @@ namespace jon {
 
     class jon {
     public:
+        jon() {
+            static value_ptr null = std::make_unique<ast::Null>();
+            value = null;
+        }
+
         jon(const std::filesystem::path & path, Mode mode = Mode::Default) {
             this->mode = mode;
 
