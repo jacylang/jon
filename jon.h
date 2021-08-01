@@ -24,8 +24,7 @@ namespace jon {
     class jon {
     public:
         jon() {
-            static value_ptr null = std::make_unique<ast::Null>();
-            value = null;
+            value = std::make_unique<ast::Null>();
         }
 
         jon(const std::filesystem::path & path, Mode mode = Mode::Default) {
@@ -75,7 +74,7 @@ namespace jon {
 
     private:
         Mode mode;
-        value_ptr value;
+        ast::value_ptr value;
 
     private:
         template<class ...Args>
