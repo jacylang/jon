@@ -58,19 +58,27 @@ namespace jon {
                 }
             }
 
-            void assertArrayFirstAccess() const {
+            void assertTypeArray() const {
+                assertType(Type::Array, mstr("Cannot access ", typeStr(), " as array"));
+            }
+
+            void assertArrayFirstAccess() {
                 if (t == Type::Null) {
                     v = arr_t {};
                 } else {
-                    assertType(Type::Array, mstr("Cannot access ", typeStr(), " as array"));
+                    assertTypeArray();
                 }
             }
 
-            void assertObjectFirstAccess(const std::string & key) const {
+            void assertTypeObject(const std::string & key) const {
+                assertType(Type::Object, mstr("Cannot access property ", key, " of ", typeStr()));
+            }
+
+            void assertObjectFirstAccess(const std::string & key) {
                 if (t == Type::Null) {
                     v = obj_t {};
                 } else {
-                    assertType(Type::Object, mstr("Cannot access property ", key, " of ", typeStr()));
+                    assertTypeObject(key);
                 }
             }
 
