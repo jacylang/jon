@@ -138,13 +138,14 @@ namespace jon {
             if (not root) {
                 skip(TokenKind::LBrace, "[BUG] expected `{`", true); // Skip `{`
             } else {
+                skipNls(true);
                 rootBraced = skipOpt(TokenKind::LBrace, true);
             }
 
             bool first = true;
             ast::Object::Entries entries;
             while (not eof()) {
-                if (is(TokenKind::LBrace)) {
+                if (is(TokenKind::RBrace)) {
                     break;
                 }
 
@@ -154,7 +155,7 @@ namespace jon {
                     skipSep();
                 }
 
-                if (is(TokenKind::LBrace)) {
+                if (is(TokenKind::RBrace)) {
                     break;
                 }
 
