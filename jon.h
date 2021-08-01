@@ -400,7 +400,7 @@ namespace jon {
                         }
                     }
                     if (pretty) {
-                        ss << "\n";
+                        ss << "\n" << indent;
                     }
                     ss << "}";
                     return ss.str();
