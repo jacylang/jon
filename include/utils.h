@@ -25,9 +25,8 @@ namespace jon {
             return Indent(val, size - offset);
         }
 
-    private:
-        std::string val;
-        size_type size;
+        const std::string val;
+        const size_type size;
     };
 
     // Merges arguments overloaded ostream::operator<<
