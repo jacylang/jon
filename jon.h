@@ -383,7 +383,10 @@ namespace jon {
                     }
                     const auto & obj = get<obj_t>();
                     for (auto it = obj.begin(); it != obj.end(); it++) {
-                        ss << indent + 1 << it->first << ":";
+                        if (pretty) {
+                            ss << indent + 1;
+                        }
+                        ss << it->first << ":";
                         if (pretty) {
                             ss << " ";
                         }
@@ -412,7 +415,10 @@ namespace jon {
                         ss << "\n";
                     }
                     for (const auto & el : get<arr_t>()) {
-                        ss << indent + 1 << el.stringify(indent + 1);
+                        if (pretty) {
+                            ss << indent + 1;
+                        }
+                        ss << el.stringify(indent + 1);
                         if (pretty) {
                             ss << "\n";
                         } else {
@@ -420,7 +426,7 @@ namespace jon {
                         }
                     }
                     if (pretty) {
-                        ss << "\n";
+                        ss << "\n" << indent;
                     }
                     ss << "]";
                     return ss.str();

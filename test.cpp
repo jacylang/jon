@@ -6,7 +6,9 @@ int main(const int argc, const char ** argv) {
     auto val = R"(
         {
             hello: {
-                hi: 'killurself'
+                hi: {
+                    hi: 'killurself'
+                }
             }
         }
     )"_jon;
