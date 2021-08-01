@@ -21,6 +21,7 @@ namespace jon::val {
     };
 
     class Value {
+    public:
         using null_t = std::monostate;
         using bool_t = bool;
         using int_t = int64_t;

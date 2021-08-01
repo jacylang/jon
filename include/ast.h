@@ -54,6 +54,11 @@ namespace jon::ast {
 
         ValueKind kind;
 
+        template<class T>
+        static constexpr T * as(value_ptr && val) {
+            return static_cast<T*>(val.release());
+        }
+
         virtual void accept(ValueVisitor & visitor) const = 0;
     };
 
