@@ -185,7 +185,23 @@ namespace jon {
 
         // Array interface //
         const jon & operator[](size_t idx) const {
+            value.assertTypeArray();
+            return value.get<arr_t>().at(idx);
+        }
 
+        jon & operator[](size_t idx) {
+            value.assertArrayFirstAccess();
+            return value.get<arr_t>()[idx];
+        }
+
+        const jon & at(size_t idx) const {
+            value.assertTypeArray();
+            return value.get<arr_t>().at(idx);
+        }
+
+        jon & at(size_t idx) {
+            value.assertTypeArray();
+            return value.get<arr_t>().at(idx);
         }
 
         // Serialization/Deserialization //
