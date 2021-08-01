@@ -9,4 +9,4 @@ set(CMAKE_CXX_FLAGS "-std=c++17")
 
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
-add_executable(jon test.cpp include/Lexer.h include/utils.h include/Parser.h include/ast.h include/Printer.h jon.h include/SerDes.h)
+add_executable(jon test.cpp include/Lexer.h include/utils.h include/Parser.h include/ast.h include/Printer.h jon.h)

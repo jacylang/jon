@@ -12,7 +12,6 @@
 #include "Lexer.h"
 #include "Parser.h"
 #include "Printer.h"
-#include "SerDes.h"
 
 namespace jon {
     enum class Mode : uint8_t {
@@ -79,7 +78,7 @@ namespace jon {
                 ast->accept(printer);
             }
 
-            value = SerDes::fromAst(std::move(ast));
+            value = fromAst(std::move(ast));
         }
 
     private:
@@ -153,6 +152,42 @@ namespace jon {
             Type t;
             std::variant<null_t, bool_t, int_t, float_t, str_t, obj_t, arr_t> v;
         };
+
+        // Serialization/Deserialization //
+    private:
+        Value fromAst(ast::value_ptr && ast) {
+            switch (ast->kind) {
+                case ast::ValueKind::Null: {
+                    return {};
+                }
+                case ast::ValueKind::Bool: {
+                    return {ast::Value::as<ast::Bool>(std::move(ast))->val};
+                }
+                case ast::ValueKind::Int: {
+                    return {ast::Value::as<ast::Int>(std::move(ast))->val};
+                }
+                case ast::ValueKind::Float: {
+                    return {ast::Value::as<ast::Float>(std::move(ast))->val};
+                }
+                case ast::ValueKind::String: {
+                    return {ast::Value::as<ast::String>(std::move(ast))->val};
+                }
+                case ast::ValueKind::Object: {
+                    Value::obj_t entries;
+                    for (auto && keyVal : ast::Value::as<ast::Object>(std::move(ast))->entries) {
+                        entries.emplace(keyVal.key.val, fromAst(std::move(keyVal.val)));
+                    }
+                    return {entries};
+                }
+                case ast::ValueKind::Array: {
+                    Value::arr_t values;
+                    for (auto && val : ast::Value::as<ast::Array>(std::move(ast))->values) {
+                        values.emplace_back(fromAst(std::move(val)));
+                    }
+                    return {values};
+                }
+            }
+        }
 
     private:
         Mode mode;
