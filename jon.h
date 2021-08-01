@@ -93,7 +93,20 @@ namespace jon {
 
         // Constructors //
     public:
-        jon() {}
+        explicit jon() = default;
+        explicit jon(null_t) {}
+        explicit jon(bool_t v) noexcept : value(v) {}
+        explicit jon(int_t v) noexcept : value(v) {}
+        explicit jon(float_t v) noexcept : value(v) {}
+
+        explicit jon(const str_t & v) noexcept : value(v) {}
+        explicit jon(str_t && v) noexcept : value(std::move(v)) {}
+
+        explicit jon(const obj_t & v) noexcept : value(v) {}
+        explicit jon(obj_t && v) noexcept : value(std::move(v)) {}
+
+        explicit jon(const arr_t & v) noexcept : value(v) {}
+        explicit jon(arr_t && v) noexcept : value(std::move(v)) {}
 
         // Custom constructors //
     public:
