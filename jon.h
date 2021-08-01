@@ -163,32 +163,36 @@ namespace jon {
 
         // Type checks //
     public:
+        Type type() const {
+            return value.type();
+        }
+
         bool isNull() const {
-            return value.type() == Type::Null;
+            return type() == Type::Null;
         }
 
         bool isBool() const {
-            return value.type() == Type::Bool;
+            return type() == Type::Bool;
         }
 
         bool isInt() const {
-            return value.type() == Type::Int;
+            return type() == Type::Int;
         }
 
         bool isFloat() const {
-            return value.type() == Type::Float;
+            return type() == Type::Float;
         }
 
         bool isString() const {
-            return value.type() == Type::String;
+            return type() == Type::String;
         }
 
         bool isObject() const {
-            return value.type() == Type::Object;
+            return type() == Type::Object;
         }
 
         bool isArray() const {
-            return value.type() == Type::Array;
+            return type() == Type::Array;
         }
 
         // Object interface //
