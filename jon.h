@@ -164,7 +164,7 @@ namespace jon {
     public:
         // Object interface //
         const jon & operator[](const std::string & key) const {
-            value.assertObjectFirstAccess(key);
+            value.assertTypeObject(key);
             return value.get<obj_t>().at(key);
         }
 
@@ -174,7 +174,7 @@ namespace jon {
         }
 
         const jon & at(const std::string & key) const {
-            value.assertObjectFirstAccess(key);
+            value.assertTypeObject(key);
             return value.get<obj_t>().at(key);
         }
 
