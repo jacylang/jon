@@ -44,7 +44,7 @@ namespace jon::val {
         Int(const Token & token) : Value(Type::Int) {
             assert(token.kind == TokenKind::DecInt or token.kind == TokenKind::HexInt or
                    token.kind == TokenKind::OctoInt or token.kind == TokenKind::BinInt);
-            val = std::stoull(token.val, nullptr);
+            val = std::stoull(token.val, nullptr, token.intBase());
         }
 
         int_t val;
