@@ -141,18 +141,25 @@ namespace jon {
                 rootBraced = skipOpt(TokenKind::LBrace);
             }
 
+            bool first = true;
             ast::Object::Entries entries;
             while (not eof()) {
+                if (first) {
+                    first = false;
+                } else {
+                    skipSep();
+                }
+
                 auto key = ast::Ident {
                     skip(TokenKind::String, "key", true).val
                 };
                 skip(TokenKind::Colon, "`:` delimiter", true);
                 auto val = parseValue();
 
-                skipSep();
-
                 entries.emplace_back(ast::KeyValue{std::move(key), std::move(val)});
             }
+
+            skipOptSep(); // Trailing separator
 
             if (not root or rootBraced) {
                 skip(TokenKind::RBrace, "closing `}`", false);
@@ -176,7 +183,7 @@ namespace jon {
                 values.emplace_back(parseValue());
             }
 
-            skipOptSep();
+            skipOptSep(); // Trailing separator
 
             skip(TokenKind::RBracket, "Closing `]`", false);
 
