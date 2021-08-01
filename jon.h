@@ -74,6 +74,11 @@ namespace jon {
                 assertType(Type::Object, mstr("cannot access property ", key, " of ", typeStr()));
             }
 
+            template<class T>
+            T & get() {
+                return std::get<T>(v);
+            }
+
             std::string typeStr() const {
                 switch (t) {
                     case Type::Null: {
