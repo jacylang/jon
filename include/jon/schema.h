@@ -11,6 +11,13 @@ namespace jon {
             return errors.size() > 0;
         }
 
+        friend std::ostream & operator<<(std::ostream & os, const ValidationResult & result) {
+            for (const auto & error : result.errors) {
+                os << error << "\n"
+            }
+            return os;
+        }
+
     private:
         std::vector<std::string> errors;
     };
