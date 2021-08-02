@@ -10,7 +10,8 @@ namespace jon {
         ~Schema() = default;
 
         void validate(const jon & value, const jon & schema) {
-            std::string type = schema.at("type").get<jon::str_t>();
+            std::string type = schema.at("type").check(jon::Type::String).get<jon::str_t>();
+            
         }
     };
 }

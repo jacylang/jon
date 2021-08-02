@@ -255,7 +255,7 @@ namespace jon {
             return value.type();
         }
 
-        auto check(Type expectedType, const std::string & errorMsg) const noexcept {
+        auto check(Type expectedType) const noexcept {
             if (type() != expectedType) {
                 throw std::runtime_error(mstr("`jon::get` expected type ", typeStr(expectedType), " got ", value.typeStr()));
             }
