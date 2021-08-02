@@ -46,16 +46,18 @@ namespace jon {
         using pos_t = size_t;
         using len_t = size_t;
 
-        pos_t pos;
-        len_t len;
+        Span(pos_t pos, len_t len) : pos(pos), len(len) {}
+
+        const pos_t pos;
+        const len_t len;
     };
 
     struct Token {
-        Token(TokenKind kind, const std::string & val, const Span & span) : kind(kind), val(val) {}
+        Token(TokenKind kind, const std::string & val, const Span & span) : kind(kind), val(val), span(span) {}
 
-        TokenKind kind;
-        std::string val;
-        Span span;
+        const TokenKind kind;
+        const std::string val;
+        const Span span;
 
         std::string toString() const {
             switch (kind) {
