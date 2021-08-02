@@ -588,7 +588,10 @@ namespace jon {
                     if (props.find(entry.first) == props.end()) {
                         result[entry.first] = jon {jon::str_t {"Additional property"}};
                     } else {
-                        result[entry.first] = entry.second.validate(props.at(entry.first));
+                        const auto & entryValidation = entry.second.validate(props.at(entry.first));
+                        if (not entryValidation.isNull()) {
+                            result[entry.first] = entryValidation;
+                        }
                         checkedProps.emplace_back(entry.first);
                     }
                 }
