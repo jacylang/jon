@@ -194,15 +194,21 @@ at(key).get<T>()
 ##### `jon::jon::dump`
 
 ```c++
-std::string dump(const Indent & indent = {"", -1}) const;
-std::string dump(const std::string & indentStr) const;
+(1) std::string dump(const Indent & indent = {"", -1}) const;
+(2) std::string dump(const std::string & indentStr) const;
+(3) std::string dump(uint16_t spaceSize) const;
 ```
 
 Converts JON value to string.
-Second variant (with `indentStr`) is a shortcut for first one, and is an
- equivalent to:
+
+(2) is an equivalent to:
 ```c++
 dump(Indent {indentStr, 0});
+```
+
+(3) is an equivalent to:
+```c++
+dump(Indent {std::string(spaceSize, ' '), 0});
 ```
 
 By default, `dump` returns escaped string, if no indent provided and
