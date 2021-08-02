@@ -313,13 +313,13 @@ namespace jon {
         }
 
         template<class T>
-        const jon & at(const str_t & key) const {
+        const T & at(const str_t & key) const {
             value.assertTypeObject(key);
             return value.get<obj_t>().at(key).get<T>();
         }
 
         template<class T>
-        jon & at(const str_t & key) {
+        T & at(const str_t & key) {
             value.assertObjectFirstAccess(key);
             return value.get<obj_t>().at(key).get<T>();
         }
