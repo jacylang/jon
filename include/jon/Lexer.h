@@ -212,8 +212,13 @@ namespace jon {
         }
 
         template<class ...Args>
-        bool isAnyOf(char c, Args && ...chars) {
+        bool isCharAnyOf(char c, Args && ...chars) {
             return (... or (c == chars));
+        }
+
+        bool isNextNonContinue(char c) {
+            return eof()
+                or isCharAnyOf(lookup(), ':', ',', ' ', '{', '}', '[', ']');
         }
 
         template<class ...Args>
@@ -478,7 +483,7 @@ namespace jon {
                 return;
             }
 
-            if (isSeq('n', 'u', 'l', 'l')) {
+            if (isSeq('n', 'u', 'l', 'l') and isCharAnyOf(lookup(), ':', '{', '}', '')) {
                 addTokenAdvance(TokenKind::Null, 4);
                 return;
             }
