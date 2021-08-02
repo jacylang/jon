@@ -507,7 +507,8 @@ namespace jon {
             tokens.emplace_back(kind, val, Span {tokenPos, val.size()});
         }
 
-        void addToken(TokenKind kind, Span::len_t len) {
+        void addTokenAdvance(TokenKind kind, Span::len_t len) {
+            advance(len);
             tokens.emplace_back(kind, "", Span {tokenPos, len});
         }
 
