@@ -26,12 +26,13 @@ namespace jon {
                 const auto & stringValue = value.get<jon::str_t>();
                 
                 bool status = true;
-                if (schema.has("maxLen")) {
-                    status &= stringValue.size() <= schema.at<jon::int_t>("maxLen");
-                }
-
+                
                 if (schema.has("minLen")) {
                     status &= stringValue.size() >= schema.at<jon::int_t>("minLen");
+                }
+
+                if (schema.has("maxLen")) {
+                    status &= stringValue.size() <= schema.at<jon::int_t>("maxLen");
                 }
 
                 return status;
@@ -41,12 +42,13 @@ namespace jon {
                 const auto & arrayValue = value.get<jon::arr_t>();
 
                 bool status = true;
-                if (schema.has("maxSize")) {
-                    status &= arrayValue.size() <= schema.at<jon::int_t>("maxSize");
-                }
 
                 if (schema.has("minSize")) {
                     status &= arrayValue.size() >= schema.at<jon::int_t>("minSize");
+                }
+
+                if (schema.has("maxSize")) {
+                    status &= arrayValue.size() <= schema.at<jon::int_t>("maxSize");
                 }
 
                 const auto & itemsSchema = schema.at("items");
