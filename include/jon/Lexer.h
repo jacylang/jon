@@ -222,7 +222,7 @@ namespace jon {
 
         template<class ...Args>
         bool isAnyOf(Args && ...chars) {
-            return (... or is(chars));
+            return isCharAnyOf(peek(), std::forward<Args>(chars)...);
         }
 
         bool isHidden() {
