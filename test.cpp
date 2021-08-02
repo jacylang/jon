@@ -3,16 +3,17 @@
 int main(const int argc, const char ** argv) {
     using namespace jon::literal;
 
-    auto val = R"('asdsadasdsasddddddddddddddddddddddddddd
+    auto val = R"(
+        hello: 'world'
     )"_jon;
 
-    auto schema = R"(
-        type: 'object'
-        props: {
-        }
-    )"_jon;
+//    auto schema = R"(
+//        type: 'object'
+//        props: {
+//        }
+//    )"_jon;
 
-    std::cout << val.validate(schema).stringify("  ");
+//    std::cout << val.validate(schema).stringify("  ");
 
     return 0;
 }

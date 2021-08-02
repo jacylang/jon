@@ -215,14 +215,15 @@ namespace jon {
         // Errors //
         void expectedError(const std::string & expected) {
             // TODO: Token to string
-            throw std::runtime_error(mstr("Expected ", expected, ", got ", peek().toString()));
+            error(mstr("Expected ", expected, ", got ", peek().toString()));
         }
 
         void error(const std::string & msg) {
+            size_t errorIndex = index;
             size_t sliceTo = index;
             while (not eof()) {
-                sliceTo = index;
                 if (is(TokenKind::NL)) {
+                    sliceTo = index;
                     break;
                 }
                 advance();
@@ -230,7 +231,8 @@ namespace jon {
 
             const auto & lastNlPos = tokens.at(lastNl).span.pos;
             const auto & line = source.substr(lastNlPos, tokens.at(sliceTo).span.pos - lastNlPos);
-            const auto col = peek().span.pos - lastNlPos;
+            const auto col = tokens.at(errorIndex).span.pos - lastNlPos;
+
             std::string pointLine;
             if (msg.size() + 2 < col) {
                 pointLine = std::string(col - msg.size() - 1, ' ') + msg + " ^";
