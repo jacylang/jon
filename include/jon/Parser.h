@@ -2,6 +2,7 @@
 #define JON_PARSER_H
 
 #include "Lexer.h"
+#include "Printer.h"
 #include "ast.h"
 
 namespace jon {
@@ -16,7 +17,11 @@ namespace jon {
             this->source = source;
 
             Lexer lexer;
+
+            Printer printer;
             tokens = lexer.lex(source);
+
+            printer.printTokens(tokens);
 
             return parseObject(true);
         }
@@ -229,9 +234,13 @@ namespace jon {
                 advance();
             }
 
+            std::cout << sliceTo << " " << index;
+
             const auto & lastNlPos = tokens.at(lastNl).span.pos;
             const auto & line = source.substr(lastNlPos, tokens.at(sliceTo).span.pos - lastNlPos);
             const auto col = tokens.at(errorIndex).span.pos - lastNlPos;
+
+            std::cout << mstr(lastNlPos, " ", lastNl, " ", col);
 
             std::string pointLine;
             if (msg.size() + 2 < col) {
