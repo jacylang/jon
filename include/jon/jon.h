@@ -216,7 +216,7 @@ namespace jon {
             return false;
         }
 
-        bool contains(const str_t & key) const noexcept {
+        bool has(const str_t & key) const noexcept {
             if (isObject()) {
                 const auto & obj = get<obj_t>();
                 return obj.find(key) != obj.end();
