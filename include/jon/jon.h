@@ -390,6 +390,10 @@ namespace jon {
             return dump(Indent{indentStr, 0});
         }
 
+        std::string dump(uint16_t spaceSize) const {
+            return dump(Indent{std::string(spaceSize, ' '), 0});
+        }
+
         std::string dump(const Indent & indent = {"", -1}) const {
             bool pretty = indent.size != -1;
 
