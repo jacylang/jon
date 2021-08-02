@@ -22,6 +22,14 @@ namespace jon {
                 return false;
             }
 
+            if (expectedType == jon::Type::String) {
+                const auto & stringValue = value.get<jon::str_t>();
+                
+                bool status = true;
+                if (schema.has("maxLen")) {
+                    status &= stringValue.size() <= schema.at("maxLen").get<jon::int_t>();
+                }
+            }
         }
 
     private:
