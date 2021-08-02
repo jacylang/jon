@@ -49,6 +49,12 @@ namespace jon {
                     status &= arrayValue.size() >= schema.at<jon::int_t>("minSize");
                 }
 
+                const auto & itemsSchema = schema.at("items");
+
+                for (const auto & value : arrayValue) {
+                    status &= validate(value, itemsSchema);
+                }
+
                 return status;
             }
         }
