@@ -527,7 +527,20 @@ namespace jon {
                 got = mstr("`", peek(), "`");
             }
 
-            throw std::runtime_error(mstr("Expected ", msg, ", got ", got));
+            size_t sliceTo{0};
+            while (not eof()) {
+                sliceTo = index;
+                if (isNL()) {
+                    break;
+                }
+            }
+
+            const auto & line = source.substr(lastNl, sliceTo - lastNl);
+            const auto & pointLine = mstr("Expected ", std::string(' ', col), "^", ", got ", got);
+
+            throw std::runtime_error(
+                mstr(line, "\n", pointLine)
+            );
         }
     };
 }
