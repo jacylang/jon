@@ -10,9 +10,10 @@ namespace jon {
         Parser() {}
         ~Parser() = default;
 
-        ast::value_ptr parse(TokenStream && tokens) {
-            this->tokens = tokens;
+        ast::value_ptr parse(const std::string & source) {
             this->index = 0;
+            Lexer lexer;
+            tokens = lexer.lex(source);
 
             return parseObject(true);
         }

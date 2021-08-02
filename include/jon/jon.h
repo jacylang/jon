@@ -189,13 +189,11 @@ namespace jon {
         }
 
         static jon parse(const str_t & source) {
-            Lexer lexer;
             Parser parser;
 
-            auto tokens = lexer.lex(source);
-            auto ast = parser.parse(std::move(tokens));
-
-            return jon {fromAst(std::move(ast))};
+            return jon {
+                fromAst(parser.parse(source))
+            };
         }
 
         // Common methods //
