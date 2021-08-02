@@ -503,8 +503,12 @@ namespace jon {
         // Tokens //
         TokenStream tokens;
 
-        void addToken(TokenKind kind, Span::len_t len, const std::string & val = "") {
-            tokens.emplace_back(kind, val, Span {tokenPos, len});
+        void addToken(TokenKind kind, const std::string & val) {
+            tokens.emplace_back(kind, val, Span {tokenPos, val.size()});
+        }
+
+        void addToken(TokenKind kind, Span::len_t len) {
+            tokens.emplace_back(kind, "", Span {tokenPos, len});
         }
 
         // Errors //
