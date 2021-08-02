@@ -55,6 +55,7 @@ namespace jon {
 
         TokenKind kind;
         std::string val;
+        Span span;
 
         std::string toString() const {
             switch (kind) {

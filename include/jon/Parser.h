@@ -217,10 +217,6 @@ namespace jon {
             // TODO: Token to string
             throw std::runtime_error(mstr("Expected ", expected, ", got ", peek().toString()));
         }
-
-        void error(const std::string & msg) {
-
-        }
     };
 }
 
