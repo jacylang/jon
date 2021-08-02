@@ -65,17 +65,23 @@ namespace jon {
             } else if (expectedType == jon::Type::String) {
                 const auto & stringValue = value.get<jon::str_t>();
 
-                bool status = true;
-
                 if (schema.has("minLen")) {
-                    status &= stringValue.size() >= schema.at<jon::int_t>("minLen");
+                    auto min = schema.at<jon::int_t>("minLen");
+                    if (stringValue.size() < min) {
+                        return jon {
+                            mstr("Invalid string size: ", stringValue.size(), " is less than ", min)
+                        };
+                    }
                 }
 
                 if (schema.has("maxLen")) {
-                    status &= stringValue.size() <= schema.at<jon::int_t>("maxLen");
+                    auto max = schema.at<jon::int_t>("maxLen");
+                    if (stringValue.size() > max) {
+                        return jon {
+                            mstr("Invalid string size: ", stringValue.size(), " is greater than ", max)
+                        };
+                    }
                 }
-
-                return status;
             } else if (expectedType == jon::Type::Array) {
                 const auto & arrayValue = value.get<jon::arr_t>();
 
