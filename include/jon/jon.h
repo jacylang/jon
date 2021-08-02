@@ -47,15 +47,7 @@ namespace jon {
         }
 
         std::string typeStr() const {
-            switch (type()) {
-                case Type::Null: return "null";
-                case Type::Bool: return "boolean";
-                case Type::Int: return "integer";
-                case Type::Float: return "float";
-                case Type::String: return "string";
-                case Type::Object: return "object";
-                case Type::Array: return "array";
-            }
+            return typeStr(type());
         }
 
     private:
