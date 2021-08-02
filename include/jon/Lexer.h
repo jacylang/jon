@@ -43,12 +43,15 @@ namespace jon {
     };
 
     struct Span {
-        size_t pos;
-        size_t len;
+        using pos_t = size_t;
+        using len_t = size_t;
+
+        pos_t pos;
+        len_t len;
     };
 
     struct Token {
-        Token(TokenKind kind, const std::string & val) : kind(kind), val(val) {}
+        Token(TokenKind kind, const std::string & val, const Span & span) : kind(kind), val(val) {}
 
         TokenKind kind;
         std::string val;
@@ -141,9 +144,11 @@ namespace jon {
             this->tokens.clear();
 
             while (not eof()) {
+                tokenPos = index;
                 lexCurrent();
             }
 
+            tokenPos = index;
             addToken(TokenKind::Eof);
 
             return std::move(tokens);
@@ -153,6 +158,7 @@ namespace jon {
         std::string source;
 
         size_t index;
+        Span::pos_t tokenPos;
 
         char peek() {
             return source.at(index);
@@ -497,8 +503,8 @@ namespace jon {
         // Tokens //
         TokenStream tokens;
 
-        void addToken(TokenKind kind, const std::string & val = "") {
-            tokens.emplace_back(kind, val);
+        void addToken(TokenKind kind, Span::len_t len, const std::string & val = "") {
+            tokens.emplace_back(kind, val, Span {tokenPos, len});
         }
 
         // Errors //
