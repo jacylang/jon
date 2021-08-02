@@ -142,6 +142,7 @@ namespace jon {
             this->source = source;
             index = 0;
             lastNl = 0;
+            col = 0;
             tokens.clear();
 
             while (not eof()) {
@@ -158,8 +159,9 @@ namespace jon {
     private:
         std::string source;
 
-        size_t index;
-        size_t lastNl;
+        size_t index{0};
+        size_t lastNl{0};
+        uint16_t col{0};
         Span::pos_t tokenPos;
 
         char peek() {
@@ -168,7 +170,15 @@ namespace jon {
 
         char advance(uint8_t dist = 1) {
             auto cur = peek();
-            index += dist;
+            for (uint8_t i = 0; i < dist; i++) {
+                if (isNL()) {
+                    lastNl = index;
+                    col = 0;
+                } else {
+                    col++;
+                }
+                advance();
+            }
             if (eof()) {
                 return '\0';
             }
