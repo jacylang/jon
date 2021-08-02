@@ -4,7 +4,7 @@ int main(const int argc, const char ** argv) {
     using namespace jon::literal;
 
     auto val = R"(
-        hello: 'world'
+        hello: '1234567890'
     )"_jon;
 
     auto schema = R"(
@@ -12,6 +12,8 @@ int main(const int argc, const char ** argv) {
         props: {
             hello: {
                 type: 'string'
+                minLen: 10
+                nullable: true
             }
         }
     )"_jon;

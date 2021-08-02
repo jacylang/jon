@@ -212,6 +212,11 @@ namespace jon {
         }
 
         template<class ...Args>
+        bool isAnyOf(char c, Args && ...chars) {
+            return (... or (c == chars));
+        }
+
+        template<class ...Args>
         bool isAnyOf(Args && ...chars) {
             return (... or is(chars));
         }
