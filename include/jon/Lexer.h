@@ -516,7 +516,7 @@ namespace jon {
 
         // Errors //
         void unexpectedToken() {
-            throw std::runtime_error(mstr("Unexpected token '", peek(), "'"));
+            error(mstr("Unexpected token '", peek(), "'"));
         }
 
         void expectedError(const std::string & expected) {
@@ -527,6 +527,10 @@ namespace jon {
                 got = mstr("`", peek(), "`");
             }
 
+            error(mstr("Expected ", expected, ", got ", got));
+        }
+
+        void error(const std::string & msg) {
             size_t sliceTo = index;
             while (not eof()) {
                 sliceTo = index;
@@ -535,8 +539,6 @@ namespace jon {
                 }
                 advance();
             }
-
-            const auto msg = mstr("Expected ", expected, ", got ", got);
 
             const auto & line = source.substr(lastNl, sliceTo - lastNl);
             std::string pointLine;
