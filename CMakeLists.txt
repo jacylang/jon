@@ -1,6 +1,15 @@
 cmake_minimum_required(VERSION 3.16)
-project(jon)
 
+project(jon VERSION 0.0.1 LANGUAGES CXX)
+
+### Target
+set(JON_TARGET_NAME ${PROJECT_NAME})
+
+add_library(${PROJECT_NAME} INTERFACE)
+add_library(${PROJECT_NAME}::${JON_TARGET_NAME} ALIAS ${JON_TARGET_NAME})
+
+
+### Compiler flags
 set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_CXX_FLAGS_DEBUG "-g -Og")
