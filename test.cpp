@@ -11,7 +11,7 @@ int main(const int argc, const char ** argv) {
         type: 'object'
         props: {
             hello: {
-                type: 'string'
+                type: 'int'
             }
         }
     )"_jon;
