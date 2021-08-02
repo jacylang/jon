@@ -7,13 +7,17 @@ namespace jon {
     struct ValidationResult {
         ValidationResult(std::vector<std::string> && errors) : errors(std::move(errors)) {}
 
-        bool err() const {
+        bool isErr() const {
             return errors.size() > 0;
+        }
+
+        bool isOk() const {
+            return errors.size() == 0;
         }
 
         friend std::ostream & operator<<(std::ostream & os, const ValidationResult & result) {
             for (const auto & error : result.errors) {
-                os << error << "\n"
+                os << error << "\n";
             }
             return os;
         }
