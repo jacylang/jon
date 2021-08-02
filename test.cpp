@@ -7,13 +7,16 @@ int main(const int argc, const char ** argv) {
         hello: 'world'
     )"_jon;
 
-//    auto schema = R"(
-//        type: 'object'
-//        props: {
-//        }
-//    )"_jon;
+    auto schema = R"(
+        type: 'object'
+        props: {
+            hello: {
+                type: 'string'
+            }
+        }
+    )"_jon;
 
-//    std::cout << val.validate(schema).stringify("  ");
+    std::cout << val.validate(schema).stringify("  ");
 
     return 0;
 }

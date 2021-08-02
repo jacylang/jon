@@ -17,11 +17,7 @@ namespace jon {
             this->source = source;
 
             Lexer lexer;
-
-            Printer printer;
             tokens = lexer.lex(source);
-
-            printer.printTokens(tokens);
 
             return parseObject(true);
         }
