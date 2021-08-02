@@ -56,9 +56,9 @@ namespace jon {
 
             if (expectedType == jon::Type::String) {
                 const auto & stringValue = value.get<jon::str_t>();
-                
+
                 bool status = true;
-                
+
                 if (schema.has("minLen")) {
                     status &= stringValue.size() >= schema.at<jon::int_t>("minLen");
                 }
@@ -106,13 +106,18 @@ namespace jon {
                 }
 
                 const auto & props = schema.at<jon::obj_t>("props");
-                std::vector<std::string> uncheckedProps{};
+                std::vector<std::string> checkedProps;
                 for (const auto & entry : objectValue) {
                     if (props.find(entry.first) == props.end()) {
                         status = false;
                     } else {
                         status &= validate(entry.second, props.at(entry.first));
+                        checkedProps.emplace_back(entry.first);
                     }
+                }
+
+                if (checkedProps.size() != props.size()) {
+                    return false;
                 }
 
                 return status;
