@@ -85,23 +85,33 @@ namespace jon {
             } else if (expectedType == jon::Type::Array) {
                 const auto & arrayValue = value.get<jon::arr_t>();
 
-                bool status = true;
+                jon result {jon::arr_t {}};
+                const auto & itemsSchema = schema.at("items");
+                for (const auto & value : arrayValue) {
+                    result[0] = validate(value, itemsSchema);
+                }
+
+                if (not result.empty()) {
+                    return result;
+                }
 
                 if (schema.has("minSize")) {
-                    status &= arrayValue.size() >= schema.at<jon::int_t>("minSize");
+                    auto min = schema.at<jon::int_t>("minSize");
+                    if (arrayValue.size() < min) {
+                        return jon {
+                            mstr("Invalid array size: ", arrayValue.size(), " is less than ", min)
+                        };
+                    }
                 }
 
                 if (schema.has("maxSize")) {
-                    status &= arrayValue.size() <= schema.at<jon::int_t>("maxSize");
+                    auto max = schema.at<jon::int_t>("maxSize");
+                    if (arrayValue.size() > max) {
+                        return jon {
+                            mstr("Invalid array size: ", arrayValue.size(), " is greater than ", max)
+                        };
+                    }
                 }
-
-                const auto & itemsSchema = schema.at("items");
-
-                for (const auto & value : arrayValue) {
-                    status &= validate(value, itemsSchema);
-                }
-
-                return status;
             } else if (expectedType == jon::Type::Object) {
                 const auto & objectValue = value.get<jon::obj_t>();
 
