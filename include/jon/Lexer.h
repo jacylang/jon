@@ -42,6 +42,11 @@ namespace jon {
         String,
     };
 
+    struct Span {
+        size_t pos;
+        size_t len;
+    };
+
     struct Token {
         Token(TokenKind kind, const std::string & val) : kind(kind), val(val) {}
 
