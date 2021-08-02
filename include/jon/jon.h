@@ -312,6 +312,18 @@ namespace jon {
             return value.get<obj_t>().at(key);
         }
 
+        template<class T>
+        const jon & at(const str_t & key) const {
+            value.assertTypeObject(key);
+            return value.get<obj_t>().at(key).get<T>();
+        }
+
+        template<class T>
+        jon & at(const str_t & key) {
+            value.assertObjectFirstAccess(key);
+            return value.get<obj_t>().at(key).get<T>();
+        }
+
         // Array interface //
     public:
         const jon & operator[](size_t idx) const {
