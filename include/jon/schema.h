@@ -91,6 +91,22 @@ namespace jon {
 
                 return status;
             }
+
+            if (expectedType == jon::Type::Object) {
+                const auto & objectValue = value.get<jon::obj_t>();
+
+                bool status = true;
+
+                if (schema.has("minProps")) {
+                    status &= objectValue.size() >= schema.at<jon::int_t>("minProps");
+                }
+
+                if (schema.has("maxProps")) {
+                    status &= objectValue.size() <= schema.at<jon::int_t>("maxProps");
+                }
+
+                return status;
+            }
         }
 
     private:
