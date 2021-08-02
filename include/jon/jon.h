@@ -15,6 +15,7 @@
 
 namespace jon {
     class jon {
+    public:
         using null_t = std::monostate;
         using bool_t = bool;
         using int_t = int64_t;
@@ -23,6 +24,7 @@ namespace jon {
         using obj_t = std::map<str_t, jon>;
         using arr_t = std::vector<jon>;
 
+    private:
         enum class Type {
             Null,
             Bool,
