@@ -177,7 +177,7 @@ namespace jon {
                 } else {
                     col++;
                 }
-                advance();
+                index++;
             }
             if (eof()) {
                 return '\0';
@@ -527,12 +527,13 @@ namespace jon {
                 got = mstr("`", peek(), "`");
             }
 
-            size_t sliceTo{0};
+            size_t sliceTo = index;
             while (not eof()) {
                 sliceTo = index;
                 if (isNL()) {
                     break;
                 }
+                advance();
             }
 
             const auto & line = source.substr(lastNl, sliceTo - lastNl);

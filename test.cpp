@@ -3,12 +3,7 @@
 int main(const int argc, const char ** argv) {
     using namespace jon::literal;
 
-    auto val = R"(
-        hello: {
-            hi: {
-                hi: 'killurself'
-            }
-        }
+    auto val = R"('asdsadasdsa
     )"_jon;
 
     auto schema = R"(
