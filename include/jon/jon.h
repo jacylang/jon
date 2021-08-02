@@ -570,6 +570,8 @@ namespace jon {
                         };
                     }
                 }
+
+                return result.empty() ? jon {} : result;
             } else if (expectedType == jon::Type::Object) {
                 const auto & objectValue = value.get<jon::obj_t>();
 
@@ -613,6 +615,8 @@ namespace jon {
                         };
                     }
                 }
+
+                return result.empty() ? jon {} : result;
             }
 
             return jon {};
