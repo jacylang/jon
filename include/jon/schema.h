@@ -9,19 +9,19 @@ namespace jon {
         Schema() = default;
         ~Schema() = default;
 
-        ValidationResult validate(const jon & value, const jon & schema) {
+        jon validate(const jon & value, const jon & schema) {
             const auto & expectedTypeName = schema.at<jon::str_t>("type");
             const auto expectedType = typeNames.at(expectedTypeName);
             const auto nullable = schema.has("nullable") and schema["nullable"].get<jon::bool_t>();
 
             if (nullable and value.isNull()) {
-                return {};
+                return jon {};
             }
 
-            ValidationResult result;
-
             if (value.type() != expectedType) {
-                result.push(mstr("Type mismatch: Expected ", jon::typeStr(expectedType), ", got ", value.typeStr()));
+                return jon {
+                    mstr("Type mismatch: Expected ", jon::typeStr(expectedType), ", got ", value.typeStr())
+                };
             } else if (expectedType == jon::Type::Int) {
                 auto intValue = value.get<jon::int_t>();
 
