@@ -152,6 +152,7 @@ namespace jon {
         };
 
     private:
+        Value value;
         jon(Value && value) : value(std::move(value)) {}
 
         // Constructors //
@@ -621,9 +622,6 @@ namespace jon {
 
     private:
         static const std::map<std::string, jon::Type> typeNames;
-
-    private:
-        Value value;
     };
 
     const std::map<std::string, jon::Type> jon::typeNames = {
