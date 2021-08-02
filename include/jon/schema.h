@@ -9,8 +9,14 @@ namespace jon {
         Schema() = default;
         ~Schema() = default;
 
-        void validate(const jon & value, const jon & schema) {
-            std::string typeName = schema.at("type").check(jon::Type::String).get<jon::str_t>();
+        bool validate(const jon & value, const jon & schema) {
+            const auto & typeName = schema.at("type").check(jon::Type::String).get<jon::str_t>();
+            const auto type = typeNames.at(typeName);
+
+            if (value.type() != type) {
+                return false;
+            }
+
 
         }
 
