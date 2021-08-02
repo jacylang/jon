@@ -174,10 +174,10 @@ namespace jon {
             ss << file.rdbuf();
             file.close();
 
-            return fromSource(ss.str());
+            return parse(ss.str());
         }
 
-        static jon fromSource(const str_t & source) {
+        static jon parse(const str_t & source) {
             Lexer lexer;
             Parser parser;
 
@@ -443,7 +443,7 @@ namespace jon {
 
     namespace literal {
         jon operator""_jon(const char * str, std::size_t n) {
-            return jon::fromSource(std::string(str, n));
+            return jon::parse(std::string(str, n));
         }
     }
 }
