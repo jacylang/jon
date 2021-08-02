@@ -4,38 +4,6 @@
 #include "jon.h"
 
 namespace jon {
-    struct ValidationResult {
-        ValidationResult() {}
-        ValidationResult(std::vector<std::string> && errors) : errors(std::move(errors)) {}
-
-        bool isErr() const {
-            return errors.size() > 0;
-        }
-
-        bool isOk() const {
-            return errors.size() == 0;
-        }
-
-        ValidationResult & operator+=(const ValidationResult & other) {
-            errors.insert(errors.end(), other.errors.begin(), other.errors.end());
-        }
-
-        auto push(const std::string & error) {
-            errors.push_back(error);
-            return *this;
-        }
-
-        friend std::ostream & operator<<(std::ostream & os, const ValidationResult & result) {
-            for (const auto & error : result.errors) {
-                os << error << "\n";
-            }
-            return os;
-        }
-
-    private:
-        std::vector<std::string> errors;
-    };
-
     class Schema {
     public:
         Schema() = default;
@@ -57,10 +25,8 @@ namespace jon {
             } else if (expectedType == jon::Type::Int) {
                 auto intValue = value.get<jon::int_t>();
 
-                bool status = true;
-
-                if (schema.has("mini")) {
-                    status &= intValue <= schema.at<jon::int_t>("mini");
+                if (schema.has("mini") and intValue < schema.at<jon::int_t>("mini")) {
+                    result.push(mstr(""))
                 }
 
                 if (schema.has("maxi")) {
