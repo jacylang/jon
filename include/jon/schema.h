@@ -141,15 +141,25 @@ namespace jon {
                 }
 
                 if (schema.has("minProps")) {
-                    status &= objectValue.size() >= schema.at<jon::int_t>("minProps");
+                    auto min = schema.at<jon::int_t>("minProps");
+                    if (objectValue.size() < min) {
+                        return jon {
+                            mstr("Invalid object properties count: ", objectValue.size(), " is less than ", min)
+                        };
+                    }
                 }
 
                 if (schema.has("maxProps")) {
-                    status &= objectValue.size() <= schema.at<jon::int_t>("maxProps");
+                    auto max = schema.at<jon::int_t>("maxProps");
+                    if (objectValue.size() > max) {
+                        return jon {
+                            mstr("Invalid object properties count: ", objectValue.size(), " is greater than ", max)
+                        };
+                    }
                 }
-
-                return status;
             }
+
+            return jon {};
         }
 
     private:
