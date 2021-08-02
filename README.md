@@ -191,21 +191,21 @@ template<class T>
 at(key).get<T>()
 ```
 
-##### `jon::jon::stringify`
+##### `jon::jon::dump`
 
 ```c++
-std::string stringify(const Indent & indent = {"", -1}) const;
-std::string stringify(const std::string & indentStr) const;
+std::string dump(const Indent & indent = {"", -1}) const;
+std::string dump(const std::string & indentStr) const;
 ```
 
 Converts JON value to string.
 Second variant (with `indentStr`) is a shortcut for first one, and is an
  equivalent to:
 ```c++
-stringify(Indent {indentStr, 0});
+dump(Indent {indentStr, 0});
 ```
 
-By default, `stringify` returns escaped string, if no indent provided and
+By default, `dump` returns escaped string, if no indent provided and
  default one chosen.
 `Indent` with `size = -1` means that no indentation will be applied and
  output string won't be prettified.

@@ -11,12 +11,12 @@ int main(const int argc, const char ** argv) {
         type: 'object'
         props: {
             hello: {
-                type: 'int'
+                type: 'string'
             }
         }
     )"_jon;
 
-    std::cout << val.validate(schema).stringify("  ");
+    std::cout << val.validate(schema).dump("  ");
 
     return 0;
 }

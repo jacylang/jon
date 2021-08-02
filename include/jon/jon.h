@@ -386,11 +386,11 @@ namespace jon {
         }
 
     public:
-        std::string stringify(const std::string & indentStr) const {
-            return stringify(Indent {indentStr, 0});
+        std::string dump(const std::string & indentStr) const {
+            return dump(Indent{indentStr, 0});
         }
 
-        std::string stringify(const Indent & indent = {"", -1}) const {
+        std::string dump(const Indent & indent = {"", -1}) const {
             bool pretty = indent.size != -1;
 
             // TODO: Support multi-line strings
@@ -421,7 +421,7 @@ namespace jon {
                         if (pretty) {
                             ss << " ";
                         }
-                        ss << it->second.stringify(indent + 1);
+                        ss << it->second.dump(indent + 1);
 
                         if (it == std::prev(obj.end())) {
                             continue;
@@ -449,7 +449,7 @@ namespace jon {
                         if (pretty) {
                             ss << indent + 1;
                         }
-                        ss << el.stringify(indent + 1);
+                        ss << el.dump(indent + 1);
                         if (pretty) {
                             ss << "\n";
                         } else {
