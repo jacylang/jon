@@ -152,7 +152,7 @@ namespace jon {
             }
 
             tokenPos = index;
-            addTokenAdvance(TokenKind::Eof, 1);
+            addToken(TokenKind::Eof, 0);
 
             return std::move(tokens);
         }
@@ -508,6 +508,10 @@ namespace jon {
 
         void addToken(TokenKind kind, const std::string & val) {
             tokens.emplace_back(kind, val, Span {tokenPos, val.size()});
+        }
+
+        void addToken(TokenKind kind, Span::len_t len) {
+            tokens.emplace_back(kind, "", Span {tokenPos, len});
         }
 
         void addTokenAdvance(TokenKind kind, Span::len_t len) {
