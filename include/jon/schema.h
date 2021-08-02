@@ -33,6 +33,23 @@ namespace jon {
                 if (schema.has("minLen")) {
                     status &= stringValue.size() >= schema.at<jon::int_t>("minLen");
                 }
+
+                return status;
+            }
+
+            if (expectedType == jon::Type::Array) {
+                const auto & arrayValue = value.get<jon::arr_t>();
+
+                bool status = true;
+                if (schema.has("maxSize")) {
+                    status &= arrayValue.size() <= schema.at<jon::int_t>("maxSize");
+                }
+
+                if (schema.has("minSize")) {
+                    status &= arrayValue.size() >= schema.at<jon::int_t>("minSize");
+                }
+
+                return status;
             }
         }
 
