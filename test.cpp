@@ -18,5 +18,7 @@ int main(const int argc, const char ** argv) {
         }
     )"_jon;
 
+    std::cout << val.validate(schema);
+
     return 0;
 }

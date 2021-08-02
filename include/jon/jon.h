@@ -468,12 +468,12 @@ namespace jon {
         }
 
         // Schema //
-        jon validate(const jon & value, const jon & schema) {
+        jon validate(const jon & schema) const {
             const auto & expectedTypeName = schema.at<jon::str_t>("type");
             const auto expectedType = typeNames.at(expectedTypeName);
             const auto nullable = schema.has("nullable") and schema["nullable"].get<jon::bool_t>();
 
-            if (nullable and value.isNull()) {
+            if (nullable and isNull()) {
                 return jon {};
             }
 
@@ -548,7 +548,7 @@ namespace jon {
                 const auto & itemsSchema = schema.at("items");
                 size_t index{0};
                 for (const auto & el : arrayValue) {
-                    result[index++] = validate(el, itemsSchema);
+                    result[index++] = el.validate(itemsSchema);
                 }
 
                 if (not result.empty()) {
@@ -584,7 +584,7 @@ namespace jon {
                     if (props.find(entry.first) == props.end()) {
                         result[entry.first] = jon {jon::str_t {"Additional property"}};
                     } else {
-                        result[entry.first] = validate(entry.second, props.at(entry.first));
+                        result[entry.first] = entry.second.validate(props.at(entry.first));
                         checkedProps.emplace_back(entry.first);
                     }
                 }
