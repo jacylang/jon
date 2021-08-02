@@ -5,6 +5,7 @@
 
 namespace jon {
     struct ValidationResult {
+        ValidationResult() {}
         ValidationResult(std::vector<std::string> && errors) : errors(std::move(errors)) {}
 
         bool isErr() const {
