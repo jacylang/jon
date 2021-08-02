@@ -149,7 +149,7 @@ namespace jon {
             }
 
             tokenPos = index;
-            addToken(TokenKind::Eof);
+            addTokenAdvance(TokenKind::Eof, 1);
 
             return std::move(tokens);
         }
@@ -244,33 +244,27 @@ namespace jon {
                     return lexString();
                 }
                 case ',': {
-                    advance();
-                    addToken(TokenKind::Comma);
+                    addTokenAdvance(TokenKind::Comma, 1);
                     break;
                 }
                 case ':': {
-                    advance();
-                    addToken(TokenKind::Colon);
+                    addTokenAdvance(TokenKind::Colon, 1);
                     break;
                 }
                 case '{': {
-                    advance();
-                    addToken(TokenKind::LBrace);
+                    addTokenAdvance(TokenKind::LBrace, 1);
                     break;
                 }
                 case '}': {
-                    advance();
-                    addToken(TokenKind::RBrace);
+                    addTokenAdvance(TokenKind::RBrace, 1);
                     break;
                 }
                 case '[': {
-                    advance();
-                    addToken(TokenKind::LBracket);
+                    addTokenAdvance(TokenKind::LBracket, 1);
                     break;
                 }
                 case ']': {
-                    advance();
-                    addToken(TokenKind::RBracket);
+                    addTokenAdvance(TokenKind::RBracket, 1);
                     break;
                 }
                 default: {
@@ -455,8 +449,7 @@ namespace jon {
 
         void lexMisc() {
             if (isNL()) {
-                advance();
-                addToken(TokenKind::NL);
+                addTokenAdvance(TokenKind::NL, 1);
                 return;
             }
 
@@ -466,20 +459,17 @@ namespace jon {
             }
 
             if (isSeq('n', 'u', 'l', 'l')) {
-                advance(4);
-                addToken(TokenKind::Null);
+                addTokenAdvance(TokenKind::Null, 4);
                 return;
             }
 
             if (isSeq('f', 'a', 'l', 's', 'e')) {
-                advance(5);
-                addToken(TokenKind::False);
+                addTokenAdvance(TokenKind::False, 5);
                 return;
             }
 
             if (isSeq('t', 'r', 'u', 'e')) {
-                advance(4);
-                addToken(TokenKind::True);
+                addTokenAdvance(TokenKind::True, 4);
                 return;
             }
 
