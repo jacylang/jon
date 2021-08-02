@@ -519,7 +519,7 @@ namespace jon {
             throw std::runtime_error(mstr("Unexpected token '", peek(), "'"));
         }
 
-        void expectedError(const std::string & msg) {
+        void expectedError(const std::string & expected) {
             std::string got;
             if (isNL()) {
                 got = "new line";
@@ -536,11 +536,18 @@ namespace jon {
                 advance();
             }
 
+            const auto msg = mstr("Expected ", expected, ", got ", got);
+
             const auto & line = source.substr(lastNl, sliceTo - lastNl);
-            const auto & pointLine = mstr("Expected ", std::string(' ', col), "^", ", got ", got);
+            std::string pointLine;
+            if (msg.size() + 2 < col) {
+                pointLine = std::string(col - msg.size() - 1, ' ') + msg + " ^";
+            } else {
+                pointLine = std::string(col, ' ') + "^ " + msg;
+            }
 
             throw std::runtime_error(
-                mstr(line, "\n", pointLine)
+                mstr("\n", line, "\n", pointLine)
             );
         }
     };
