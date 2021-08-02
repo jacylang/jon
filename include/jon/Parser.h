@@ -167,7 +167,7 @@ namespace jon {
                     skipSep();
                 }
 
-                if (is(TokenKind::RBrace)) {
+                if (is(TokenKind::RBrace) or eof()) {
                     break;
                 }
 
@@ -203,7 +203,7 @@ namespace jon {
                     skipSep();
                 }
 
-                if (is(TokenKind::RBracket)) {
+                if (is(TokenKind::RBracket) or eof()) {
                     break;
                 }
 
@@ -234,7 +234,7 @@ namespace jon {
                 advance();
             }
 
-            std::cout << sliceTo << " " << index;
+            std::cout << sliceTo << " " << index << std::endl;
 
             const auto & lastNlPos = tokens.at(lastNl).span.pos;
             const auto & line = source.substr(lastNlPos, tokens.at(sliceTo).span.pos - lastNlPos);
