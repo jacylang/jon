@@ -22,6 +22,22 @@ namespace jon {
                 return false;
             }
 
+            if (expectedType == jon::Type::Int) {
+                auto intValue = value.get<jon::int_t>();
+
+                bool status = true;
+                
+                if (schema.has("min")) {
+                    status &= intValue <= schema.at<jon::int_t>("mini");
+                }
+
+                if (schema.has("max")) {
+                    status &= intValue >= schema.at<jon::int_t>("maxi");
+                }
+
+                return status;
+            }
+
             if (expectedType == jon::Type::String) {
                 const auto & stringValue = value.get<jon::str_t>();
                 
