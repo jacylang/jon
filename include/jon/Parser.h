@@ -11,8 +11,10 @@ namespace jon {
         ~Parser() = default;
 
         ast::value_ptr parse(const std::string & source) {
-            this->index = 0;
+            index = 0;
+            lastNl = 0;
             this->source = source;
+
             Lexer lexer;
             tokens = lexer.lex(source);
 
@@ -23,6 +25,7 @@ namespace jon {
         std::string source;
         TokenStream tokens;
         size_t index;
+        size_t lastNl{0};
 
         const Token & peek() const {
             return tokens.at(index);
@@ -57,6 +60,7 @@ namespace jon {
         bool skipNls(bool optional) {
             if (is(TokenKind::NL)) {
                 while (is(TokenKind::NL)) {
+                    lastNl = index;
                     advance();
                 }
                 return true;
@@ -212,6 +216,10 @@ namespace jon {
         void expectedError(const std::string & expected) {
             // TODO: Token to string
             throw std::runtime_error(mstr("Expected ", expected, ", got ", peek().toString()));
+        }
+
+        void error(const std::string & msg) {
+
         }
     };
 }
