@@ -115,7 +115,23 @@ namespace jon {
             } else if (expectedType == jon::Type::Object) {
                 const auto & objectValue = value.get<jon::obj_t>();
 
-                bool status = true;
+                jon result {jon::obj_t {}};
+
+                const auto & props = schema.at<jon::obj_t>("props");
+                std::vector<std::string> checkedProps;
+                for (const auto & entry : objectValue) {
+                    // TODO: additionalProperties
+                    if (props.find(entry.first) == props.end()) {
+                        result[entry.first] = jon {jon::str_t {"Additional property"}};
+                    } else {
+                        result[entry.first] = validate(entry.second, props.at(entry.first));
+                        checkedProps.emplace_back(entry.first);
+                    }
+                }
+
+                if (checkedProps.size() != props.size()) {
+                    
+                }
 
                 if (schema.has("minProps")) {
                     status &= objectValue.size() >= schema.at<jon::int_t>("minProps");
@@ -123,21 +139,6 @@ namespace jon {
 
                 if (schema.has("maxProps")) {
                     status &= objectValue.size() <= schema.at<jon::int_t>("maxProps");
-                }
-
-                const auto & props = schema.at<jon::obj_t>("props");
-                std::vector<std::string> checkedProps;
-                for (const auto & entry : objectValue) {
-                    if (props.find(entry.first) == props.end()) {
-                        status = false;
-                    } else {
-                        status &= validate(entry.second, props.at(entry.first));
-                        checkedProps.emplace_back(entry.first);
-                    }
-                }
-
-                if (checkedProps.size() != props.size()) {
-                    return false;
                 }
 
                 return status;
