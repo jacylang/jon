@@ -27,8 +27,8 @@ namespace jon {
             } else if (expectedType == jon::Type::Int) {
                 auto intValue = value.get<jon::int_t>();
 
-                if (schema.has("mini")) {
-                    auto min = schema.at<jon::int_t>("mini");
+                if (schema.has("minInt")) {
+                    auto min = schema.at<jon::int_t>("minInt");
                     if (intValue < min) {
                         return jon {
                             mstr("Invalid integer size: ", intValue, " is less than ", min)
@@ -36,8 +36,8 @@ namespace jon {
                     }
                 }
 
-                if (schema.has("maxi")) {
-                    auto max = schema.at<jon::int_t>("maxi");
+                if (schema.has("maxInt")) {
+                    auto max = schema.at<jon::int_t>("maxInt");
                     if (intValue > max) {
                         return jon {
                             mstr("Invalid integer size: ", intValue, " is greater than ", max)
@@ -47,8 +47,8 @@ namespace jon {
             } else if (expectedType == jon::Type::Float) {
                 auto floatValue = value.get<jon::float_t>();
 
-                if (schema.has("minf")) {
-                    auto min = schema.at<jon::int_t>("minf");
+                if (schema.has("minFloat")) {
+                    auto min = schema.at<jon::int_t>("minFloat");
                     if (floatValue < min) {
                         return jon {
                             mstr("Invalid float size: ", floatValue, " is less than ", min)
@@ -56,8 +56,8 @@ namespace jon {
                     }
                 }
 
-                if (schema.has("maxf")) {
-                    auto max = schema.at<jon::int_t>("maxf");
+                if (schema.has("maxFloat")) {
+                    auto max = schema.at<jon::int_t>("maxFloat");
                     if (floatValue > max) {
                         return jon {
                             mstr("Invalid float size: ", floatValue, " is greater than ", max)
