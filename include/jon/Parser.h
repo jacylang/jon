@@ -217,6 +217,31 @@ namespace jon {
             // TODO: Token to string
             throw std::runtime_error(mstr("Expected ", expected, ", got ", peek().toString()));
         }
+
+        void error(const std::string & msg) {
+            size_t sliceTo = index;
+            while (not eof()) {
+                sliceTo = index;
+                if (is(TokenKind::NL)) {
+                    break;
+                }
+                advance();
+            }
+
+            const auto & lastNlPos = tokens.at(lastNl).span.pos;
+            const auto & line = source.substr(lastNlPos, tokens.at(sliceTo).span.pos - lastNlPos);
+            const auto col = peek().span.pos - lastNlPos;
+            std::string pointLine;
+            if (msg.size() + 2 < col) {
+                pointLine = std::string(col - msg.size() - 1, ' ') + msg + " ^";
+            } else {
+                pointLine = std::string(col, ' ') + "^ " + msg;
+            }
+
+            throw std::runtime_error(
+                mstr("\n", line, "\n", pointLine)
+            );
+        }
     };
 }
 
