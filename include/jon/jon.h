@@ -59,7 +59,7 @@ namespace jon {
                         break;
                     }
                     case Type::Int: {
-                        v = 0;
+                        v = 0L;
                         break;
                     }
                     case Type::Float: {

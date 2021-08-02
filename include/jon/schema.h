@@ -6,15 +6,12 @@
 namespace jon {
     class Schema {
     public:
-        Schema(jon && schema) : schema(std::move(schema)) {}
+        Schema() = default;
         ~Schema() = default;
 
-        void validate(const jon & value) {
-            
+        void validate(const jon & value, const jon & schema) {
+            std::string type = schema.at("type").get<jon::str_t>();
         }
-
-    private:
-        jon schema;
     };
 }
 
