@@ -26,13 +26,29 @@ namespace jon {
                 auto intValue = value.get<jon::int_t>();
 
                 bool status = true;
-                
-                if (schema.has("min")) {
+
+                if (schema.has("mini")) {
                     status &= intValue <= schema.at<jon::int_t>("mini");
                 }
 
-                if (schema.has("max")) {
+                if (schema.has("maxi")) {
                     status &= intValue >= schema.at<jon::int_t>("maxi");
+                }
+
+                return status;
+            }
+
+            if (expectedType == jon::Type::Float) {
+                auto floatValue = value.get<jon::float_t>();
+
+                bool status = true;
+
+                if (schema.has("minf")) {
+                    status &= floatValue <= schema.at<jon::float_t>("minf");
+                }
+
+                if (schema.has("maxf")) {
+                    status &= floatValue >= schema.at<jon::float_t>("maxf");
                 }
 
                 return status;
