@@ -10,13 +10,17 @@ namespace jon {
         ~Schema() = default;
 
         bool validate(const jon & value, const jon & schema) {
-            const auto & typeName = schema.at("type").check(jon::Type::String).get<jon::str_t>();
-            const auto type = typeNames.at(typeName);
+            const auto & expectedTypeName = schema.at("type").check(jon::Type::String).get<jon::str_t>();
+            const auto expectedType = typeNames.at(expectedTypeName);
+            const auto nullable = schema.has("nullable") and schema["nullable"].get<jon::bool_t>();
 
-            if (value.type() != type) {
-                return false;
+            if (nullable and value.isNull()) {
+                return true;
             }
 
+            if (value.type() != expectedType) {
+                return false;
+            }
 
         }
 
