@@ -1,6 +1,8 @@
 #ifndef JON_SCHEMA_H
 #define JON_SCHEMA_H
 
+#include <algorithm>
+
 #include "jon.h"
 
 namespace jon {
@@ -130,7 +132,12 @@ namespace jon {
                 }
 
                 if (checkedProps.size() != props.size()) {
-                    
+                    for (const auto & prop : props) {
+                        if (std::find(checkedProps.begin(), checkedProps.end(), prop.first) != checkedProps.end()) {
+                            continue;
+                        }
+                        result[prop.first] = jon {jon::str_t {"Missing property"}};
+                    }
                 }
 
                 if (schema.has("minProps")) {
