@@ -16,6 +16,10 @@ namespace jon {
             return errors.size() == 0;
         }
 
+        ValidationResult & operator+=(const ValidationResult & other) {
+            errors.insert(errors.end(), other.errors.begin(), other.errors.end());
+        }
+
         friend std::ostream & operator<<(std::ostream & os, const ValidationResult & result) {
             for (const auto & error : result.errors) {
                 os << error << "\n";
