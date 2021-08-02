@@ -4,6 +4,17 @@
 #include "jon.h"
 
 namespace jon {
+    struct ValidationResult {
+        ValidationResult(std::vector<std::string> && errors) : errors(std::move(errors)) {}
+
+        bool err() const {
+            return errors.size() > 0;
+        }
+
+    private:
+        std::vector<std::string> errors;
+    };
+
     class Schema {
     public:
         Schema() = default;
