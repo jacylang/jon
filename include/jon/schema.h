@@ -25,15 +25,18 @@ namespace jon {
             } else if (expectedType == jon::Type::Int) {
                 auto intValue = value.get<jon::int_t>();
 
-                if (schema.has("mini") and intValue < schema.at<jon::int_t>("mini")) {
-                    result.push(mstr(""))
+                if (schema.has("mini")) {
+                    auto min = intValue < schema.at<jon::int_t>("mini");
+                    if (intValue < min) {
+                        return jon {
+                            mstr("Invalid integer size: ", intValue, " is less than ", min)
+                        };
+                    }
                 }
 
-                if (schema.has("maxi")) {
-                    status &= intValue >= schema.at<jon::int_t>("maxi");
-                }
+                if (schema.has("maxi") and intValue > schema.at<jon::int_t>("maxi")) {
 
-                return status;
+                }
             } else if (expectedType == jon::Type::Float) {
                 auto floatValue = value.get<jon::float_t>();
 

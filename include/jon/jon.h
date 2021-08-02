@@ -46,7 +46,7 @@ namespace jon {
             }
         }
 
-        std::string typeStr() {
+        std::string typeStr() const {
             switch (type()) {
                 case Type::Null: return "null";
                 case Type::Bool: return "boolean";
