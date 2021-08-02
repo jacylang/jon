@@ -24,7 +24,6 @@ namespace jon {
         using obj_t = std::map<str_t, jon>;
         using arr_t = std::vector<jon>;
 
-    private:
         enum class Type {
             Null,
             Bool,
@@ -35,6 +34,7 @@ namespace jon {
             Array,
         };
 
+    private:
         struct Value {
             explicit Value() = default;
             explicit Value(bool_t v) noexcept : v(v), t(Type::Bool) {}
