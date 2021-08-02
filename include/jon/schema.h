@@ -90,8 +90,8 @@ namespace jon {
                 jon result {jon::arr_t {}};
                 const auto & itemsSchema = schema.at("items");
                 size_t index{0};
-                for (const auto & value : arrayValue) {
-                    result[index++] = validate(value, itemsSchema);
+                for (const auto & el : arrayValue) {
+                    result[index++] = validate(el, itemsSchema);
                 }
 
                 if (not result.empty()) {
