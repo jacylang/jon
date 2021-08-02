@@ -27,7 +27,11 @@ namespace jon {
                 
                 bool status = true;
                 if (schema.has("maxLen")) {
-                    status &= stringValue.size() <= schema.at("maxLen").get<jon::int_t>();
+                    status &= stringValue.size() <= schema.at<jon::int_t>("maxLen");
+                }
+
+                if (schema.has("minLen")) {
+                    status &= stringValue.size() >= schema.at<jon::int_t>("minLen");
                 }
             }
         }
