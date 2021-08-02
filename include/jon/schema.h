@@ -20,6 +20,11 @@ namespace jon {
             errors.insert(errors.end(), other.errors.begin(), other.errors.end());
         }
 
+        auto push(const std::string & error) {
+            errors.push_back(error);
+            return *this;
+        }
+
         friend std::ostream & operator<<(std::ostream & os, const ValidationResult & result) {
             for (const auto & error : result.errors) {
                 os << error << "\n";
