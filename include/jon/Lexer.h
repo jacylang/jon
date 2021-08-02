@@ -140,8 +140,9 @@ namespace jon {
 
         TokenStream lex(const std::string & source) {
             this->source = source;
-            this->index = 0;
-            this->tokens.clear();
+            index = 0;
+            lastNl = 0;
+            tokens.clear();
 
             while (not eof()) {
                 tokenPos = index;
@@ -158,6 +159,7 @@ namespace jon {
         std::string source;
 
         size_t index;
+        size_t lastNl;
         Span::pos_t tokenPos;
 
         char peek() {
@@ -514,6 +516,7 @@ namespace jon {
             } else {
                 got = mstr("`", peek(), "`");
             }
+
             throw std::runtime_error(mstr("Expected ", msg, ", got ", got));
         }
     };

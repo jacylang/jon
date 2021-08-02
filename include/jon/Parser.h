@@ -12,6 +12,7 @@ namespace jon {
 
         ast::value_ptr parse(const std::string & source) {
             this->index = 0;
+            this->source = source;
             Lexer lexer;
             tokens = lexer.lex(source);
 
@@ -19,6 +20,7 @@ namespace jon {
         }
 
     private:
+        std::string source;
         TokenStream tokens;
         size_t index;
 
