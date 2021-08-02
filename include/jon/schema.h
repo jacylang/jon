@@ -105,6 +105,16 @@ namespace jon {
                     status &= objectValue.size() <= schema.at<jon::int_t>("maxProps");
                 }
 
+                const auto & props = schema.at<jon::obj_t>("props");
+                std::vector<std::string> uncheckedProps{};
+                for (const auto & entry : objectValue) {
+                    if (props.find(entry.first) == props.end()) {
+                        status = false;
+                    } else {
+                        status &= validate(entry.second, props.at(entry.first));
+                    }
+                }
+
                 return status;
             }
         }
