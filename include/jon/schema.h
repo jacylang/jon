@@ -41,20 +41,20 @@ namespace jon {
         Schema() = default;
         ~Schema() = default;
 
-        bool validate(const jon & value, const jon & schema) {
+        ValidationResult validate(const jon & value, const jon & schema) {
             const auto & expectedTypeName = schema.at<jon::str_t>("type");
             const auto expectedType = typeNames.at(expectedTypeName);
             const auto nullable = schema.has("nullable") and schema["nullable"].get<jon::bool_t>();
 
             if (nullable and value.isNull()) {
-                return true;
+                return {};
             }
+
+            ValidationResult result;
 
             if (value.type() != expectedType) {
-                return false;
-            }
-
-            if (expectedType == jon::Type::Int) {
+                result.push(mstr("Type mismatch: Expected ", jon::typeStr(expectedType), ", got ", value.typeStr()));
+            } else if (expectedType == jon::Type::Int) {
                 auto intValue = value.get<jon::int_t>();
 
                 bool status = true;
@@ -68,9 +68,7 @@ namespace jon {
                 }
 
                 return status;
-            }
-
-            if (expectedType == jon::Type::Float) {
+            } else if (expectedType == jon::Type::Float) {
                 auto floatValue = value.get<jon::float_t>();
 
                 bool status = true;
@@ -84,9 +82,7 @@ namespace jon {
                 }
 
                 return status;
-            }
-
-            if (expectedType == jon::Type::String) {
+            } else if (expectedType == jon::Type::String) {
                 const auto & stringValue = value.get<jon::str_t>();
 
                 bool status = true;
@@ -100,9 +96,7 @@ namespace jon {
                 }
 
                 return status;
-            }
-
-            if (expectedType == jon::Type::Array) {
+            } else if (expectedType == jon::Type::Array) {
                 const auto & arrayValue = value.get<jon::arr_t>();
 
                 bool status = true;
@@ -122,9 +116,7 @@ namespace jon {
                 }
 
                 return status;
-            }
-
-            if (expectedType == jon::Type::Object) {
+            } else if (expectedType == jon::Type::Object) {
                 const auto & objectValue = value.get<jon::obj_t>();
 
                 bool status = true;
