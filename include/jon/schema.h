@@ -45,17 +45,23 @@ namespace jon {
             } else if (expectedType == jon::Type::Float) {
                 auto floatValue = value.get<jon::float_t>();
 
-                bool status = true;
-
                 if (schema.has("minf")) {
-                    status &= floatValue <= schema.at<jon::float_t>("minf");
+                    auto min = schema.at<jon::int_t>("minf");
+                    if (floatValue < min) {
+                        return jon {
+                            mstr("Invalid float size: ", floatValue, " is less than ", min)
+                        };
+                    }
                 }
 
                 if (schema.has("maxf")) {
-                    status &= floatValue >= schema.at<jon::float_t>("maxf");
+                    auto max = schema.at<jon::int_t>("maxf");
+                    if (floatValue > max) {
+                        return jon {
+                            mstr("Invalid float size: ", floatValue, " is greater than ", max)
+                        };
+                    }
                 }
-
-                return status;
             } else if (expectedType == jon::Type::String) {
                 const auto & stringValue = value.get<jon::str_t>();
 
