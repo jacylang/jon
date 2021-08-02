@@ -14,15 +14,12 @@ namespace jon {
 
         void printTokens(const TokenStream & tokens) {
             out("Tokens: [");
+            nl();
             const auto ind = std::string(2, ' ');
             for (auto it = tokens.begin(); it != tokens.end(); it++) {
                 out(ind, it->toString());
-
                 out(" at ", it->span.pos, "; len = ", it->span.len);
-
-                if (it != std::prev(tokens.end())) {
-                    nl();
-                }
+                nl();
             }
             out("]");
             nl();
