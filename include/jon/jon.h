@@ -571,11 +571,18 @@ namespace jon {
                     if (pretty) {
                         ss << "\n";
                     }
-                    for (const auto & el : get<arr_t>()) {
+                    const auto & arr = get<arr_t>();
+                    for (size_t i = 0; i < arr.size(); i++) {
+                        const auto & el = arr.at(i);
                         if (pretty) {
                             ss << indent + 1;
                         }
                         ss << el.dump(indent + 1);
+
+                        if (i == arr.size() - 1) {
+                            continue;
+                        }
+
                         if (pretty) {
                             ss << "\n";
                         } else {
