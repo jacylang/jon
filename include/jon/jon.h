@@ -843,6 +843,16 @@ namespace jon {
 
     private:
         static const std::map<std::string, jon::Type> typeNames;
+
+        /// Helper overload for schema validation, throws `invalid_error` instead of `type_error`
+        template<class T>
+        T schemaAt(const str_t & key, const std::string & typeErrorMsg) const {
+            try {
+                return at<T>(key);
+            } catch (type_error & te) {
+                throw invalid_schema(typeErrorMsg);
+            }
+        }
     };
 
     const std::map<std::string, jon::Type> jon::typeNames = {
