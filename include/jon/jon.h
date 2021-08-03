@@ -403,7 +403,7 @@ namespace jon {
             if (it == obj.end()) {
                 throw out_of_range("`jon::at` by key '" + key + "'");
             }
-            return it->second;
+            return it->second.get<T>();
         }
 
         template<class T>
@@ -414,7 +414,7 @@ namespace jon {
             if (it == obj.end()) {
                 throw out_of_range("`jon::at` by key '" + key + "'");
             }
-            return it->second;
+            return it->second.get<T>();
         }
 
         // Array interface //
