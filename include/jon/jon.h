@@ -604,7 +604,7 @@ namespace jon {
             if (validType) {
                 std::string expectedTypeStr;
                 if (expectedTypeNames.size() == 1) {
-                    expectedTypeStr = expectedTypeStr.at(0);
+                    expectedTypeStr = expectedTypeNames.at(0);
                 } else {
                     for (size_t i = 0; i < expectedTypeNames.size(); i++) {
                         expectedTypeStr += expectedTypeNames.at(i);
