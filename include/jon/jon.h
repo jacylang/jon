@@ -232,7 +232,12 @@ namespace jon {
         // Common methods //
     public:
         template<class T>
-        constexpr T get() const noexcept {
+        constexpr T & get() noexcept {
+            return value.get<T>();
+        }
+
+        template<class T>
+        constexpr const T & get() const noexcept {
             return value.get<T>();
         }
 
