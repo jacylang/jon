@@ -245,7 +245,7 @@ namespace jon {
                 pointLine = std::string(col, ' ') + "^ " + msg;
             }
 
-            throw std::runtime_error(
+            throw parse_error(
                 mstr("\n", line, "\n", pointLine)
             );
         }
