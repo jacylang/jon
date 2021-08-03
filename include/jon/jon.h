@@ -472,8 +472,13 @@ namespace jon {
 
         // Schema //
         jon validate(const jon & schema) const {
+            // Check nullability, does not require any other constraints if value is null
+            const auto nullable = schema.has("nullable") and schema.at<jon::bool_t>("nullable");
+            if (nullable and isNull()) {
+                return jon {};
+            }
+
             jon::str_t expectedTypeName;
-            const auto nullable = schema.has("nullable") and schema["nullable"].get<jon::bool_t>();
 
             if (schema.isString()) {
                 expectedTypeName = schema.get<jon::str_t>();
@@ -482,10 +487,6 @@ namespace jon {
             }
 
             const auto expectedType = typeNames.at(expectedTypeName);
-
-            if (nullable and isNull()) {
-                return jon {};
-            }
 
             const auto valueType = value.type();
 
