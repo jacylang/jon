@@ -302,7 +302,7 @@ std::cout << first.validate(schema).dump(2);
 ```
 #### Type shortcuts
 
-There're two ways to specify type of value in schema.
+There're 4 ways to specify type of value in schema.
 
 **#1**
 ```yaml
@@ -318,7 +318,27 @@ This one allows placing more constraints with other keywords.
 field: '{TYPE}'
 ```
 
-Using this one is simpler, but you cannot specify constraints for value.
+Shortcut for variant above and is simpler, but you cannot specify constraints for value.
+
+**#3**
+```yaml
+field: {
+    type: ['{TYPE_1}', '{TYPE_2}', ...]
+}
+```
+
+Here `field` can be of any of given type.
+
+**#4**
+```yaml
+field: ['{TYPE_1}', '{TYPE_3}', ...]
+```
+
+Similar to **#2** variant, but shortcut for **#4** one.
+
+If type is an array you still can specify any constraints for each of these types.
+This is why keywords like `minInt`/`maxInt` are not `min`/`max`, because if you have `type: ['int', 'string']` then `min`/`max` would be ambiguous -- are these bounds for `int` value or for `string` size?
+
 
 **Possible type names**
 | JON Type |
@@ -336,7 +356,7 @@ Using this one is simpler, but you cannot specify constraints for value.
 This keywords can be applied to schema for any type.
 
 - `type` [`string`]: Type of value. (REQUIRED)
-- `nullable` [`bool`]: Allows value to be `null`. (Default: `false`)
+- `nullable` [`bool`]: Allows value to be `null`, similar to `type: ['{TYPE}', 'null']`. (Default: `false`)
 
 #### Integer Keywords
 
