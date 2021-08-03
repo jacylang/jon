@@ -745,15 +745,11 @@ namespace jon {
                 const auto & itemsSchema = schema.at("items");
                 size_t index{0};
                 for (const auto & el : arrayValue) {
-                    const auto & elValidation = el.validate(itemsSchema);
+                    const auto elValidation = el.validate(itemsSchema);
                     if (not elValidation.isNull()) {
                         result[index] = elValidation;
                     }
                     index++;
-                }
-
-                if (not result.empty()) {
-                    return result;
                 }
 
                 return result.empty() ? jon {} : result;
