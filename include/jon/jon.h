@@ -341,12 +341,12 @@ namespace jon {
     public:
         jon & operator[](const str_t & key) {
             value.assertObjectFirstAccess(key);
-            return value.get<obj_t>()[key];
+            return get<obj_t>()[key];
         }
 
         const jon & at(const str_t & key) const {
             value.assertTypeObject(key);
-            const auto & obj = value.get<obj_t>();
+            const auto & obj = get<obj_t>();
             const auto & it = obj.find(key);
             if (it == obj.end()) {
                 throw out_of_range("`jon::at` by key '" + key + "'");
@@ -356,7 +356,7 @@ namespace jon {
 
         jon & at(const str_t & key) {
             value.assertObjectFirstAccess(key);
-            auto obj = value.get<obj_t>();
+            auto obj = get<obj_t>();
             auto it = obj.find(key);
             if (it == obj.end()) {
                 throw out_of_range("`jon::at` by key '" + key + "'");
@@ -367,7 +367,7 @@ namespace jon {
         template<class T>
         T at(const str_t & key) const {
             value.assertTypeObject(key);
-            const auto & obj = value.get<obj_t>();
+            const auto & obj = get<obj_t>();
             const auto & it = obj.find(key);
             if (it == obj.end()) {
                 throw out_of_range("`jon::at` by key '" + key + "'");
@@ -378,7 +378,7 @@ namespace jon {
         template<class T>
         T & at(const str_t & key) {
             value.assertObjectFirstAccess(key);
-            auto obj = value.get<obj_t>();
+            auto obj = get<obj_t>();
             auto it = obj.find(key);
             if (it == obj.end()) {
                 throw out_of_range("`jon::at` by key '" + key + "'");
@@ -583,7 +583,7 @@ namespace jon {
                     mstr("Type mismatch: Expected ", expectedTypeStr, ", got ", value.typeStr())
                 };
             } else if (valueType == jon::Type::Int) {
-                auto intValue = value.get<jon::int_t>();
+                auto intValue = get<jon::int_t>();
 
                 if (schema.has("minInt")) {
                     auto min = schema.at<jon::int_t>("minInt");
@@ -603,7 +603,7 @@ namespace jon {
                     }
                 }
             } else if (valueType == jon::Type::Float) {
-                auto floatValue = value.get<jon::float_t>();
+                auto floatValue = get<jon::float_t>();
 
                 if (schema.has("minFloat")) {
                     auto min = schema.at<jon::int_t>("minFloat");
@@ -623,7 +623,7 @@ namespace jon {
                     }
                 }
             } else if (valueType == jon::Type::String) {
-                const auto & stringValue = value.get<jon::str_t>();
+                const auto & stringValue = get<jon::str_t>();
 
                 if (schema.has("minLen")) {
                     auto min = schema.at<jon::int_t>("minLen");
@@ -655,7 +655,7 @@ namespace jon {
                     };
                 }
             } else if (valueType == jon::Type::Array) {
-                const auto & arrayValue = value.get<jon::arr_t>();
+                const auto & arrayValue = get<jon::arr_t>();
 
                 if (schema.has("minSize")) {
                     auto min = schema.at<jon::int_t>("minSize");
@@ -692,7 +692,7 @@ namespace jon {
 
                 return result.empty() ? jon {} : result;
             } else if (valueType == jon::Type::Object) {
-                const auto & objectValue = value.get<jon::obj_t>();
+                const auto & objectValue = get<jon::obj_t>();
 
                 if (schema.has("minProps")) {
                     auto min = schema.at<jon::int_t>("minProps");
