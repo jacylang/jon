@@ -523,7 +523,7 @@ namespace jon {
                 return jon {
                     mstr("Type mismatch: Expected ", expectedTypeStr, ", got ", value.typeStr())
                 };
-            } else if (expectedType == jon::Type::Int) {
+            } else if (valueType == jon::Type::Int) {
                 auto intValue = value.get<jon::int_t>();
 
                 if (schema.has("minInt")) {
@@ -543,7 +543,7 @@ namespace jon {
                         };
                     }
                 }
-            } else if (expectedType == jon::Type::Float) {
+            } else if (valueType == jon::Type::Float) {
                 auto floatValue = value.get<jon::float_t>();
 
                 if (schema.has("minFloat")) {
@@ -563,7 +563,7 @@ namespace jon {
                         };
                     }
                 }
-            } else if (expectedType == jon::Type::String) {
+            } else if (valueType == jon::Type::String) {
                 const auto & stringValue = value.get<jon::str_t>();
 
                 if (schema.has("minLen")) {
@@ -583,7 +583,7 @@ namespace jon {
                         };
                     }
                 }
-            } else if (expectedType == jon::Type::Array) {
+            } else if (valueType == jon::Type::Array) {
                 const auto & arrayValue = value.get<jon::arr_t>();
 
                 if (schema.has("minSize")) {
@@ -620,7 +620,7 @@ namespace jon {
                 }
 
                 return result.empty() ? jon {} : result;
-            } else if (expectedType == jon::Type::Object) {
+            } else if (valueType == jon::Type::Object) {
                 const auto & objectValue = value.get<jon::obj_t>();
 
                 if (schema.has("minProps")) {
