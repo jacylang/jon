@@ -771,7 +771,7 @@ namespace jon {
 
                 if (checkedProps.size() != props.size()) {
                     for (const auto & prop : props) {
-                        if (not prop.second.has("required")) {
+                        if (prop.second.has("optional")) {
                             continue;
                         }
                         if (std::find(checkedProps.begin(), checkedProps.end(), prop.first) != checkedProps.end()) {
