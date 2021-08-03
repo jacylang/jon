@@ -55,6 +55,7 @@ namespace jon {
     private:
         struct Value {
             explicit Value() : t(Type::Null) {}
+            explicit Value(null_t) : t(Type::Null) {}
             explicit Value(bool_t v) noexcept : v(v), t(Type::Bool) {}
             explicit Value(int_t v) noexcept : v(v), t(Type::Int) {}
             explicit Value(float_t v) noexcept : v(v), t(Type::Float) {}
@@ -207,8 +208,8 @@ namespace jon {
 
         // Constructors //
     public:
-        explicit jon() = default;
-        explicit jon(null_t) {}
+        explicit jon() : value(null_t {}) {}
+        explicit jon(null_t) noexcept : value(null_t {}) {}
         explicit jon(bool_t v) noexcept : value(v) {}
         explicit jon(int_t v) noexcept : value(v) {}
         explicit jon(float_t v) noexcept : value(v) {}
@@ -615,7 +616,7 @@ namespace jon {
                 throw invalid_schema("`type` must be specified");
             }
 
-            const auto valueType = value.type();
+            const auto valueType = type();
 
             bool validType = false;
             for (const auto & typeName : expectedTypeNames) {
