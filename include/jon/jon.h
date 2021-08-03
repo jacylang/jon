@@ -608,10 +608,11 @@ namespace jon {
                 std::vector<std::string> checkedProps;
                 for (const auto & entry : objectValue) {
                     // TODO: additionalProperties
-                    if (props.find(entry.first) == props.end()) {
+                    const auto & prop = props.find(entry.first);
+                    if (prop == props.end()) {
                         result[entry.first] = jon {jon::str_t {"Additional property"}};
                     } else {
-                        const auto & entryValidation = entry.second.validate(props.at(entry.first));
+                        const auto & entryValidation = entry.second.validate(prop->second);
                         if (not entryValidation.isNull()) {
                             result[entry.first] = entryValidation;
                         }
@@ -621,6 +622,9 @@ namespace jon {
 
                 if (checkedProps.size() != props.size()) {
                     for (const auto & prop : props) {
+                        if (not prop.second.has("required")) {
+                            continue;
+                        }
                         if (std::find(checkedProps.begin(), checkedProps.end(), prop.first) != checkedProps.end()) {
                             continue;
                         }
