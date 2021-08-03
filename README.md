@@ -258,7 +258,7 @@ at(key).get<T>()
 (3) std::string dump(uint16_t spaceSize) const;
 ```
 
-Converts JON value to string.
+(1) Converts JON value to string.
 
 (2) is an equivalent to:
 ```c++
@@ -403,8 +403,9 @@ This is why keywords like `minInt`/`maxInt` are not `min`/`max`, because if you 
 
 
 **Possible type names**
-| JON Type |
-|:--------:|
+| JON Schema Type |
+|:---------------:|
+| `any` |
 | `null` |
 | `bool` |
 | `int` |
@@ -412,6 +413,10 @@ This is why keywords like `minInt`/`maxInt` are not `min`/`max`, because if you 
 | `string` |
 | `object` |
 | `array` |
+
+`any` type does not exist in `jon::Type`, but in schema it just allows value
+ to be of any type, similar to array of all possible types (`['null', 'bool
+ ', 'int', 'float', 'string', 'object', 'array']`).
 
 #### Common Keywords
 

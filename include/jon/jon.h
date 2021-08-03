@@ -789,10 +789,9 @@ namespace jon {
                 std::vector<std::string> checkedProps;
 
                 for (const auto & entry : objectValue) {
-                    // TODO: additionalProperties
                     const auto & prop = props.find(entry.first);
                     if (not extras and prop == props.end()) {
-                        result[entry.first] = jon {jon::str_t {"Additional property"}};
+                        result[entry.first] = jon {jon::str_t {"Extra property (`extras` are not allowed)"}};
                     } else {
                         const auto & entryValidation = entry.second.validate(prop->second);
                         if (not entryValidation.isNull()) {
