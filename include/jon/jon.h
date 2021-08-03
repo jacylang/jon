@@ -486,7 +486,7 @@ namespace jon {
                 expectedTypeNames = {schema.at<jon::str_t>("type")};
             } else if (schema.has("type") and schema.at("type").isArray()) {
                 for (const auto & typeName : schema.at<jon::arr_t>("type")) {
-                    expectedTypeNames.emplace_back(typeName);
+                    expectedTypeNames.emplace_back(typeName.get<str_t>());
                 }
                 if (expectedTypeNames.empty()) {
                     throw std::runtime_error("Invalid schema: `type` cannot be an empty array");
