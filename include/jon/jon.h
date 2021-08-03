@@ -621,8 +621,10 @@ namespace jon {
                 if (expectedTypeNames.empty()) {
                     throw invalid_schema("`type` cannot be an empty array");
                 }
-            } else {
+            } else if (schema.has("type") and schema.at("type").isNull()) {
                 anyType = true;
+            } else {
+                throw invalid_schema("`type` must be either string, array or null");
             }
 
             const auto valueType = type();
