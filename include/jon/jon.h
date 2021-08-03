@@ -137,6 +137,26 @@ namespace jon {
 
             template<class T>
             constexpr T & get() {
+                getTypeAssert<T>();
+                return std::get<T>(v);
+            }
+
+            template<class T>
+            constexpr const T & get() const {
+                getTypeAssert<T>();
+                return std::get<T>(v);
+            }
+
+            std::string typeStr() const {
+                return jon::typeStr(t);
+            }
+
+            Type t;
+            std::variant<null_t, bool_t, int_t, float_t, str_t, obj_t, arr_t> v;
+
+        private:
+            template<class T>
+            constexpr void getTypeAssert() const {
                 if constexpr (std::is_same_v<T, null_t>) {
                     assertType(jon::Type::Null, "called `jon::get<null_t>` with not a `null_t` `jon`");
                 }
@@ -161,20 +181,7 @@ namespace jon {
                 else {
                     throw type_error("called `jon::get` with invalid type");
                 }
-                return std::get<T>(v);
             }
-
-            template<class T>
-            constexpr const T & get() const {
-                return std::get<T>(v);
-            }
-
-            std::string typeStr() const {
-                return jon::typeStr(t);
-            }
-
-            Type t;
-            std::variant<null_t, bool_t, int_t, float_t, str_t, obj_t, arr_t> v;
         };
 
     private:
