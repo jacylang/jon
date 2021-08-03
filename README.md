@@ -401,7 +401,7 @@ This keywords can be applied to schema for any type.
 
 This keywords only allowed for schema which is a property of an object schema.
 
-- `required` [`bool`]: Requires object to contain this property. (Default: `false`)
+- `optional` [`bool`]: Allows missing property marked as `optional`. (Default: `false`)
 
 #### Array Keywords
 
