@@ -488,8 +488,11 @@ namespace jon {
                 for (const auto & typeName : schema.at<jon::arr_t>("type")) {
                     expectedTypeNames.emplace_back(typeName);
                 }
+                if (expectedTypeNames.empty()) {
+                    throw std::runtime_error("Invalid schema: `type` cannot be an empty array");
+                }
             } else {
-                throw std::runtime_error("Invalid schema: Type must be specified");
+                throw std::runtime_error("Invalid schema: `type` must be specified");
             }
 
             const auto expectedType = typeNames.at(expectedTypeName);
