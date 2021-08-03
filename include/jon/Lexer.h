@@ -8,6 +8,7 @@
 #include <assert.h>
 
 #include "utils.h"
+#include "error.h"
 
 namespace jon {
     struct Token;
@@ -564,7 +565,7 @@ namespace jon {
                 pointLine = std::string(col, ' ') + "^ " + msg;
             }
 
-            throw std::runtime_error(
+            throw parse_error(
                 mstr("\n", line, "\n", pointLine)
             );
         }
