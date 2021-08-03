@@ -9,6 +9,7 @@
 #include <assert.h>
 #include <map>
 #include <algorithm>
+#include <regex>
 
 #include "Lexer.h"
 #include "Parser.h"
@@ -582,6 +583,17 @@ namespace jon {
                             mstr("Invalid string size: ", stringValue.size(), " is greater than ", max)
                         };
                     }
+                }
+
+                if (schema.has("pattern")) {
+                    const auto pattern = schema.at<jon::str_t>("pattern");
+                    const std::regex regex(pattern);
+                    if (std::regex_match(stringValue, regex)) {
+                        return jon {};
+                    }
+                    return jon {
+                        mstr("Invalid string: Failed to match pattern '", pattern, "'")
+                    };
                 }
             } else if (valueType == jon::Type::Array) {
                 const auto & arrayValue = value.get<jon::arr_t>();
