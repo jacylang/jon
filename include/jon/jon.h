@@ -608,6 +608,7 @@ namespace jon {
 
             std::vector<jon::str_t> expectedTypeNames;
 
+            bool anyType = false;
             if (schema.isString()) {
                 expectedTypeNames = {schema.get<jon::str_t>()};
             } else if (schema.has("type") and schema.at("type").isString()) {
@@ -620,38 +621,48 @@ namespace jon {
                     throw invalid_schema("`type` cannot be an empty array");
                 }
             } else {
-                throw invalid_schema("`type` must be specified");
+                anyType = true;
             }
 
             const auto valueType = type();
 
-            bool validType = false;
-            for (const auto & typeName : expectedTypeNames) {
-                const auto & foundType = typeNames.find(typeName);
-                if (foundType == typeNames.end()) {
-                    throw invalid_schema("unknown `type` '" + typeName + "'");
-                }
-                validType |= valueType == foundType->second;
-            }
+            if (not anyType) {
+                bool validType = false;
+                for (const auto & typeName : expectedTypeNames) {
+                    if (typeName == "any") {
+                        anyType = true;
+                        validType = true;
+                        continue;
+                    }
 
-            if (not validType) {
-                std::string expectedTypeStr;
-                if (expectedTypeNames.size() == 1) {
-                    expectedTypeStr = expectedTypeNames.at(0);
-                } else {
-                    for (size_t i = 0; i < expectedTypeNames.size(); i++) {
-                        expectedTypeStr += expectedTypeNames.at(i);
-                        if (expectedTypeNames.size() > 2 and i < expectedTypeNames.size() - 2) {
-                            expectedTypeStr += ", ";
-                        } else if (i < expectedTypeNames.size() - 1) {
-                            expectedTypeStr += " or ";
+                    const auto & foundType = typeNames.find(typeName);
+                    if (foundType == typeNames.end()) {
+                        throw invalid_schema("unknown `type` '" + typeName + "'");
+                    }
+                    validType |= valueType == foundType->second;
+                }
+
+                if (not validType) {
+                    std::string expectedTypeStr;
+                    if (expectedTypeNames.size() == 1) {
+                        expectedTypeStr = expectedTypeNames.at(0);
+                    } else {
+                        for (size_t i = 0; i < expectedTypeNames.size(); i++) {
+                            expectedTypeStr += expectedTypeNames.at(i);
+                            if (expectedTypeNames.size() > 2 and i < expectedTypeNames.size() - 2) {
+                                expectedTypeStr += ", ";
+                            } else if (i < expectedTypeNames.size() - 1) {
+                                expectedTypeStr += " or ";
+                            }
                         }
                     }
+                    return jon{
+                        mstr("Type mismatch: Expected ", expectedTypeStr, ", got ", typeStr())
+                    };
                 }
-                return jon {
-                    mstr("Type mismatch: Expected ", expectedTypeStr, ", got ", typeStr())
-                };
-            } else if (valueType == jon::Type::Int) {
+            }
+
+            if (valueType == jon::Type::Int) {
                 auto intValue = get<jon::int_t>();
 
                 if (schema.has("minInt")) {

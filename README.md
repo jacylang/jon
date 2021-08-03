@@ -422,7 +422,7 @@ This is why keywords like `minInt`/`maxInt` are not `min`/`max`, because if you 
 
 This keywords can be applied to schema for any type.
 
-- `type` [`string`]: Type of value. (REQUIRED)
+- `type` [`string`]: Type of value. (Default: `any`)
 - `nullable` [`bool`]: Allows value to be `null`, similar to `type: ['{TYPE}', 'null']`. (Default: `false`)
 
 #### Integer Keywords
