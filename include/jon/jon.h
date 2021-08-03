@@ -755,22 +755,20 @@ namespace jon {
                     }
                 }
 
-                if (not schema.has("items")) {
-                    throw invalid_schema("array schema must specify `items`");
-                }
-
-                jon result {jon::obj_t {}};
-                const auto & itemsSchema = schema.at("items");
-                size_t index{0};
-                for (const auto & el : arrayValue) {
-                    const auto elValidation = el.validate(itemsSchema);
-                    if (not elValidation.isNull()) {
-                        result[index] = elValidation;
+                if (schema.has("items")) {
+                    jon result {jon::obj_t {}};
+                    const auto & itemsSchema = schema.at("items");
+                    size_t index{0};
+                    for (const auto & el : arrayValue) {
+                        const auto elValidation = el.validate(itemsSchema);
+                        if (not elValidation.isNull()) {
+                            result[index] = elValidation;
+                        }
+                        index++;
                     }
-                    index++;
-                }
 
-                return result.empty() ? jon {} : result;
+                    return result.empty() ? jon {} : result;
+                }
             } else if (valueType == jon::Type::Object) {
                 const auto & objectValue = get<jon::obj_t>();
 
