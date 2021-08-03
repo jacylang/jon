@@ -54,7 +54,7 @@ namespace jon {
 
     private:
         struct Value {
-            explicit Value() = default;
+            explicit Value() : t(Type::Null) {}
             explicit Value(bool_t v) noexcept : v(v), t(Type::Bool) {}
             explicit Value(int_t v) noexcept : v(v), t(Type::Int) {}
             explicit Value(float_t v) noexcept : v(v), t(Type::Float) {}
@@ -152,7 +152,7 @@ namespace jon {
             }
 
             template<class T>
-            static constexpr str_t valueAsKey(const T & t) {
+            static constexpr const char * valueAsKey(const T & t) {
                 if constexpr (std::is_same_v<T, null_t>) {
                     return "null";
                 } else if constexpr (std::is_same_v<T, bool_t>) {
@@ -163,7 +163,7 @@ namespace jon {
                     return t;
                 } else if constexpr (std::is_same_v<T, obj_t>) {
                     throw type_error("Unable to use object as object key");
-                } else if constexpr (std::is_same_v<t, arr_t>) {
+                } else if constexpr (std::is_same_v<T, arr_t>) {
                     throw type_error("Unable to use array as object key");
                 }
             }
@@ -399,9 +399,7 @@ namespace jon {
 
         template<class T>
         jon & operator[](const T & key) {
-            const auto & strKey = Value::valueAsKey(key);
-            value.assertObjectFirstAccess(strKey);
-            return get<obj_t>()[strKey];
+            return operator[](Value::valueAsKey(key));
         }
 
         const jon & at(const str_t & key) const {
@@ -449,6 +447,9 @@ namespace jon {
         // Array interface //
     public:
         jon & operator[](size_t idx) {
+            if (isObject()) {
+                return operator[](str_t {Value::valueAsKey(idx)});
+            }
             value.assertArrayFirstAccess();
             return get<arr_t>()[idx];
         }
