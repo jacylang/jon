@@ -601,7 +601,7 @@ namespace jon {
                 validType |= valueType == foundType->second;
             }
 
-            if (validType) {
+            if (not validType) {
                 std::string expectedTypeStr;
                 if (expectedTypeNames.size() == 1) {
                     expectedTypeStr = expectedTypeNames.at(0);
@@ -616,7 +616,7 @@ namespace jon {
                     }
                 }
                 return jon {
-                    mstr("Type mismatch: Expected ", expectedTypeStr, ", got ", value.typeStr())
+                    mstr("Type mismatch: Expected ", expectedTypeStr, ", got ", typeStr())
                 };
             } else if (valueType == jon::Type::Int) {
                 auto intValue = get<jon::int_t>();
