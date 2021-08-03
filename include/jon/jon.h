@@ -495,11 +495,18 @@ namespace jon {
                 throw std::runtime_error("Invalid schema: `type` must be specified");
             }
 
-            const auto expectedType = typeNames.at(expectedTypeName);
-
             const auto valueType = value.type();
 
-            if (valueType != expectedType) {
+            bool validType = false;
+            for (const auto & typeName : expectedTypeNames) {
+                const auto & foundType = typeNames.find(typeName);
+                if (foundType == typeNames.end()) {
+                    throw std::runtime_error("Invalid schema: unknown `type` '" + typeName + "'");
+                }
+                validType |= valueType == foundType->second;
+            }
+
+            if (validType) {
                 return jon {
                     mstr("Type mismatch: Expected ", jon::typeStr(expectedType), ", got ", value.typeStr())
                 };
