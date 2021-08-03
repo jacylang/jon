@@ -176,28 +176,28 @@ namespace jon {
             template<class T>
             constexpr void getTypeAssert() const {
                 if constexpr (std::is_same_v<T, null_t>) {
-                    assertType(jon::Type::Null, "called `jon::get<null_t>` with not a `null_t` `jon`");
+                    assertType(Type::Null, "called `get<null_t>` with not a `null_t` `jon`");
                 }
                 else if constexpr (std::is_same_v<T, bool_t>) {
-                    assertType(jon::Type::Bool, "called `jon::get<bool_t>` with not a `bool_t` `jon`");
+                    assertType(Type::Bool, "called `get<bool_t>` with not a `bool_t` `jon`");
                 }
                 else if constexpr (std::is_same_v<T, int_t>) {
-                    assertType(jon::Type::Int, "called `jon::get<int_t>` with not a `int_t` `jon`");
+                    assertType(Type::Int, "called `get<int_t>` with not a `int_t` `jon`");
                 }
                 else if constexpr (std::is_same_v<T, float_t>) {
-                    assertType(jon::Type::Float, "called `jon::get<float_t>` with not a `float_t` `jon`");
+                    assertType(Type::Float, "called `get<float_t>` with not a `float_t` `jon`");
                 }
                 else if constexpr (std::is_same_v<T, str_t>) {
-                    assertType(jon::Type::String, "called `jon::get<str_t>` with not a `str_t` `jon`");
+                    assertType(Type::String, "called `get<str_t>` with not a `str_t` `jon`");
                 }
                 else if constexpr (std::is_same_v<T, obj_t>) {
-                    assertType(jon::Type::Object, "called `jon::get<obj_t>` with not a `obj_t` `jon`");
+                    assertType(Type::Object, "called `get<obj_t>` with not a `obj_t` `jon`");
                 }
                 else if constexpr (std::is_same_v<T, arr_t>) {
-                    assertType(jon::Type::Array, "called `jon::get<arr_t>` with not a `arr_t` `jon`");
+                    assertType(Type::Array, "called `get<arr_t>` with not a `arr_t` `jon`");
                 }
                 else {
-                    throw type_error("called `jon::get` with invalid type");
+                    throw type_error("called `get` with invalid type");
                 }
             }
         };
@@ -358,7 +358,7 @@ namespace jon {
 
         auto check(Type expectedType) const {
             if (type() != expectedType) {
-                throw type_error(mstr("`jon::get` expected type ", typeStr(expectedType), " got ", value.typeStr()));
+                throw type_error(mstr("`get` expected type ", typeStr(expectedType), " got ", value.typeStr()));
             }
             return *this;
         }
@@ -408,7 +408,7 @@ namespace jon {
             const auto & obj = get<obj_t>();
             const auto & it = obj.find(key);
             if (it == obj.end()) {
-                throw out_of_range("`jon::at` by key '" + key + "'");
+                throw out_of_range("`at` by key '" + key + "'");
             }
             return it->second;
         }
@@ -418,7 +418,7 @@ namespace jon {
             auto obj = get<obj_t>();
             auto it = obj.find(key);
             if (it == obj.end()) {
-                throw out_of_range("`jon::at` by key '" + key + "'");
+                throw out_of_range("`at` by key '" + key + "'");
             }
             return it->second;
         }
@@ -429,7 +429,7 @@ namespace jon {
             const auto & obj = get<obj_t>();
             const auto & it = obj.find(key);
             if (it == obj.end()) {
-                throw out_of_range("`jon::at` by key '" + key + "'");
+                throw out_of_range("`at` by key '" + key + "'");
             }
             return it->second.get<T>();
         }
@@ -440,7 +440,7 @@ namespace jon {
             auto obj = get<obj_t>();
             auto it = obj.find(key);
             if (it == obj.end()) {
-                throw out_of_range("`jon::at` by key '" + key + "'");
+                throw out_of_range("`at` by key '" + key + "'");
             }
             return it->second.get<T>();
         }
@@ -458,7 +458,7 @@ namespace jon {
         const jon & at(size_t idx) const {
             value.assertTypeArray();
             if (idx > get<arr_t>().size()) {
-                throw out_of_range(mstr("`jon::at` by index '", idx, "'"));
+                throw out_of_range(mstr("`at` by index '", idx, "'"));
             }
             return get<arr_t>()[idx];
         }
@@ -466,7 +466,7 @@ namespace jon {
         jon & at(size_t idx) {
             value.assertTypeArray();
             if (idx > get<arr_t>().size()) {
-                throw out_of_range(mstr("`jon::at` by index '", idx, "'"));
+                throw out_of_range(mstr("`at` by index '", idx, "'"));
             }
             return get<arr_t>()[idx];
         }
@@ -844,7 +844,7 @@ namespace jon {
         }
 
     private:
-        static const std::map<std::string, jon::Type> typeNames;
+        static const std::map<std::string, Type> typeNames;
 
         template<class T>
         static constexpr const char * typeStrArticle() {
@@ -885,14 +885,14 @@ namespace jon {
         }
     };
 
-    const std::map<std::string, jon::Type> jon::typeNames = {
-        {"null", jon::Type::Null},
-        {"bool", jon::Type::Bool},
-        {"int", jon::Type::Int},
-        {"float", jon::Type::Float},
+    const std::map<std::string, jon::Type> typeNames = {
+        {"null",   jon::Type::Null},
+        {"bool",   jon::Type::Bool},
+        {"int",    jon::Type::Int},
+        {"float",  jon::Type::Float},
         {"string", jon::Type::String},
         {"object", jon::Type::Object},
-        {"array", jon::Type::Array},
+        {"array",  jon::Type::Array},
     };
 
     namespace literal {
