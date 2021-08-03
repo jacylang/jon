@@ -5,10 +5,10 @@ int main(const int argc, const char ** argv) {
 
     auto file = jon::jon::fromFile("F:/projects/jacylang/jon/examples/sample_1.jon");
 
-    const auto & val = file.at("value");
-//    auto schema = file.at("schema");
-//
-//    std::cout << val.validate(schema).dump("  ");
+    auto val = file.at("value");
+    auto schema = file.at("schema");
+
+    std::cout << val.validate(schema).dump("  ");
 
     return 0;
 }

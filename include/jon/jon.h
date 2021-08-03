@@ -415,7 +415,7 @@ namespace jon {
 
         jon & at(const str_t & key) {
             value.assertObjectFirstAccess(key);
-            auto obj = get<obj_t>();
+            auto & obj = get<obj_t>();
             auto it = obj.find(key);
             if (it == obj.end()) {
                 throw out_of_range("`at` by key '" + key + "'");
