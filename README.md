@@ -164,7 +164,7 @@ jon & check(Type expectedType) const;
 
 Checks that value is of given type and returns `*this`.
 
-**Exceptions**
+###### Exceptions
 Throws `jon::type_error` if type check failed.
 
 ##### `jon::jon::operator[]`
@@ -178,7 +178,7 @@ Throws `jon::type_error` if type check failed.
 Element-access operators without bound checks, those that receive `str_t` are
  used for objects, those that receive `size_t` are used for arrays.
 
-**Exceptions**
+###### Exceptions
 (1) throws `jon::type_error` if value is not an `object`.
 (2) throws `jon::type_error` if value is not an `array`.
 
@@ -223,7 +223,7 @@ template<class T>
 at(key).get<T>()
 ```
 
-**Exceptions**
+###### Exceptions
 (1-6) throw `jon::out_if_range` if no element found by key/index.
 
 (1), (2), (5), (6) throw `jon::type_error` if value is not an `object`.
@@ -266,7 +266,7 @@ jon validate(const jon & schema) const;
 Validates JON value by schema, returns `null` jon value if value is valid, otherwise returns schema-like error structure.
 Read more about schemas [Schemas](#schemas)
 
-**Exceptions**
+###### Exceptions
 Throws `jon::invalid_schema` if schema has invalid structure.
 
 ##### `jon::literals::operator""_jon`
