@@ -715,7 +715,7 @@ namespace jon {
                     throw invalid_schema("array schema must specify `items`");
                 }
 
-                jon result {jon::arr_t {}};
+                jon result {jon::obj_t {}};
                 const auto & itemsSchema = schema.at("items");
                 size_t index{0};
                 for (const auto & el : arrayValue) {

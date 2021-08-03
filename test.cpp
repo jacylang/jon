@@ -14,6 +14,7 @@ int main(const int argc, const char ** argv) {
         props: {
             hello: {
                 type: 'array'
+                items: 'string'
             }
         }
     )"_jon;
