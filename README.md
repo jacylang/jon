@@ -305,29 +305,29 @@ std::cout << first.validate(schema).dump(2);
 
 This keywords can be applied to schema for any type.
 
-- `type` [`string`]: Type of value
-- `nullable` [`bool`]: Allows value to be `null`.
+- `type` [`string`]: Type of value. (REQUIRED)
+- `nullable` [`bool`]: Allows value to be `null`. (Default: `false`)
 
 #### Integer Keywords
 
-- `minInt` [`int`]: Minimum integer value.
-- `maxInt` [`int`]: Maximum integer value.
+- `minInt` [`int`]: Minimum integer value. (Optional)
+- `maxInt` [`int`]: Maximum integer value. (Optional)
 
 #### Float Keywords
 
-- `minFloat` [`float`]: Minimum float value.
-- `maxFloat` [`float`]: Maximum float value.
+- `minFloat` [`float`]: Minimum float value. (Optional)
+- `maxFloat` [`float`]: Maximum float value. (Optional)
 
 #### String Keywords
 
-- `minLen` [`int`]: Minimum length of string value.
-- `maxLen` [`int`]: Maximum length of string value.
+- `minLen` [`int`]: Minimum length of string value. (Optional)
+- `maxLen` [`int`]: Maximum length of string value. (Optional)
 
 #### Object Keywords
 
-- `minProps` [`int`]: Minimum count of properties in object.
-- `maxProps` [`int`]: Maximum count of properties in object.
-- `props` [`object`]: Schema object for properties validation.
+- `minProps` [`int`]: Minimum count of properties in object. (Optional)
+- `maxProps` [`int`]: Maximum count of properties in object. (Optional)
+- `props` [`object`]: Schema object for properties validation. (REQUIRED)
 - `extras` [`array`]: Allows additional properties in object. (Default: `[]`)
 
 #### Object properties Keywords
@@ -338,6 +338,6 @@ This keywords only allowed for schema which is a property of an object schema.
 
 #### Array Keywords
 
-- `minSize` [`int`]: Minimum size of array.
-- `maxSize` [`int`]: Maximum size of array.
-- `items` [`object`]: Schema object for items validation.
+- `minSize` [`int`]: Minimum size of array. (Optional)
+- `maxSize` [`int`]: Maximum size of array. (Optional)
+- `items` [`object`]: Schema object for items validation. (REQUIRED)
