@@ -305,39 +305,39 @@ std::cout << first.validate(schema).dump(2);
 
 This keywords can be applied to schema for any type.
 
-- `type`: Type of value
-- `nullable`: Allows value to be `null`.
+- `type` [`string`]: Type of value
+- `nullable` [`bool`]: Allows value to be `null`.
 
 #### Integer Keywords
 
-- `minInt`: Minimum integer value.
-- `maxInt`: Maximum integer value.
+- `minInt` [`int`]: Minimum integer value.
+- `maxInt` [`int`]: Maximum integer value.
 
 #### Float Keywords
 
-- `minFloat`: Minimum float value.
-- `maxFloat`: Maximum float value.
+- `minFloat` [`float`]: Minimum float value.
+- `maxFloat` [`float`]: Maximum float value.
 
 #### String Keywords
 
-- `minLen`: Minimum length of string value.
-- `maxLen`: Maximum length of string value.
+- `minLen` [`int`]: Minimum length of string value.
+- `maxLen` [`int`]: Maximum length of string value.
 
 #### Object Keywords
 
-- `minProps`: Minimum count of properties in object.
-- `maxProps`: Maximum count of properties in object.
-- `props`: Schema object for properties validation.
-- `extras`: Allows additional properties in object. (Default: `[]`)
+- `minProps` [`int`]: Minimum count of properties in object.
+- `maxProps` [`int`]: Maximum count of properties in object.
+- `props` [`object`]: Schema object for properties validation.
+- `extras` [`array`]: Allows additional properties in object. (Default: `[]`)
 
 #### Object properties Keywords
 
 This keywords only allowed for schema which is a property of an object schema.
 
-- `required`: Requires object to contain this property. (Default: `false`)
+- `required` [`bool`]: Requires object to contain this property. (Default: `false`)
 
 #### Array Keywords
 
-- `minSize`: Minimum size of array.
-- `maxSize`: Maximum size of array.
-- `items`: Schema object for items validation.
+- `minSize` [`int`]: Minimum size of array.
+- `maxSize` [`int`]: Maximum size of array.
+- `items` [`object`]: Schema object for items validation.
