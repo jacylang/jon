@@ -449,7 +449,7 @@ namespace jon {
     public:
         jon & operator[](size_t idx) {
             if (isObject()) {
-                return operator[](str_t {Value::valueAsKey(idx)});
+                return operator[](str_t {std::to_string(idx)});
             }
             value.assertArrayFirstAccess();
             return get<arr_t>()[idx];

@@ -23,7 +23,7 @@ int main(const int argc, const char ** argv) {
 
     std::cout << schema.dump(2) << std::endl;
 
-    // std::cout << val.validate(schema).dump("  ") << std::endl;
+    std::cout << val.validate(schema).dump(2) << std::endl;
 
     return 0;
 }
