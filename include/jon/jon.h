@@ -399,6 +399,13 @@ namespace jon {
             return get<obj_t>()[key];
         }
 
+        template<class T>
+        jon & operator[](const T & key) {
+            const auto & strKey = Value::coerceToString(key);
+            value.assertObjectFirstAccess(strKey);
+            return get<obj_t>()[strKey];
+        }
+
         const jon & at(const str_t & key) const {
             value.assertTypeObject(key);
             const auto & obj = get<obj_t>();
