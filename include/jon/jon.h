@@ -598,7 +598,8 @@ namespace jon {
             }
         }
 
-        // Schema //
+        // Schemas //
+    public:
         jon validate(const jon & schema) const {
             // Check nullability, does not require any other constraints if value is null
             const auto nullable = schema.has("nullable") and schema.at<jon::bool_t>("nullable");
@@ -660,6 +661,11 @@ namespace jon {
                         mstr("Type mismatch: Expected ", expectedTypeStr, ", got ", typeStr())
                     };
                 }
+            }
+
+            if (schema.isString()) {
+                // Schema is just a type as string, type is checked above thus just don't run other checks
+                return jon {};
             }
 
             if (valueType == jon::Type::Int) {
