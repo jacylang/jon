@@ -182,10 +182,16 @@ Element-access operators without bound checks, those that receive `str_t` are
  used for objects, those that receive `size_t` are used for arrays.
 
 (1) Access object element by key.
-(2) Access array element by index.
-(3) Access to object element by key of any type that can be coerced to key
+(2) Access array (or object) element by index. If value is an object then
+ `idx` is converted to string and then `operator[](const str_t & key)` is
+  called.
+(3) Access to object element by key of any type that can be converted to key
  type (`str_t`), allows only `null_t`, `bool_t`, `int_t`, `float_t` or `str_t
  `. Access by `obj_t` or `arr_t` is not allowed.
+
+__Important__: `operator[](size_t idx` inherits `std::vector::operator
+[]` logic and unlike `std::map::operator[]` does not insert new element, thus
+ calling to it with non-existent element index is Undefined Behaviour.
 
 ###### Exceptions
 (1) throws `jon::type_error` if value is not an `object`.
