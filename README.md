@@ -418,6 +418,10 @@ This is why keywords like `minInt`/`maxInt` are not `min`/`max`, because if you 
  to be of any type, similar to array of all possible types (`['null', 'bool
  ', 'int', 'float', 'string', 'object', 'array']`).
 
+__Important__: Schema can be either `object`, `string` (just a type) or `null
+`. `null` is just the same as `any` type schema. All over types are INVALID
+ for schema.
+
 #### Common Keywords
 
 This keywords can be applied to schema for any type.
