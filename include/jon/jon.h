@@ -507,8 +507,21 @@ namespace jon {
             }
 
             if (validType) {
+                std::string expectedTypeStr;
+                if (expectedTypeNames.size() == 1) {
+                    expectedTypeStr = expectedTypeStr.at(0);
+                } else {
+                    for (size_t i = 0; i < expectedTypeNames.size(); i++) {
+                        expectedTypeStr += expectedTypeNames.at(i);
+                        if (expectedTypeNames.size() > 2 and i < expectedTypeNames.size() - 2) {
+                            expectedTypeStr += ", ";
+                        } else if (i < expectedTypeNames.size() - 1) {
+                            expectedTypeStr += " or ";
+                        }
+                    }
+                }
                 return jon {
-                    mstr("Type mismatch: Expected ", jon::typeStr(expectedType), ", got ", value.typeStr())
+                    mstr("Type mismatch: Expected ", expectedTypeStr, ", got ", value.typeStr())
                 };
             } else if (expectedType == jon::Type::Int) {
                 auto intValue = value.get<jon::int_t>();
