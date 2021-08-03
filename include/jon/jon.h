@@ -615,19 +615,23 @@ namespace jon {
             bool anyType = false;
             if (schema.isString()) {
                 expectedTypeNames = {schema.get<str_t>()};
-            } else if (schema.has("type") and schema.at("type").isString()) {
-                expectedTypeNames = {schema.at<str_t>("type")};
-            } else if (schema.has("type") and schema.at("type").isArray()) {
-                for (const auto & typeName : schema.at<arr_t>("type")) {
-                    expectedTypeNames.emplace_back(typeName.get<str_t>());
+            } else if (schema.has("type")) {
+                if (schema.at("type").isString()) {
+                    expectedTypeNames = {schema.at<str_t>("type")};
+                } else if (schema.at("type").isArray()) {
+                    for (const auto & typeName : schema.at<arr_t>("type")) {
+                        expectedTypeNames.emplace_back(typeName.get<str_t>());
+                    }
+                    if (expectedTypeNames.empty()) {
+                        throw invalid_schema("`type` cannot be an empty array");
+                    }
+                } else if (schema.at("type").isNull()) {
+                    anyType = true;
+                } else {
+                    throw invalid_schema("`type` must be either string, array or null");
                 }
-                if (expectedTypeNames.empty()) {
-                    throw invalid_schema("`type` cannot be an empty array");
-                }
-            } else if (schema.has("type") and schema.at("type").isNull()) {
-                anyType = true;
             } else {
-                throw invalid_schema("`type` must be either string, array or null");
+                anyType = true;
             }
 
             const auto valueType = type();
