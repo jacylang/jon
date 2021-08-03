@@ -487,7 +487,9 @@ namespace jon {
                 return jon {};
             }
 
-            if (value.type() != expectedType) {
+            const auto valueType = value.type();
+
+            if (valueType != expectedType) {
                 return jon {
                     mstr("Type mismatch: Expected ", jon::typeStr(expectedType), ", got ", value.typeStr())
                 };
