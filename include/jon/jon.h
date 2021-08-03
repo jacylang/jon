@@ -885,7 +885,7 @@ namespace jon {
         }
     };
 
-    const std::map<std::string, jon::Type> typeNames = {
+    const std::map<std::string, jon::Type> jon::typeNames = {
         {"null",   jon::Type::Null},
         {"bool",   jon::Type::Bool},
         {"int",    jon::Type::Int},
