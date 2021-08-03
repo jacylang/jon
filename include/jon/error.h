@@ -15,6 +15,10 @@ namespace jon {
         parse_error(const std::string & msg) : jon_exception("[jon::parse_error]: " + msg) {}
     };
 
+    struct type_error : jon_exception {
+        type_error(const std::string & msg) : jon_exception("[jon::type_error]: " + msg) {}
+    };
+
     struct out_of_range : jon_exception {
         out_of_range(const std::string & msg) : jon_exception("[jon::out_of_range] " + msg) {}
     };
