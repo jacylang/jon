@@ -446,7 +446,9 @@ This keywords can be applied to schema for any type.
 - `minProps` [`int`]: Minimum count of properties in object. (Optional)
 - `maxProps` [`int`]: Maximum count of properties in object. (Optional)
 - `props` [`object`]: Schema object for properties validation. (REQUIRED)
-- `extras` [`array`]: Allows additional properties in object. (Default: `[]`)
+- `extras` [`array`]: Allows additional properties in object, does not
+ depend on `props`, thus if `props` is not specified and `extras` is empty
+ then no properties in object would be allowed. (Default: `[]`)
 
 #### Object properties Keywords
 
