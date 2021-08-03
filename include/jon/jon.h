@@ -339,11 +339,6 @@ namespace jon {
 
         // Object interface //
     public:
-        const jon & operator[](const str_t & key) const {
-            value.assertTypeObject(key);
-            return value.get<obj_t>().at(key);
-        }
-
         jon & operator[](const str_t & key) {
             value.assertObjectFirstAccess(key);
             return value.get<obj_t>()[key];
@@ -373,11 +368,6 @@ namespace jon {
 
         // Array interface //
     public:
-        const jon & operator[](size_t idx) const {
-            value.assertTypeArray();
-            return value.get<arr_t>().at(idx);
-        }
-
         jon & operator[](size_t idx) {
             value.assertArrayFirstAccess();
             return value.get<arr_t>()[idx];
