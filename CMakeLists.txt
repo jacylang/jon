@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(jon VERSION 0.0.2 LANGUAGES CXX)
+project(jon VERSION 0.0.3 LANGUAGES CXX)
 
 ### Target
 set(JON_TARGET_NAME ${PROJECT_NAME})

@@ -3,24 +3,12 @@
 int main(const int argc, const char ** argv) {
     using namespace jon::literal;
 
-    auto val = R"(
-        hello: '1234567890'
-    )"_jon;
+    auto file = jon::jon::fromFile("F:/projects/jacylang/jon/examples/sample_1.jon");
 
-    auto schema = R"(
-        type: 'object'
-        props: {
-            hello: {
-                type: 'string'
-                minLen: 10
-                nullable: true
-            }
-        }
-    )"_jon;
-
-    std::cout << schema.dump(2) << std::endl;
-
-    std::cout << val.validate(schema).dump("  ");
+    auto val = file.at("value");
+//    auto schema = file.at("schema");
+//
+//    std::cout << val.validate(schema).dump("  ");
 
     return 0;
 }

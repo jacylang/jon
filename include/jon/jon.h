@@ -410,7 +410,7 @@ namespace jon {
             if (it == obj.end()) {
                 throw out_of_range("`at` by key '" + key + "'");
             }
-            return it->second;
+            return (*it).second;
         }
 
         jon & at(const str_t & key) {
@@ -420,18 +420,18 @@ namespace jon {
             if (it == obj.end()) {
                 throw out_of_range("`at` by key '" + key + "'");
             }
-            return it->second;
+            return (*it).second;
         }
 
         template<class T>
-        T at(const str_t & key) const {
+        const T & at(const str_t & key) const {
             value.assertTypeObject(key);
             const auto & obj = get<obj_t>();
-            const auto & it = obj.find(key);
+            auto it = obj.find(key);
             if (it == obj.end()) {
                 throw out_of_range("`at` by key '" + key + "'");
             }
-            return it->second.get<T>();
+            return (*it).second.get<T>();
         }
 
         template<class T>
@@ -503,6 +503,9 @@ namespace jon {
                         values.emplace_back(jon {fromAst(std::move(val))});
                     }
                     return Value {values};
+                }
+                default: {
+                    throw std::logic_error("[jon bug]: Unhandled `ast::ValueKind` in `jon::fromAst");
                 }
             }
         }
