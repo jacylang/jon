@@ -602,20 +602,20 @@ namespace jon {
     public:
         jon validate(const jon & schema) const {
             // Check nullability, does not require any other constraints if value is null
-            const auto nullable = schema.has("nullable") and schema.schemaAt<jon::bool_t>("nullable");
+            const auto nullable = schema.has("nullable") and schema.schemaAt<bool_t>("nullable");
             if (nullable and isNull()) {
                 return jon {};
             }
 
-            std::vector<jon::str_t> expectedTypeNames;
+            std::vector<str_t> expectedTypeNames;
 
             bool anyType = false;
             if (schema.isString()) {
-                expectedTypeNames = {schema.get<jon::str_t>()};
+                expectedTypeNames = {schema.get<str_t>()};
             } else if (schema.has("type") and schema.at("type").isString()) {
-                expectedTypeNames = {schema.at<jon::str_t>("type")};
+                expectedTypeNames = {schema.at<str_t>("type")};
             } else if (schema.has("type") and schema.at("type").isArray()) {
-                for (const auto & typeName : schema.at<jon::arr_t>("type")) {
+                for (const auto & typeName : schema.at<arr_t>("type")) {
                     expectedTypeNames.emplace_back(typeName.get<str_t>());
                 }
                 if (expectedTypeNames.empty()) {
@@ -670,11 +670,11 @@ namespace jon {
                 return jon {};
             }
 
-            if (valueType == jon::Type::Int) {
-                auto intValue = get<jon::int_t>();
+            if (valueType == Type::Int) {
+                auto intValue = get<int_t>();
 
                 if (schema.has("minInt")) {
-                    auto min = schema.at<jon::int_t>("minInt");
+                    auto min = schema.at<int_t>("minInt");
                     if (intValue < min) {
                         return jon {
                             mstr("Invalid integer size: ", intValue, " is less than ", min)
@@ -683,18 +683,18 @@ namespace jon {
                 }
 
                 if (schema.has("maxInt")) {
-                    auto max = schema.at<jon::int_t>("maxInt");
+                    auto max = schema.at<int_t>("maxInt");
                     if (intValue > max) {
                         return jon {
                             mstr("Invalid integer size: ", intValue, " is greater than ", max)
                         };
                     }
                 }
-            } else if (valueType == jon::Type::Float) {
-                auto floatValue = get<jon::float_t>();
+            } else if (valueType == Type::Float) {
+                auto floatValue = get<float_t>();
 
                 if (schema.has("minFloat")) {
-                    auto min = schema.at<jon::int_t>("minFloat");
+                    auto min = schema.at<int_t>("minFloat");
                     if (floatValue < min) {
                         return jon {
                             mstr("Invalid float size: ", floatValue, " is less than ", min)
@@ -703,18 +703,18 @@ namespace jon {
                 }
 
                 if (schema.has("maxFloat")) {
-                    auto max = schema.at<jon::int_t>("maxFloat");
+                    auto max = schema.at<int_t>("maxFloat");
                     if (floatValue > max) {
                         return jon {
                             mstr("Invalid float size: ", floatValue, " is greater than ", max)
                         };
                     }
                 }
-            } else if (valueType == jon::Type::String) {
-                const auto & stringValue = get<jon::str_t>();
+            } else if (valueType == Type::String) {
+                const auto & stringValue = get<str_t>();
 
                 if (schema.has("minLen")) {
-                    auto min = schema.at<jon::int_t>("minLen");
+                    auto min = schema.at<int_t>("minLen");
                     if (stringValue.size() < min) {
                         return jon {
                             mstr("Invalid string size: ", stringValue.size(), " is less than ", min)
@@ -723,7 +723,7 @@ namespace jon {
                 }
 
                 if (schema.has("maxLen")) {
-                    auto max = schema.at<jon::int_t>("maxLen");
+                    auto max = schema.at<int_t>("maxLen");
                     if (stringValue.size() > max) {
                         return jon {
                             mstr("Invalid string size: ", stringValue.size(), " is greater than ", max)
@@ -733,7 +733,7 @@ namespace jon {
 
                 if (schema.has("pattern")) {
                     // TODO: Return parts failed to match
-                    const auto pattern = schema.at<jon::str_t>("pattern");
+                    const auto pattern = schema.at<str_t>("pattern");
                     const std::regex regex(pattern);
                     if (std::regex_match(stringValue, regex)) {
                         return jon {};
@@ -742,11 +742,11 @@ namespace jon {
                         mstr("Invalid string: Failed to match pattern '", pattern, "'")
                     };
                 }
-            } else if (valueType == jon::Type::Array) {
-                const auto & arrayValue = get<jon::arr_t>();
+            } else if (valueType == Type::Array) {
+                const auto & arrayValue = get<arr_t>();
 
                 if (schema.has("minSize")) {
-                    auto min = schema.at<jon::int_t>("minSize");
+                    auto min = schema.at<int_t>("minSize");
                     if (arrayValue.size() < min) {
                         return jon {
                             mstr("Invalid array size: ", arrayValue.size(), " is less than ", min)
@@ -755,7 +755,7 @@ namespace jon {
                 }
 
                 if (schema.has("maxSize")) {
-                    auto max = schema.at<jon::int_t>("maxSize");
+                    auto max = schema.at<int_t>("maxSize");
                     if (arrayValue.size() > max) {
                         return jon {
                             mstr("Invalid array size: ", arrayValue.size(), " is greater than ", max)
@@ -764,7 +764,7 @@ namespace jon {
                 }
 
                 if (schema.has("items")) {
-                    jon result {jon::obj_t {}};
+                    jon result {obj_t {}};
                     const auto & itemsSchema = schema.at("items");
                     size_t index{0};
                     for (const auto & el : arrayValue) {
@@ -777,11 +777,11 @@ namespace jon {
 
                     return result.empty() ? jon {} : result;
                 }
-            } else if (valueType == jon::Type::Object) {
-                const auto & objectValue = get<jon::obj_t>();
+            } else if (valueType == Type::Object) {
+                const auto & objectValue = get<obj_t>();
 
                 if (schema.has("minProps")) {
-                    auto min = schema.at<jon::int_t>("minProps");
+                    auto min = schema.at<int_t>("minProps");
                     if (objectValue.size() < min) {
                         return jon {
                             mstr("Invalid object properties count: ", objectValue.size(), " is less than ", min)
@@ -790,7 +790,7 @@ namespace jon {
                 }
 
                 if (schema.has("maxProps")) {
-                    auto max = schema.at<jon::int_t>("maxProps");
+                    auto max = schema.at<int_t>("maxProps");
                     if (objectValue.size() > max) {
                         return jon {
                             mstr("Invalid object properties count: ", objectValue.size(), " is greater than ", max)
@@ -798,19 +798,19 @@ namespace jon {
                     }
                 }
 
-                jon result {jon::obj_t {}};
+                jon result {obj_t {}};
 
-                bool extras = schema.has("extras") and schema.at<jon::bool_t>("extras");
+                bool extras = schema.has("extras") and schema.at<bool_t>("extras");
 
                 if (schema.has("props")) {
-                    const auto & props = schema.at<jon::obj_t>("props");
+                    const auto & props = schema.at<obj_t>("props");
 
                     std::vector<std::string> checkedProps;
 
                     for (const auto & entry : objectValue) {
                         const auto & prop = props.find(entry.first);
                         if (not extras and prop == props.end()) {
-                            result[entry.first] = jon {jon::str_t {"Extra property (`extras` are not allowed)"}};
+                            result[entry.first] = jon {str_t {"Extra property (`extras` are not allowed)"}};
                         } else {
                             const auto & entryValidation = entry.second.validate(prop->second);
                             if (not entryValidation.isNull()) {
@@ -828,7 +828,7 @@ namespace jon {
                             if (std::find(checkedProps.begin(), checkedProps.end(), prop.first) != checkedProps.end()) {
                                 continue;
                             }
-                            result[prop.first] = jon {jon::str_t {"Missing property"}};
+                            result[prop.first] = jon {str_t {"Missing property"}};
                         }
                     }
                 } else if (not extras and not objectValue.empty()) {
