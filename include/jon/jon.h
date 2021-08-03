@@ -390,17 +390,23 @@ namespace jon {
     public:
         jon & operator[](size_t idx) {
             value.assertArrayFirstAccess();
-            return value.get<arr_t>()[idx];
+            return get<arr_t>()[idx];
         }
 
         const jon & at(size_t idx) const {
             value.assertTypeArray();
-            return value.get<arr_t>().at(idx);
+            if (idx > get<arr_t>().size()) {
+                throw out_of_range(mstr("`jon::at` by index '", idx, "'"));
+            }
+            return get<arr_t>()[idx];
         }
 
         jon & at(size_t idx) {
             value.assertTypeArray();
-            return value.get<arr_t>().at(idx);
+            if (idx > get<arr_t>().size()) {
+                throw out_of_range(mstr("`jon::at` by index '", idx, "'"));
+            }
+            return get<arr_t>()[idx];
         }
 
         // Serialization/Deserialization //
