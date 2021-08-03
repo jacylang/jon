@@ -602,7 +602,7 @@ namespace jon {
     public:
         jon validate(const jon & schema) const {
             // Check nullability, does not require any other constraints if value is null
-            const auto nullable = schema.has("nullable") and schema.at<jon::bool_t>("nullable");
+            const auto nullable = schema.has("nullable") and schema.schemaAt<jon::bool_t>("nullable");
             if (nullable and isNull()) {
                 return jon {};
             }
@@ -844,13 +844,41 @@ namespace jon {
     private:
         static const std::map<std::string, jon::Type> typeNames;
 
+        template<class T>
+        static constexpr const char * typeStrArticle() {
+            if constexpr (std::is_same_v<T, null_t>) {
+                return "a null";
+            }
+            else if constexpr (std::is_same_v<T, bool_t>) {
+                return "a bool";
+            }
+            else if constexpr (std::is_same_v<T, int_t>) {
+                return "an int";
+            }
+            else if constexpr (std::is_same_v<T, float_t>) {
+                return "a float";
+            }
+            else if constexpr (std::is_same_v<T, str_t>) {
+                return "a string";
+            }
+            else if constexpr (std::is_same_v<T, obj_t>) {
+                return "an object";
+            }
+            else if constexpr (std::is_same_v<T, arr_t>) {
+                return "an array";
+            }
+            else {
+                throw std::logic_error("[jon bug] called `typeStr<T>` with non-supported type `T`");
+            }
+        }
+
         /// Helper overload for schema validation, throws `invalid_error` instead of `type_error`
         template<class T>
-        T schemaAt(const str_t & key, const std::string & typeErrorMsg) const {
+        T schemaAt(const str_t & key) const {
             try {
                 return at<T>(key);
             } catch (type_error & te) {
-                throw invalid_schema(typeErrorMsg);
+                throw invalid_schema(mstr(key, " must be ", typeStrArticle<T>()));
             }
         }
     };
