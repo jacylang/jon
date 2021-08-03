@@ -674,7 +674,7 @@ namespace jon {
                 auto intValue = get<int_t>();
 
                 if (schema.has("minInt")) {
-                    auto min = schema.at<int_t>("minInt");
+                    auto min = schema.schemaAt<int_t>("minInt");
                     if (intValue < min) {
                         return jon {
                             mstr("Invalid integer size: ", intValue, " is less than ", min)
@@ -683,7 +683,7 @@ namespace jon {
                 }
 
                 if (schema.has("maxInt")) {
-                    auto max = schema.at<int_t>("maxInt");
+                    auto max = schema.schemaAt<int_t>("maxInt");
                     if (intValue > max) {
                         return jon {
                             mstr("Invalid integer size: ", intValue, " is greater than ", max)
@@ -694,7 +694,7 @@ namespace jon {
                 auto floatValue = get<float_t>();
 
                 if (schema.has("minFloat")) {
-                    auto min = schema.at<int_t>("minFloat");
+                    auto min = schema.schemaAt<int_t>("minFloat");
                     if (floatValue < min) {
                         return jon {
                             mstr("Invalid float size: ", floatValue, " is less than ", min)
@@ -703,7 +703,7 @@ namespace jon {
                 }
 
                 if (schema.has("maxFloat")) {
-                    auto max = schema.at<int_t>("maxFloat");
+                    auto max = schema.schemaAt<int_t>("maxFloat");
                     if (floatValue > max) {
                         return jon {
                             mstr("Invalid float size: ", floatValue, " is greater than ", max)
@@ -714,7 +714,7 @@ namespace jon {
                 const auto & stringValue = get<str_t>();
 
                 if (schema.has("minLen")) {
-                    auto min = schema.at<int_t>("minLen");
+                    auto min = schema.schemaAt<int_t>("minLen");
                     if (stringValue.size() < min) {
                         return jon {
                             mstr("Invalid string size: ", stringValue.size(), " is less than ", min)
@@ -723,7 +723,7 @@ namespace jon {
                 }
 
                 if (schema.has("maxLen")) {
-                    auto max = schema.at<int_t>("maxLen");
+                    auto max = schema.schemaAt<int_t>("maxLen");
                     if (stringValue.size() > max) {
                         return jon {
                             mstr("Invalid string size: ", stringValue.size(), " is greater than ", max)
@@ -733,7 +733,7 @@ namespace jon {
 
                 if (schema.has("pattern")) {
                     // TODO: Return parts failed to match
-                    const auto pattern = schema.at<str_t>("pattern");
+                    const auto pattern = schema.schemaAt<str_t>("pattern");
                     const std::regex regex(pattern);
                     if (std::regex_match(stringValue, regex)) {
                         return jon {};
@@ -746,7 +746,7 @@ namespace jon {
                 const auto & arrayValue = get<arr_t>();
 
                 if (schema.has("minSize")) {
-                    auto min = schema.at<int_t>("minSize");
+                    auto min = schema.schemaAt<int_t>("minSize");
                     if (arrayValue.size() < min) {
                         return jon {
                             mstr("Invalid array size: ", arrayValue.size(), " is less than ", min)
@@ -755,7 +755,7 @@ namespace jon {
                 }
 
                 if (schema.has("maxSize")) {
-                    auto max = schema.at<int_t>("maxSize");
+                    auto max = schema.schemaAt<int_t>("maxSize");
                     if (arrayValue.size() > max) {
                         return jon {
                             mstr("Invalid array size: ", arrayValue.size(), " is greater than ", max)
@@ -781,7 +781,7 @@ namespace jon {
                 const auto & objectValue = get<obj_t>();
 
                 if (schema.has("minProps")) {
-                    auto min = schema.at<int_t>("minProps");
+                    auto min = schema.schemaAt<int_t>("minProps");
                     if (objectValue.size() < min) {
                         return jon {
                             mstr("Invalid object properties count: ", objectValue.size(), " is less than ", min)
@@ -790,7 +790,7 @@ namespace jon {
                 }
 
                 if (schema.has("maxProps")) {
-                    auto max = schema.at<int_t>("maxProps");
+                    auto max = schema.schemaAt<int_t>("maxProps");
                     if (objectValue.size() > max) {
                         return jon {
                             mstr("Invalid object properties count: ", objectValue.size(), " is greater than ", max)
@@ -800,10 +800,10 @@ namespace jon {
 
                 jon result {obj_t {}};
 
-                bool extras = schema.has("extras") and schema.at<bool_t>("extras");
+                bool extras = schema.has("extras") and schema.schemaAt<bool_t>("extras");
 
                 if (schema.has("props")) {
-                    const auto & props = schema.at<obj_t>("props");
+                    const auto & props = schema.schemaAt<obj_t>("props");
 
                     std::vector<std::string> checkedProps;
 
