@@ -478,12 +478,18 @@ namespace jon {
                 return jon {};
             }
 
-            jon::str_t expectedTypeName;
+            std::vector<jon::str_t> expectedTypeNames;
 
             if (schema.isString()) {
-                expectedTypeName = schema.get<jon::str_t>();
+                expectedTypeNames = {schema.get<jon::str_t>()};
+            } else if (schema.has("type") and schema.at("type").isString()) {
+                expectedTypeNames = {schema.at<jon::str_t>("type")};
+            } else if (schema.has("type") and schema.at("type").isArray()) {
+                for (const auto & typeName : schema.at<jon::arr_t>("type")) {
+                    expectedTypeNames.emplace_back(typeName);
+                }
             } else {
-                expectedTypeName = schema.at<jon::str_t>("type");
+                throw std::runtime_error("Invalid schema: Type must be specified");
             }
 
             const auto expectedType = typeNames.at(expectedTypeName);
