@@ -152,21 +152,19 @@ namespace jon {
             }
 
             template<class T>
-            static constexpr str_t coerceToString(const T & t) {
+            static constexpr str_t valueAsKey(const T & t) {
                 if constexpr (std::is_same_v<T, null_t>) {
                     return "null";
                 } else if constexpr (std::is_same_v<T, bool_t>) {
                     return t ? "true" : "false";
-                } else if constexpr (std::is_same_v<T, int_t>) {
-                    return std::to_string(t);
-                } else if constexpr (std::is_same_v<T, float_t>) {
+                } else if constexpr (std::is_same_v<T, int_t> or std::is_same_v<T, float_t>) {
                     return std::to_string(t);
                 } else if constexpr (std::is_same_v<T, str_t>) {
                     return t;
                 } else if constexpr (std::is_same_v<T, obj_t>) {
-                    throw type_error("Unable to coerce object to string");
+                    throw type_error("Unable to use object as object key");
                 } else if constexpr (std::is_same_v<t, arr_t>) {
-                    throw type_error("Unable to coerce array to string");
+                    throw type_error("Unable to use array as object key");
                 }
             }
 
@@ -401,7 +399,7 @@ namespace jon {
 
         template<class T>
         jon & operator[](const T & key) {
-            const auto & strKey = Value::coerceToString(key);
+            const auto & strKey = Value::valueAsKey(key);
             value.assertObjectFirstAccess(strKey);
             return get<obj_t>()[strKey];
         }
