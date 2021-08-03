@@ -159,15 +159,19 @@ Throws `jon::type_error` if type check failed.
 ##### `jon::jon::operator[]`
 
 ```c++
-const jon & operator[](const str_t & key) const;
-jon & operator[](const str_t & key);
+(1) const jon & operator[](const str_t & key) const;
+(2) jon & operator[](const str_t & key);
 
-const jon & operator[](size_t idx) const;
-jon & operator[](size_t idx);
+(3) const jon & operator[](size_t idx) const;
+(4) jon & operator[](size_t idx);
 ```
 
 Element-access operators without bound checks, those that receive `str_t` are
  used for objects, those that receive `size_t` are used for arrays.
+
+**Exceptions**
+(1) and (2) throw `jon::type_error` if value is not an `object`.
+(3) and (4) throw `jon::type_error` if value is not an `array`.
 
 ##### `jon::jon::at`
 
