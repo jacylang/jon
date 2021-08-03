@@ -472,9 +472,16 @@ namespace jon {
 
         // Schema //
         jon validate(const jon & schema) const {
-            const auto & expectedTypeName = schema.at<jon::str_t>("type");
-            const auto expectedType = typeNames.at(expectedTypeName);
+            jon::str_t expectedTypeName;
             const auto nullable = schema.has("nullable") and schema["nullable"].get<jon::bool_t>();
+
+            if (schema.isString()) {
+                expectedTypeName = schema.get<jon::str_t>();
+            } else {
+                expectedTypeName = schema.at<jon::str_t>("type");
+            }
+
+            const auto expectedType = typeNames.at(expectedTypeName);
 
             if (nullable and isNull()) {
                 return jon {};
