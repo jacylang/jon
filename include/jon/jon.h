@@ -605,11 +605,14 @@ namespace jon {
                 jon result {jon::obj_t {}};
 
                 const auto & props = schema.at<jon::obj_t>("props");
+                bool extras = schema.has("extras") and schema.at<jon::bool_t>("extras");
+
                 std::vector<std::string> checkedProps;
+
                 for (const auto & entry : objectValue) {
                     // TODO: additionalProperties
                     const auto & prop = props.find(entry.first);
-                    if (prop == props.end()) {
+                    if (not extras and prop == props.end()) {
                         result[entry.first] = jon {jon::str_t {"Additional property"}};
                     } else {
                         const auto & entryValidation = entry.second.validate(prop->second);
