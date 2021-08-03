@@ -346,24 +346,44 @@ namespace jon {
 
         const jon & at(const str_t & key) const {
             value.assertTypeObject(key);
-            return value.get<obj_t>().at(key);
+            const auto & obj = value.get<obj_t>();
+            const auto & it = obj.find(key);
+            if (it == obj.end()) {
+                throw out_of_range("`jon::at` by key '" + key + "'");
+            }
+            return it->second;
         }
 
         jon & at(const str_t & key) {
             value.assertObjectFirstAccess(key);
-            return value.get<obj_t>().at(key);
+            auto obj = value.get<obj_t>();
+            auto it = obj.find(key);
+            if (it == obj.end()) {
+                throw out_of_range("`jon::at` by key '" + key + "'");
+            }
+            return it->second;
         }
 
         template<class T>
         T at(const str_t & key) const {
             value.assertTypeObject(key);
-            return value.get<obj_t>().at(key).get<T>();
+            const auto & obj = value.get<obj_t>();
+            const auto & it = obj.find(key);
+            if (it == obj.end()) {
+                throw out_of_range("`jon::at` by key '" + key + "'");
+            }
+            return it->second;
         }
 
         template<class T>
         T & at(const str_t & key) {
             value.assertObjectFirstAccess(key);
-            return value.get<obj_t>().at(key).get<T>();
+            auto obj = value.get<obj_t>();
+            auto it = obj.find(key);
+            if (it == obj.end()) {
+                throw out_of_range("`jon::at` by key '" + key + "'");
+            }
+            return it->second;
         }
 
         // Array interface //
