@@ -300,6 +300,36 @@ std::cout << first.validate(schema).dump(2);
 }
 */
 ```
+#### Type shortcuts
+
+There're two ways to specify type of value in schema.
+
+**#1**
+```yaml
+field: {
+    type: '{TYPE}'
+}
+```
+
+This one allows placing more constraints with other keywords.
+
+**#2**
+```yaml
+field: '{TYPE}'
+```
+
+Using this one is simpler, but you cannot specify constraints for value.
+
+**Possible type names**
+| JON Type |
+|:--------:|
+| `null` |
+| `bool` |
+| `int` |
+| `float` |
+| `string` |
+| `object` |
+| `array` |
 
 #### Common Keywords
 
