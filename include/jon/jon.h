@@ -442,7 +442,7 @@ namespace jon {
             if (it == obj.end()) {
                 throw out_of_range("`at` by key '" + key + "'");
             }
-            return it->second.get<T>();
+            return (*it).second.get<T>();
         }
 
         // Array interface //
@@ -460,7 +460,7 @@ namespace jon {
             if (idx > get<arr_t>().size()) {
                 throw out_of_range(mstr("`at` by index '", idx, "'"));
             }
-            return get<arr_t>()[idx];
+            return get<arr_t>().at(idx);
         }
 
         jon & at(size_t idx) {
@@ -468,7 +468,7 @@ namespace jon {
             if (idx > get<arr_t>().size()) {
                 throw out_of_range(mstr("`at` by index '", idx, "'"));
             }
-            return get<arr_t>()[idx];
+            return get<arr_t>().at(idx);
         }
 
         // Serialization/Deserialization //
