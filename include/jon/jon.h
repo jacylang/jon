@@ -405,8 +405,8 @@ namespace jon {
 
         const jon & at(const str_t & key) const {
             value.assertTypeObject(key);
-            const auto & obj = get<obj_t>();
-            const auto & it = obj.find(key);
+            auto obj = get<obj_t>();
+            auto it = obj.find(key);
             if (it == obj.end()) {
                 throw out_of_range("`at` by key '" + key + "'");
             }
