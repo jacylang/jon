@@ -5,6 +5,34 @@ project(jon VERSION 0.0.2 LANGUAGES CXX)
 ### Target
 set(JON_TARGET_NAME ${PROJECT_NAME})
 
+add_compile_options(
+        # WARNINGS #
+        -Wall
+        -pedantic
+        -pedantic-errors
+        -Wextra
+        -Wpedantic
+        -Wcast-align
+        -Wcast-qual
+        -Wconversion
+        -Wctor-dtor-privacy
+        -Wenum-compare
+        -Wfloat-equal
+        -Wnon-virtual-dtor
+        -Wold-style-cast
+        -Woverloaded-virtual
+        -Wredundant-decls
+        -Wsign-conversion
+        -Wsign-promo
+        -Wstrict-aliasing
+        -ansi
+        -Wunreachable-code
+        -Wunused
+        -Wunused-parameter
+
+        -Wvariadic-macros
+        -Wwrite-strings
+)
 
 ### Compiler flags
 set(CMAKE_CXX_STANDARD 17)
