@@ -372,6 +372,7 @@ This keywords can be applied to schema for any type.
 
 - `minLen` [`int`]: Minimum length of string value. (Optional)
 - `maxLen` [`int`]: Maximum length of string value. (Optional)
+- `pattern` [`string`]: Regular expression to match against a value. (Optional)
 
 #### Object Keywords
 

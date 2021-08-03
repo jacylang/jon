@@ -254,6 +254,48 @@ namespace jon {
             return 1;
         }
 
+        // Operators //
+    public:
+        bool operator==(const jon & other) const {
+            if (other.type() != type()) {
+                return false;
+            }
+
+            if (size() != other.size()) {
+                return false;
+            }
+
+            if (isNull()) {
+                return true;
+            }
+
+            if (isBool()) {
+                return get<bool_t>() == other.get<bool_t>();
+            }
+
+            if (isInt()) {
+                return get<int_t>() == other.get<int_t>();
+            }
+
+            if (isFloat()) {
+                return get<float_t>() == other.get<float_t>();
+            }
+
+            if (isString()) {
+                return get<str_t>() == other.get<str_t>();
+            }
+
+            if (isObject()) {
+                return std::equal(get<obj_t>().begin(), get<obj_t>().end(), other.get<obj_t>().begin());
+            }
+
+            if (isArray()) {
+                return std::equal(get<arr_t>().begin(), get<arr_t>().end(), other.get<arr_t>().begin());
+            }
+
+            return false;
+        }
+
         // Type checks //
     public:
         Type type() const noexcept {
@@ -586,6 +628,7 @@ namespace jon {
                 }
 
                 if (schema.has("pattern")) {
+                    // TODO: Return parts failed to match
                     const auto pattern = schema.at<jon::str_t>("pattern");
                     const std::regex regex(pattern);
                     if (std::regex_match(stringValue, regex)) {
