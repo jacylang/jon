@@ -216,6 +216,15 @@ By default, `dump` returns escaped string, if no indent provided and
 `Indent` with `size = -1` means that no indentation will be applied and
  output string won't be prettified.
 
+##### `jon::jon::validate`
+
+```c++
+jon validate(const jon & schema) const;
+```
+
+Validates JON value by schema, returns `null` jon value if value is valid, otherwise returns schema-like error structure.
+Read more about schemas [Schemas](#schemas)
+
 ##### `jon::literals::operator""_jon`
 
 ```c++
@@ -248,3 +257,80 @@ Indent(const std::string & val, size_type size = 0);
 Simple `struct` used for indentation. Holds indent value as `std::string` and
  size (count of repetitions of string).
 If `size` is `-1` then indent won't be written to `std::ostream`.
+
+### <a name="schemas"></a> Schemas
+
+Example:
+```c++
+const auto schema = R"(
+    type: 'object'
+    props: {
+        title: {
+            type: 'string'
+            minLen: 8
+        }
+        values: {
+            type: 'array'
+            items: {
+                type: 'int'
+                minInt: 0
+            }
+        }
+    }
+)"_jon;
+
+const auto first = R"(
+    title: 'short'
+    values: [
+        1
+        2
+        3
+        -100
+    ]
+)"_jon;
+
+std::cout << first.validate(schema).dump(2);
+
+/* Prints:
+{
+    title: 'Invalid string size: 5 is less than 8'
+    values: {
+        3: 'Invalid integer size: -100 is less than 0'
+    }
+}
+*/
+```
+
+#### Common Keywords
+
+This keywords can be applied to schema for any type.
+
+- `type`: Type of value
+- `nullable`: Allows value to be `null`.
+
+#### Integer Keywords
+
+- `minInt`: minimum integer value.
+- `maxInt`: maximum integer value.
+
+#### Float Keywords
+
+- `minFloat`: minimum float value.
+- `maxFloat`: maximum float value.
+
+#### String Keywords
+
+- `minLen`: minimum length of string value.
+- `maxLen`: maximum length of string value.
+
+#### Object Keywords
+
+- `minProps`: minimum count of properties in object
+- `maxProps`: maximum count of properties in object
+- `props`: Schema object for properties validation
+
+#### Array Keywords
+
+- `minSize`: minimum size of array
+- `maxSize`: maximum size of array
+- `items`: Schema object for items validation
