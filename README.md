@@ -1,3 +1,7 @@
+<div align="center">
+    <img src="img/Jon.png" height="100">
+</div>
+
 # JON 
 
 JON (Jacy Object Notation) is an alternative to JSON used by Jacy programming

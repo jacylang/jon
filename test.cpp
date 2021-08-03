@@ -4,26 +4,23 @@ int main(const int argc, const char ** argv) {
     using namespace jon::literal;
 
     auto val = R"(
-        hello: [
-            1
-        ]
+        hello: '1234567890'
     )"_jon;
-
-    std::cout << val.dump(2) << std::endl;
 
     auto schema = R"(
         type: 'object'
         props: {
             hello: {
-                type: 'array'
-                items: 'string'
+                type: 'string'
+                minLen: 10
+                nullable: true
             }
         }
     )"_jon;
 
     std::cout << schema.dump(2) << std::endl;
 
-    std::cout << val.validate(schema).dump(2) << std::endl;
+    std::cout << val.validate(schema).dump("  ");
 
     return 0;
 }
