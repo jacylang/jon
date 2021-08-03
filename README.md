@@ -10,7 +10,7 @@ JON (Jacy Object Notation) is an alternative to JSON used by Jacy programming
 - Simple API to work with JON values
 - Serialization / Deserialization
 - JON string literals (`"..."_jon`)
-- Built-in JON schema validator
+- Built-in JON schema validator [Schemas](#schemas)
 
 ### API 
 
