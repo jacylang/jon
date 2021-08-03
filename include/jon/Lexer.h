@@ -300,7 +300,7 @@ namespace jon {
 
         void lexComment() {
             if (peek() != '/') {
-                throw std::runtime_error("Called `Lexer::lexComment` with not the '/' char");
+                throw std::logic_error("Called `Lexer::lexComment` with not the '/' char");
             }
             if (lookup() == '*') {
                 advance(2);

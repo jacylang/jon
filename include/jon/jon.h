@@ -107,7 +107,7 @@ namespace jon {
 
             void assertType(Type check, const std::string & errorMsg) const {
                 if (this->type() != check) {
-                    throw std::runtime_error(mstr("Type mismatch: ", errorMsg));
+                    throw type_error(errorMsg);
                 }
             }
 
@@ -180,7 +180,7 @@ namespace jon {
             std::fstream file(path);
 
             if (not file.is_open()) {
-                throw std::runtime_error(mstr("File '", path.string(), "' not found"));
+                throw jon_exception(mstr("File '", path.string(), "' not found"));
             }
 
             std::stringstream ss;
@@ -304,7 +304,7 @@ namespace jon {
 
         auto check(Type expectedType) const {
             if (type() != expectedType) {
-                throw std::runtime_error(mstr("`jon::get` expected type ", typeStr(expectedType), " got ", value.typeStr()));
+                throw type_error(mstr("`jon::get` expected type ", typeStr(expectedType), " got ", value.typeStr()));
             }
             return *this;
         }
@@ -532,10 +532,10 @@ namespace jon {
                     expectedTypeNames.emplace_back(typeName.get<str_t>());
                 }
                 if (expectedTypeNames.empty()) {
-                    throw std::runtime_error("Invalid schema: `type` cannot be an empty array");
+                    throw invalid_schema("`type` cannot be an empty array");
                 }
             } else {
-                throw std::runtime_error("Invalid schema: `type` must be specified");
+                throw invalid_schema("`type` must be specified");
             }
 
             const auto valueType = value.type();
@@ -544,7 +544,7 @@ namespace jon {
             for (const auto & typeName : expectedTypeNames) {
                 const auto & foundType = typeNames.find(typeName);
                 if (foundType == typeNames.end()) {
-                    throw std::runtime_error("Invalid schema: unknown `type` '" + typeName + "'");
+                    throw invalid_schema("unknown `type` '" + typeName + "'");
                 }
                 validType |= valueType == foundType->second;
             }

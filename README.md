@@ -148,7 +148,7 @@ Simple type-checking methods.
 ##### `jon::jon::check`
 
 ```c++
-jon & check(Type expectedType) const noexcept;
+jon & check(Type expectedType) const;
 ```
 
 Checks that value is of given type and returns `*this`, otherwise throws an
