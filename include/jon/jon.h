@@ -136,12 +136,36 @@ namespace jon {
             }
 
             template<class T>
-            T & get() noexcept {
+            constexpr T & get() {
+                if constexpr (std::is_same_v<T, null_t>) {
+                    assertType(jon::Type::Null, "called `jon::get<null_t>` with not a `null_t` `jon`");
+                }
+                else if constexpr (std::is_same_v<T, bool_t>) {
+                    assertType(jon::Type::Bool, "called `jon::get<bool_t>` with not a `bool_t` `jon`");
+                }
+                else if constexpr (std::is_same_v<T, int_t>) {
+                    assertType(jon::Type::Int, "called `jon::get<int_t>` with not a `int_t` `jon`");
+                }
+                else if constexpr (std::is_same_v<T, float_t>) {
+                    assertType(jon::Type::Float, "called `jon::get<float_t>` with not a `float_t` `jon`");
+                }
+                else if constexpr (std::is_same_v<T, str_t>) {
+                    assertType(jon::Type::String, "called `jon::get<str_t>` with not a `str_t` `jon`");
+                }
+                else if constexpr (std::is_same_v<T, obj_t>) {
+                    assertType(jon::Type::Object, "called `jon::get<obj_t>` with not a `obj_t` `jon`");
+                }
+                else if constexpr (std::is_same_v<T, arr_t>) {
+                    assertType(jon::Type::Array, "called `jon::get<arr_t>` with not a `arr_t` `jon`");
+                }
+                else {
+                    throw type_error("called `jon::get` with invalid type");
+                }
                 return std::get<T>(v);
             }
 
             template<class T>
-            const T & get() const noexcept {
+            constexpr const T & get() const {
                 return std::get<T>(v);
             }
 
@@ -201,7 +225,7 @@ namespace jon {
         // Common methods //
     public:
         template<class T>
-        T get() const noexcept {
+        constexpr T get() const noexcept {
             return value.get<T>();
         }
 
