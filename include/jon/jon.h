@@ -151,6 +151,25 @@ namespace jon {
                 return jon::typeStr(t);
             }
 
+            template<class T>
+            static constexpr str_t coerceToString(const T & t) {
+                if constexpr (std::is_same_v<T, null_t>) {
+                    return "null";
+                } else if constexpr (std::is_same_v<T, bool_t>) {
+                    return t ? "true" : "false";
+                } else if constexpr (std::is_same_v<T, int_t>) {
+                    return std::to_string(t);
+                } else if constexpr (std::is_same_v<T, float_t>) {
+                    return std::to_string(t);
+                } else if constexpr (std::is_same_v<T, str_t>) {
+                    return t;
+                } else if constexpr (std::is_same_v<T, obj_t>) {
+                    throw type_error("Unable to coerce object to string");
+                } else if constexpr (std::is_same_v<t, arr_t>) {
+                    throw type_error("Unable to coerce array to string");
+                }
+            }
+
             Type t;
             std::variant<null_t, bool_t, int_t, float_t, str_t, obj_t, arr_t> v;
 
