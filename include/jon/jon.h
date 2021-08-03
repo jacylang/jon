@@ -794,34 +794,41 @@ namespace jon {
 
                 jon result {jon::obj_t {}};
 
-                const auto & props = schema.at<jon::obj_t>("props");
                 bool extras = schema.has("extras") and schema.at<jon::bool_t>("extras");
 
-                std::vector<std::string> checkedProps;
+                if (schema.has("props")) {
+                    const auto & props = schema.at<jon::obj_t>("props");
 
-                for (const auto & entry : objectValue) {
-                    const auto & prop = props.find(entry.first);
-                    if (not extras and prop == props.end()) {
-                        result[entry.first] = jon {jon::str_t {"Extra property (`extras` are not allowed)"}};
-                    } else {
-                        const auto & entryValidation = entry.second.validate(prop->second);
-                        if (not entryValidation.isNull()) {
-                            result[entry.first] = entryValidation;
-                        }
-                        checkedProps.emplace_back(entry.first);
-                    }
-                }
+                    std::vector<std::string> checkedProps;
 
-                if (checkedProps.size() != props.size()) {
-                    for (const auto & prop : props) {
-                        if (prop.second.has("optional")) {
-                            continue;
+                    for (const auto & entry : objectValue) {
+                        const auto & prop = props.find(entry.first);
+                        if (not extras and prop == props.end()) {
+                            result[entry.first] = jon {jon::str_t {"Extra property (`extras` are not allowed)"}};
+                        } else {
+                            const auto & entryValidation = entry.second.validate(prop->second);
+                            if (not entryValidation.isNull()) {
+                                result[entry.first] = entryValidation;
+                            }
+                            checkedProps.emplace_back(entry.first);
                         }
-                        if (std::find(checkedProps.begin(), checkedProps.end(), prop.first) != checkedProps.end()) {
-                            continue;
-                        }
-                        result[prop.first] = jon {jon::str_t {"Missing property"}};
                     }
+
+                    if (checkedProps.size() != props.size()) {
+                        for (const auto & prop : props) {
+                            if (prop.second.has("optional")) {
+                                continue;
+                            }
+                            if (std::find(checkedProps.begin(), checkedProps.end(), prop.first) != checkedProps.end()) {
+                                continue;
+                            }
+                            result[prop.first] = jon {jon::str_t {"Missing property"}};
+                        }
+                    }
+                } else if (not extras and not objectValue.empty()) {
+                    return jon {
+                        mstr("No properties allowed in this object as `extras: false` and no `props` specified")
+                    };
                 }
 
                 return result.empty() ? jon {} : result;
