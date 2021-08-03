@@ -310,27 +310,34 @@ This keywords can be applied to schema for any type.
 
 #### Integer Keywords
 
-- `minInt`: minimum integer value.
-- `maxInt`: maximum integer value.
+- `minInt`: Minimum integer value.
+- `maxInt`: Maximum integer value.
 
 #### Float Keywords
 
-- `minFloat`: minimum float value.
-- `maxFloat`: maximum float value.
+- `minFloat`: Minimum float value.
+- `maxFloat`: Maximum float value.
 
 #### String Keywords
 
-- `minLen`: minimum length of string value.
-- `maxLen`: maximum length of string value.
+- `minLen`: Minimum length of string value.
+- `maxLen`: Maximum length of string value.
 
 #### Object Keywords
 
-- `minProps`: minimum count of properties in object
-- `maxProps`: maximum count of properties in object
-- `props`: Schema object for properties validation
+- `minProps`: Minimum count of properties in object.
+- `maxProps`: Maximum count of properties in object.
+- `props`: Schema object for properties validation.
+- `extras`: Allows additional properties in object. (Default: `[]`)
+
+#### Object properties Keywords
+
+This keywords only allowed for schema which is a property of an object schema.
+
+- `required`: Requires object to contain this property. (Default: `false`)
 
 #### Array Keywords
 
-- `minSize`: minimum size of array
-- `maxSize`: maximum size of array
-- `items`: Schema object for items validation
+- `minSize`: Minimum size of array.
+- `maxSize`: Maximum size of array.
+- `items`: Schema object for items validation.
