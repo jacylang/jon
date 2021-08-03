@@ -173,14 +173,25 @@ Throws `jon::type_error` if type check failed.
 (1) jon & operator[](const str_t & key);
 
 (2) jon & operator[](size_t idx);
+
+template<class T>
+(3) jon & operator[](const T & key);
 ```
 
 Element-access operators without bound checks, those that receive `str_t` are
  used for objects, those that receive `size_t` are used for arrays.
 
+(1) Access object element by key.
+(2) Access array element by index.
+(3) Access to object element by key of any type that can be coerced to key
+ type (`str_t`), allows only `null_t`, `bool_t`, `int_t`, `float_t` or `str_t
+ `. Access by `obj_t` or `arr_t` is not allowed.
+
 ###### Exceptions
 (1) throws `jon::type_error` if value is not an `object`.
 (2) throws `jon::type_error` if value is not an `array`.
+(3) throws `jon::type_error` if value cannot be coerced to key type (`str_t
+`) or value is not an `object`.
 
 ##### `jon::jon::operator==`
 
@@ -224,6 +235,7 @@ at(key).get<T>()
 ```
 
 ###### Exceptions
+
 (1-6) throw `jon::out_if_range` if no element found by key/index.
 
 (1), (2), (5), (6) throw `jon::type_error` if value is not an `object`.
