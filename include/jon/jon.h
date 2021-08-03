@@ -250,12 +250,12 @@ namespace jon {
         // Common methods //
     public:
         template<class T>
-        constexpr T & get() noexcept {
+        constexpr T & get() {
             return value.get<T>();
         }
 
         template<class T>
-        constexpr const T & get() const noexcept {
+        constexpr const T & get() const {
             return value.get<T>();
         }
 

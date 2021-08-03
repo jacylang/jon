@@ -2,9 +2,9 @@
     <img src="img/Jon.png" height="100">
 </div>
 
-# JON 
+# _JON_
 
-JON (Jacy Object Notation) is an alternative to JSON used by Jacy programming
+_JON_ (Jacy Object Notation) is an alternative to JSON used by Jacy programming
  language.
 
 **This is a C++ library to work with JON**
@@ -16,7 +16,7 @@ JON (Jacy Object Notation) is an alternative to JSON used by Jacy programming
 - JON string literals (`"..."_jon`)
 - Built-in JON schema validator [Schemas](#schemas)
 
-### API 
+### API
 
 ##### `jon::jon::fromFile`
 
@@ -38,7 +38,10 @@ Parses source string and returns `jon` value.
 
 ```c++
 template<class T>
-T get() const noexcept;
+constexpr T & get();
+
+template<class T>
+constexpr const T & get() const;
 ```
 
 Returns stored value by type.
@@ -52,6 +55,10 @@ Returns stored value by type.
 | `string` | `std::string` |
 | `object` | `std::map<std::string, jon>` |
 | `array` | `std::vector<jon>` |
+
+###### Exceptions
+
+Throws `jon::type_error` if tried to get invalid type.
 
 ##### `jon::jon::empty`
 
@@ -174,6 +181,23 @@ Element-access operators without bound checks, those that receive `str_t` are
 **Exceptions**
 (1) throws `jon::type_error` if value is not an `object`.
 (2) throws `jon::type_error` if value is not an `array`.
+
+##### `jon::jon::operator==`
+
+```c++
+bool operator==(const jon & other) const;
+```
+
+Equality operator, requires both values to be of same type, size and value.
+
+Comparison depends on type:
+- `null` - both values are `null`
+- `bool` - `bool == bool`
+- `int` - `int64_t == int64_t`
+- `float` - `double == double`
+- `string` - `std::string == std::string`
+- `object` - `std::equal(get<obj_t>().begin(), get<obj_t>().end(), other.get<obj_t>().begin())`
+- `array` - `std::equal(get<arr_t>().begin(), get<arr_t>().end(), other.get<arr_t>().begin())`
 
 ##### `jon::jon::at`
 
