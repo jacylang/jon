@@ -8,6 +8,7 @@
 #include <string>
 #include <assert.h>
 #include <map>
+#include <algorithm>
 
 #include "Lexer.h"
 #include "Parser.h"
@@ -546,21 +547,6 @@ namespace jon {
             } else if (expectedType == jon::Type::Array) {
                 const auto & arrayValue = value.get<jon::arr_t>();
 
-                jon result {jon::arr_t {}};
-                const auto & itemsSchema = schema.at("items");
-                size_t index{0};
-                for (const auto & el : arrayValue) {
-                    const auto & elValidation = el.validate(itemsSchema);
-                    if (not elValidation.isNull()) {
-                        result[index] = elValidation;
-                    }
-                    index++;
-                }
-
-                if (not result.empty()) {
-                    return result;
-                }
-
                 if (schema.has("minSize")) {
                     auto min = schema.at<jon::int_t>("minSize");
                     if (arrayValue.size() < min) {
@@ -579,9 +565,42 @@ namespace jon {
                     }
                 }
 
+                jon result {jon::arr_t {}};
+                const auto & itemsSchema = schema.at("items");
+                size_t index{0};
+                for (const auto & el : arrayValue) {
+                    const auto & elValidation = el.validate(itemsSchema);
+                    if (not elValidation.isNull()) {
+                        result[index] = elValidation;
+                    }
+                    index++;
+                }
+
+                if (not result.empty()) {
+                    return result;
+                }
+
                 return result.empty() ? jon {} : result;
             } else if (expectedType == jon::Type::Object) {
                 const auto & objectValue = value.get<jon::obj_t>();
+
+                if (schema.has("minProps")) {
+                    auto min = schema.at<jon::int_t>("minProps");
+                    if (objectValue.size() < min) {
+                        return jon {
+                            mstr("Invalid object properties count: ", objectValue.size(), " is less than ", min)
+                        };
+                    }
+                }
+
+                if (schema.has("maxProps")) {
+                    auto max = schema.at<jon::int_t>("maxProps");
+                    if (objectValue.size() > max) {
+                        return jon {
+                            mstr("Invalid object properties count: ", objectValue.size(), " is greater than ", max)
+                        };
+                    }
+                }
 
                 jon result {jon::obj_t {}};
 
@@ -606,24 +625,6 @@ namespace jon {
                             continue;
                         }
                         result[prop.first] = jon {jon::str_t {"Missing property"}};
-                    }
-                }
-
-                if (schema.has("minProps")) {
-                    auto min = schema.at<jon::int_t>("minProps");
-                    if (objectValue.size() < min) {
-                        return jon {
-                            mstr("Invalid object properties count: ", objectValue.size(), " is less than ", min)
-                        };
-                    }
-                }
-
-                if (schema.has("maxProps")) {
-                    auto max = schema.at<jon::int_t>("maxProps");
-                    if (objectValue.size() > max) {
-                        return jon {
-                            mstr("Invalid object properties count: ", objectValue.size(), " is greater than ", max)
-                        };
                     }
                 }
 
