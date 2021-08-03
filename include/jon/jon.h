@@ -694,7 +694,7 @@ namespace jon {
                 auto floatValue = get<float_t>();
 
                 if (schema.has("minFloat")) {
-                    auto min = schema.schemaAt<int_t>("minFloat");
+                    auto min = schema.schemaAt<float_t>("minFloat");
                     if (floatValue < min) {
                         return jon {
                             mstr("Invalid float size: ", floatValue, " is less than ", min)
@@ -703,7 +703,7 @@ namespace jon {
                 }
 
                 if (schema.has("maxFloat")) {
-                    auto max = schema.schemaAt<int_t>("maxFloat");
+                    auto max = schema.schemaAt<float_t>("maxFloat");
                     if (floatValue > max) {
                         return jon {
                             mstr("Invalid float size: ", floatValue, " is greater than ", max)
