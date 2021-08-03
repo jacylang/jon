@@ -4,16 +4,16 @@ int main(const int argc, const char ** argv) {
     using namespace jon::literal;
 
     auto val = R"(
+        hello: [
+            1
+        ]
     )"_jon;
 
     auto schema = R"(
         type: 'object'
         props: {
             hello: {
-                type: ['string', 'object']
-                minLen: 10
-                nullable: true
-                optional: true
+                type: 'array'
             }
         }
     )"_jon;

@@ -4,8 +4,12 @@
 #include <stdexcept>
 
 namespace jon {
-    struct jon_exception {
+    struct jon_exception : std::exception {
         jon_exception(const std::string & msg) : msg(msg) {}
+
+        const char * what() const noexcept override {
+            return msg.c_str();
+        }
 
     private:
         std::string msg;
