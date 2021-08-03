@@ -151,8 +151,10 @@ Simple type-checking methods.
 jon & check(Type expectedType) const;
 ```
 
-Checks that value is of given type and returns `*this`, otherwise throws an
- `std::runtime_error` exception.
+Checks that value is of given type and returns `*this`.
+
+**Exceptions**
+Throws `jon::type_error` if type check failed.
 
 ##### `jon::jon::operator[]`
 
@@ -191,6 +193,15 @@ template<class T>
 at(key).get<T>()
 ```
 
+**Exceptions**
+(1-6) throw `jon::out_if_range` if no element found by key/index.
+
+(1), (2), (5), (6) throw `jon::type_error` if value is not an `object`.
+
+(3) and (4) throw `jon::type_error` if value is not an `array`.
+
+(5) and (6) throw `jon::type_error` if value is not of type `T`.
+
 ##### `jon::jon::dump`
 
 ```c++
@@ -224,6 +235,9 @@ jon validate(const jon & schema) const;
 
 Validates JON value by schema, returns `null` jon value if value is valid, otherwise returns schema-like error structure.
 Read more about schemas [Schemas](#schemas)
+
+**Exceptions**
+Throws `jon::invalid_schema` if schema has invalid structure.
 
 ##### `jon::literals::operator""_jon`
 
