@@ -15,6 +15,7 @@
 #include "Lexer.h"
 #include "Parser.h"
 #include "Printer.h"
+#include "ref.h"
 
 namespace jon {
     class jon {
