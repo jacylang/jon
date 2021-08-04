@@ -32,6 +32,7 @@ namespace jon {
         True,
         NaN,
         Inf,
+        NegInf,
 
         BinInt,
         HexInt,
@@ -535,6 +536,8 @@ namespace jon {
                 addToken(TokenKind::NaN, 3);
             } else if (trimmed == "inf") {
                 addToken(TokenKind::Inf, 3);
+            } else if (trimmed == "-inf") {
+                addToken(TokenKind::NegInf, 3);
             } else {
                 // Add identifier as string
                 addToken(TokenKind::String, std::move(val));
