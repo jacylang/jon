@@ -962,6 +962,7 @@ namespace jon {
                 for (const auto & entry : flatten().get<obj_t>()) {
                     list.push(jon {str_t {mstr(entry.first, ": ", entry.second.dump())}});
                 }
+                return list;
             }
 
             if (isArray()) {
