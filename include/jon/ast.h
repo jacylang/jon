@@ -84,16 +84,6 @@ namespace jon::ast {
         }
     };
 
-    struct Inf : Value {
-        Inf(bool sign) : Value(ValueKind::Bool), sign(sign) {}
-
-        bool sign;
-
-        void accept(ValueVisitor & visitor) const override {
-            visitor.visit(*this);
-        }
-    };
-
     struct Int : Value {
         Int(int64_t val) : Value(ValueKind::Int), val(val) {}
 
