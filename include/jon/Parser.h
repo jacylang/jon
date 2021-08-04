@@ -136,7 +136,7 @@ namespace jon {
             }
         }
 
-        ast::value_ptr parseValue() {
+        ast::value_ptr parseValue(bool root = false) {
             switch (peek().kind) {
                 case TokenKind::LBrace: {
                     return parseObject();
@@ -175,6 +175,9 @@ namespace jon {
                     return std::make_unique<ast::String>(advance().val);
                 }
                 default: {
+                    if (root) {
+                        return parseObject(root);
+                    }
                     expectedError("value");
                 }
             }
