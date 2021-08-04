@@ -447,28 +447,37 @@ namespace jon {
         }
 
         jon flatten() const {
-            if (isNull() or isInt() or isFloat() or isString()) {
-                return *this;
-            }
+            jon result {arr_t {}};
+            _flatten("", *this, result);
+            return result;
+        }
 
-            if (isObject()) {
-                jon flatObj = jon {obj_t {}};
-                for (const auto & entry : get<obj_t>()) {
-                    flatObj["/" + entry.first] = entry.second.flatten();
+    private:
+        static void _flatten(const std::string & refString, const jon & value, jon & result) {
+            switch (value.type()) {
+                case Type::Object: {
+                    if (value.empty()) {
+                        return;
+                    }
+                    for (const auto & entry : value.get<obj_t>()) {
+                        _flatten(refString + "/" + escstr(entry.first), entry.second, result);
+                    }
+                    break;
                 }
-                return flatObj;
-            }
-
-            if (isArray()) {
-                jon flatObj = jon {obj_t {}};
-                size_t index{0};
-                for (const auto & el : get<arr_t>()) {
-                    flatObj["/" + std::to_string(index)] = el.flatten();
+                case Type::Array: {
+                    if (value.empty()) {
+                        return;
+                    }
+                    size_t index{0};
+                    for (const auto & el : value.get<arr_t>()) {
+                        _flatten(refString + "/" + std::to_string(index), el, result);
+                    }
+                    break;
                 }
-                return flatObj;
+                default: {
+                    result[refString] = value;
+                }
             }
-
-            throw std::logic_error("[jon bug]: Unhandled type in `jon::flatten`");
         }
 
         // Array interface //
