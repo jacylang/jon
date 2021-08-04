@@ -472,6 +472,11 @@ namespace jon {
             return get<arr_t>().at(idx);
         }
 
+        void push(const jon & el) {
+            value.assertArrayFirstAccess();
+            get<arr_t>().push_back(el);
+        }
+
         // Serialization/Deserialization //
     private:
         static Value fromAst(ast::value_ptr && ast) {
