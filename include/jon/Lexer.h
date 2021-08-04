@@ -483,21 +483,6 @@ namespace jon {
                 return;
             }
 
-            if (isSeq('n', 'u', 'l', 'l') and isNextNonContinue(5)) {
-                addTokenAdvance(TokenKind::Null, 4);
-                return;
-            }
-
-            if (isSeq('f', 'a', 'l', 's', 'e') and isNextNonContinue(6)) {
-                addTokenAdvance(TokenKind::False, 5);
-                return;
-            }
-
-            if (isSeq('t', 'r', 'u', 'e') and isNextNonContinue(5)) {
-                addTokenAdvance(TokenKind::True, 4);
-                return;
-            }
-
             if (isDigit()) {
                 return lexNum();
             }
