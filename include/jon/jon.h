@@ -392,6 +392,12 @@ namespace jon {
             return type() == Type::Array;
         }
 
+        // Float interface //
+    public:
+        bool isNaN() const {
+            return type() == Type::Float and std::isnan(get<float_t>());
+        }
+
         // Object interface //
     public:
         jon & operator[](const str_t & key) {
