@@ -233,7 +233,11 @@ namespace jon {
         }
 
         bool isDigit() {
-            return peek() >= '0' and peek() <= '9';
+            return isDigit(peek());
+        }
+
+        bool isDigit(char c) {
+            return c >= '0' and c <= '9';
         }
 
         bool isHexDigit() {
@@ -485,7 +489,7 @@ namespace jon {
                 return;
             }
 
-            if (isDigit()) {
+            if ((is('-') or is('+')) and isDigit()) {
                 return lexNum();
             }
 
