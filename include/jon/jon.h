@@ -10,6 +10,7 @@
 #include <map>
 #include <algorithm>
 #include <regex>
+#include <cmath>
 
 #include "Lexer.h"
 #include "Parser.h"
@@ -332,7 +333,7 @@ namespace jon {
             }
 
             if (isFloat()) {
-                return get<float_t>() == other.get<float_t>();
+                return std::abs(get<float_t>() - other.get<float_t>()) < std::numeric_limits<double>::epsilon();
             }
 
             if (isString()) {
