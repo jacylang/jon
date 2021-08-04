@@ -210,6 +210,7 @@ namespace jon {
         // Constructors //
     public:
         explicit jon() : value(null_t {}) {}
+        explicit jon(std::nullptr_t = nullptr) noexcept : value(null_t {}) {}
         explicit jon(null_t) noexcept : value(null_t {}) {}
         explicit jon(bool_t v) noexcept : value(v) {}
         explicit jon(int_t v) noexcept : value(v) {}
