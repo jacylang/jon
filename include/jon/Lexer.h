@@ -107,6 +107,12 @@ namespace jon {
                 case TokenKind::NaN: {
                     return "`nan`";
                 }
+                case TokenKind::PosNaN: {
+                    return "`+nan`";
+                }
+                case TokenKind::NegNaN: {
+                    return "`-nan`";
+                }
                 case TokenKind::Inf: {
                     return "`inf`";
                 }
