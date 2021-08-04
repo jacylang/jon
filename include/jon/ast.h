@@ -20,7 +20,6 @@ namespace jon::ast {
 
         virtual void visit(const Null&) = 0;
         virtual void visit(const Bool&) = 0;
-        virtual void visit(const Inf&) = 0;
         virtual void visit(const Int&) = 0;
         virtual void visit(const Float&) = 0;
         virtual void visit(const String&) = 0;
