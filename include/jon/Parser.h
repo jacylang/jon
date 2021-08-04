@@ -108,6 +108,21 @@ namespace jon {
                         skip(TokenKind::String, "key", true).val
                     };
                 }
+                case TokenKind::Null: {
+                    return ast::Ident {"null"};
+                }
+                case TokenKind::False: {
+                    return ast::Ident {"false"};
+                }
+                case TokenKind::True: {
+                    return ast::Ident {"true"};
+                }
+                case TokenKind::Inf: {
+                    return ast::Ident {"inf"};
+                }
+                case TokenKind::NegInf: {
+                    return ast::Ident {"-inf"};
+                }
             }
         }
 
