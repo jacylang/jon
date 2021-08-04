@@ -120,6 +120,9 @@ namespace jon {
                 case TokenKind::Inf: {
                     return ast::Ident {"inf"};
                 }
+                case TokenKind::PosInf: {
+                    return ast::Ident {"+inf"};
+                }
                 case TokenKind::NegInf: {
                     return ast::Ident {"-inf"};
                 }
@@ -153,7 +156,8 @@ namespace jon {
                     return std::make_unique<ast::Bool>(advance().kind == TokenKind::True);
                 }
                 case TokenKind::Inf:
-                case TokenKind::NegInf: {
+                case TokenKind::NegInf:
+                case TokenKind::PosInf: {
                     return std::make_unique<ast::Float>(
                         std::numeric_limits<double>::infinity() * (advance().kind == TokenKind::NegInf ? -1 : 1)
                     );
