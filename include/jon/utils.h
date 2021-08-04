@@ -4,6 +4,8 @@
 #include <string>
 #include <sstream>
 
+#include "error.h"
+
 namespace jon {
     struct Indent {
         using size_type = int32_t;
@@ -73,6 +75,22 @@ namespace jon {
             return !std::isspace(ch);
         }).base(), res.end());
         return res;
+    }
+
+    static inline uint8_t hexChar2Int(char c) {
+        if (c >= '0' and c <= '9') {
+            return static_cast<uint8_t>(c - '0');
+        }
+
+        if (c >= 'a' and c <= 'f') {
+            return static_cast<uint8_t>(c - 'a');
+        }
+
+        if (c >= 'A' and c <= 'F') {
+            return static_cast<uint8_t>(c - 'A');
+        }
+
+        throw jon::jon_exception("[jon bug]: Called `hexChar2Int` with not a hex digit char");
     }
 }
 
