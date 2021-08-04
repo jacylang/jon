@@ -1,9 +1,16 @@
 cmake_minimum_required(VERSION 3.16)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
+include(jon)
+
 project(jon VERSION 0.0.3 LANGUAGES CXX)
 
-### Target
-set(JON_TARGET_NAME ${PROJECT_NAME})
+### Compiler flags
+set(CMAKE_CXX_STANDARD 17)
+
+set(CMAKE_CXX_FLAGS_DEBUG "-g -Og")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+set(CMAKE_CXX_FLAGS "-std=c++17")
 
 add_compile_options(
         # WARNINGS #
@@ -35,13 +42,20 @@ add_compile_options(
         -Wno-logical-op-parentheses
 )
 
-### Compiler flags
-set(CMAKE_CXX_STANDARD 17)
+include(GNUInstallDirs)
 
-set(CMAKE_CXX_FLAGS_DEBUG "-g -Og")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-set(CMAKE_CXX_FLAGS "-std=c++17")
+set(JON_STANDALONE_PROJECT OFF)
+if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    set(JON_STANDALONE_PROJECT ON)
+endif()
 
-include_directories("${PROJECT_SOURCE_DIR}/include")
+if (JON_BUILD_EXAMPLES)
+    add_subdirectory(src)
+endif()
 
-add_executable(jon test.cpp include/jon/Lexer.h include/jon/utils.h include/jon/Parser.h include/jon/ast.h include/jon/Printer.h include/jon/jon.h)
+add_library(jon INTERFACE)
+add_library(jon::jon ALIAS jon)
+add_subdirectory(include)
+
+### Target
+set(JON_TARGET_NAME ${PROJECT_NAME})

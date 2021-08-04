@@ -8,7 +8,7 @@ int main(const int argc, const char ** argv) {
     auto val = file.at("value");
     auto schema = file.at("schema");
 
-    std::cout << val.validate(schema).dump("  ");
+    std::cout << val.validate(schema).dump("  ") << std::endl;
 
     return 0;
 }
