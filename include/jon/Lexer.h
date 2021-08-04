@@ -445,6 +445,8 @@ namespace jon {
                                 val += static_cast<char>(hexChar2Int(advance()) * 16 + hexChar2Int(advance()));
                                 val += static_cast<char>(hexChar2Int(advance()) * 16 + hexChar2Int(advance()));
                                 val += static_cast<char>(hexChar2Int(advance()) * 16 + hexChar2Int(advance()));
+                            } else {
+                                val += peek();
                             }
                         }
                     }
