@@ -20,6 +20,7 @@ namespace jon::ast {
 
         virtual void visit(const Null&) = 0;
         virtual void visit(const Bool&) = 0;
+        virtual void visit(const Inf&) = 0;
         virtual void visit(const Int&) = 0;
         virtual void visit(const Float&) = 0;
         virtual void visit(const String&) = 0;
@@ -77,6 +78,16 @@ namespace jon::ast {
         Bool(bool val) : Value(ValueKind::Bool), val(val) {}
 
         bool val;
+
+        void accept(ValueVisitor & visitor) const override {
+            visitor.visit(*this);
+        }
+    };
+
+    struct Inf : Value {
+        Inf(bool sign) : Value(ValueKind::Bool), sign(sign) {}
+
+        bool sign;
 
         void accept(ValueVisitor & visitor) const override {
             visitor.visit(*this);
