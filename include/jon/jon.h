@@ -394,6 +394,8 @@ namespace jon {
 
         // Float interface //
     public:
+        static const float_t NaN;
+
         bool isNaN() const {
             return type() == Type::Float and std::isnan(get<float_t>());
         }
@@ -1035,6 +1037,8 @@ namespace jon {
         {"object", jon::Type::Object},
         {"array",  jon::Type::Array},
     };
+
+    const jon::float_t jon::NaN = std::nan("");
 
     namespace literal {
         jon operator""_jon(const char * str, std::size_t n) {
