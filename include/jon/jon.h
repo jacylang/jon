@@ -959,8 +959,8 @@ namespace jon {
 
             if (isObject()) {
                 jon list {arr_t {}};
-                for (const auto & entry : get<obj_t>()) {
-
+                for (const auto & entry : flatten().get<obj_t>()) {
+                    list.push(jon {str_t {mstr(entry.first, ": ", entry.second.dump())}});
                 }
             }
 
