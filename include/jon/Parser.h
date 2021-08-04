@@ -154,7 +154,9 @@ namespace jon {
                 }
                 case TokenKind::Inf:
                 case TokenKind::NegInf: {
-                    return std::make_unique<ast::Inf>(advance().kind == TokenKind::NegInf);
+                    return std::make_unique<ast::Float>(
+                        std::numeric_limits<double>::infinity() * (advance().kind == TokenKind::NegInf ? -1 : 1)
+                    );
                 }
                 case TokenKind::BinInt: {
                     return std::make_unique<ast::Int>(std::stoul(advance().val, nullptr, 2));
