@@ -207,7 +207,7 @@ namespace jon {
                 }
 
                 auto key = parseKey();
-                skipNls();
+                skipNls(true);
                 skip(TokenKind::Colon, "`:` delimiter", true);
                 auto val = parseValue();
 
