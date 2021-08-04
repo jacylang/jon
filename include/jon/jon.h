@@ -450,6 +450,10 @@ namespace jon {
 
         // Object interface //
     public:
+        static jon obj(std::initializer_list<detail::jon_ref<jon>> init = {}) {
+            return jon {init, false, Type::Object};
+        }
+
         jon & operator[](const str_t & key) {
             value.assertObjectFirstAccess(key);
             return get<obj_t>()[key];
