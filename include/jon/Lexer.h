@@ -414,8 +414,9 @@ namespace jon {
                             break;
                         }
                         default: {
-                            if (isOctDigit()) {
-
+                            if (isOctDigit() and isOctDigit(lookup()) and isOctDigit(lookup(2))) {
+                                // Octal representation of ASCII character
+                                val += (advance() - '0') * 64 + (advance() - '0') * 8 + (advance() - '0');
                             }
                         }
                     }
