@@ -31,6 +31,8 @@ namespace jon {
         False,
         True,
         NaN,
+        PosNaN,
+        NegNaN,
         Inf,
         /// Same as `Inf` but starts with `+`, converts to key `+inf` but as value is the same as `Inf`
         PosInf,
@@ -548,10 +550,14 @@ namespace jon {
                 addToken(TokenKind::False, 4);
             } else if (trimmed == "nan") {
                 addToken(TokenKind::NaN, 3);
+            } else if (trimmed == "-nan") {
+                addToken(TokenKind::NegNaN, 4);
+            } else if (trimmed == "+nan") {
+                addToken(TokenKind::PosNaN, 4);
             } else if (trimmed == "inf") {
                 addToken(TokenKind::Inf, 3);
             } else if (trimmed == "+inf") {
-                addToken(TokenKind::Inf, 4);
+                addToken(TokenKind::PosInf, 4);
             } else if (trimmed == "-inf") {
                 addToken(TokenKind::NegInf, 4);
             } else {
