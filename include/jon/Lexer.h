@@ -424,7 +424,13 @@ namespace jon {
                                     (advance() - '0') * 64 + (advance() - '0') * 8 + (advance() - '0')
                                 );
                             } else if (is('x') and isHexDigit(lookup()) and isHexDigit(lookup(2))) {
+                                // Hex representation of ASCII character
                                 advance(); // Skip `x`
+                                val += static_cast<char>(hexChar2Int(advance()) * 16 + hexChar2Int(advance()));
+                            } else if (is('u') and isHexDigit(lookup()) and isHexDigit(lookup(2))) {
+                                advance(); // Skip `u`
+                                // Hex representation of unicode point below 10000
+                                val += static_cast<char>(hexChar2Int(advance()) * 4096 + hexChar2Int(advance()) * 256);
                                 val += static_cast<char>(hexChar2Int(advance()) * 16 + hexChar2Int(advance()));
                             }
                         }
