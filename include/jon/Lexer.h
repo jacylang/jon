@@ -106,6 +106,9 @@ namespace jon {
                 case TokenKind::Inf: {
                     return "`inf`";
                 }
+                case TokenKind::PosInf: {
+                    return "`+inf`";
+                }
                 case TokenKind::NegInf: {
                     return "`-inf`";
                 }
