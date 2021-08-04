@@ -996,6 +996,8 @@ namespace jon {
             if (isArray()) {
                 throw jon_exception("`array` is not a schema result type");
             }
+
+            throw jon_exception("[jon bug]: Unhandled type in `jon::toErrorList`");
         }
 
     private:
