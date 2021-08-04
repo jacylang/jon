@@ -266,7 +266,11 @@ namespace jon {
         }
 
         bool isOctDigit() {
-            return peek() >= '0' and peek() <= '7';
+            return isOctDigit(peek());
+        }
+
+        bool isOctDigit(char c) {
+            return c >= '0' and c <= '7';
         }
 
         void skip(char c) {
@@ -408,6 +412,11 @@ namespace jon {
                             val += '\v';
                             advance();
                             break;
+                        }
+                        default: {
+                            if (isOctDigit()) {
+
+                            }
                         }
                     }
                 }
