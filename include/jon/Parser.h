@@ -101,6 +101,16 @@ namespace jon {
             }
         }
 
+        ast::Ident parseKey() {
+            switch (peek().kind) {
+                case TokenKind::String: {
+                    return ast::Ident {
+                        skip(TokenKind::String, "key", true).val
+                    };
+                }
+            }
+        }
+
         ast::value_ptr parseValue() {
             switch (peek().kind) {
                 case TokenKind::LBrace: {
@@ -171,9 +181,7 @@ namespace jon {
                     break;
                 }
 
-                auto key = ast::Ident {
-                    skip(TokenKind::String, "key", true).val
-                };
+                auto key = parseKey();
                 skip(TokenKind::Colon, "`:` delimiter", true);
                 auto val = parseValue();
 
