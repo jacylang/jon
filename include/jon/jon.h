@@ -576,7 +576,12 @@ namespace jon {
                 case Type::Null: return "null";
                 case Type::Bool: return get<bool_t>() ? "true" : "false";
                 case Type::Int: return std::to_string(get<int_t>());
-                case Type::Float: return std::to_string(get<float_t>());
+                case Type::Float: {
+                    if (isNaN()) {
+                        return "nan";
+                    }
+                    return std::to_string(get<float_t>());
+                }
                 case Type::String: {
                     if (not pretty) {
                         return "'" + escstr(get<str_t>()) + "'";
