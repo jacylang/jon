@@ -1,6 +1,6 @@
 #include "jon/jon.h"
 
-int main(const int argc, const char ** argv) {
+int main(const int, const char**) {
     using namespace jon::literal;
 
     auto file = jon::jon::fromFile("/home/hazer-hazer/dev/jacylang/jon/examples/sample_1.jon");

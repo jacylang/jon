@@ -16,6 +16,8 @@ namespace jon::ast {
 
     struct ValueVisitor {
     public:
+        virtual ~ValueVisitor() = default;
+
         virtual void visit(const Null&) = 0;
         virtual void visit(const Bool&) = 0;
         virtual void visit(const Int&) = 0;
