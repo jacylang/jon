@@ -117,6 +117,9 @@ namespace jon {
                 case TokenKind::True: {
                     return ast::Ident {"true"};
                 }
+                case TokenKind::NaN: {
+                    return ast::Ident {"nan"};
+                }
                 case TokenKind::Inf: {
                     return ast::Ident {"inf"};
                 }
