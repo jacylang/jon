@@ -226,20 +226,20 @@ namespace jon {
         explicit jon(const arr_t & v) noexcept : value(v) {}
         explicit jon(arr_t && v) noexcept : value(std::move(v)) {}
 
-        jon(std::initializer_list<jon> init) {
+        jon(std::initializer_list<detail::jon_ref<jon>> init) {
             if (init.size() == 0) {
                 value = Value {obj_t {}};
                 return;
             }
 
-            bool isObjectProjection = std::all_of(init.begin(), init.end(), [](const jon & el) {
-                return el.isArray() and el.size() == 2 and el.at(0).isString();
+            bool isObjectProjection = std::all_of(init.begin(), init.end(), [](const auto & el) {
+                return el->isArray() and el->size() == 2 and el->at(0).isString();
             });
 
             if (isObjectProjection) {
                 value = Value {obj_t {}};
                 for (const auto & el : init) {
-                    const auto & pair = el.get<arr_t>();
+                    const auto & pair = el.get().get<arr_t>();
                     value.get<obj_t>().emplace(pair.at(0).get<str_t>(), pair.at(1));
                 }
             } else {
