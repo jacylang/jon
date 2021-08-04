@@ -356,18 +356,16 @@ namespace jon {
         }
 
         void lexString() {
+            bool multiLine = false;
+
             const auto quote = peek();
             if (isSeq(quote, quote, quote)) {
-                return lexMLString();
+                // Note: Skip triple quote
+                advance(3);
+                multiLine = true;
+            } else {
+                advance();
             }
-
-            return lexNormalString();
-        }
-
-        void lexMLString() {
-            const auto quote = peek();
-            // Note: Skip triple quote
-            advance(3);
 
             bool closed = false;
             std::string val;
@@ -414,34 +412,25 @@ namespace jon {
                     }
                 }
 
-                if (isSeq(quote, quote, quote)) {
+                if (multiLine and isSeq(quote, quote, quote)) {
                     closed = true;
                     break;
+                } else if (isNL() or is(quote)) {
+                    break;
                 }
+
                 val += advance();
             }
 
             if (!closed) {
-                expectedError(mstr(quote, quote, quote));
-            }
-
-            advance(3);
-
-            addToken(TokenKind::String, val);
-        }
-
-        void lexNormalString() {
-            const auto quote = advance();
-
-            std::string val;
-            while (not eof()) {
-                if (isNL() or is(quote)) {
-                    break;
+                if (multiLine) {
+                    expectedError(mstr(quote, quote, quote));
+                } else {
+                    expectedError(std::string(1, quote));
                 }
-                val += advance();
             }
 
-            skip(quote);
+            advance(multiLine ? 3 : 1);
 
             addToken(TokenKind::String, val);
         }
