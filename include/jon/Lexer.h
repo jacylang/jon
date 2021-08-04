@@ -260,9 +260,13 @@ namespace jon {
         }
 
         bool isHexDigit() {
+            return isHexDigit(peek());
+        }
+
+        bool isHexDigit(char c) {
             return isDigit()
-                or peek() >= 'a' and peek() <= 'f'
-                or peek() >= 'A' and peek() <= 'F';
+                or c >= 'a' and c <= 'f'
+                or c >= 'A' and c <= 'F';
         }
 
         bool isOctDigit() {
