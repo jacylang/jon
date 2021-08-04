@@ -30,6 +30,7 @@ namespace jon {
         Null,
         False,
         True,
+        NaN,
 
         BinInt,
         HexInt,
@@ -496,7 +497,7 @@ namespace jon {
                 val += advance();
             }
 
-            // Left spaces are already skipped, thus trim right side of string to check for constant
+            // Left spaces are already skipped by `isHidden`, thus trim right side of string to check for constant
             const auto & trimmed = rtrim(val);
             if (trimmed == "null") {
                 addToken(TokenKind::Null, 4);
@@ -504,6 +505,8 @@ namespace jon {
                 addToken(TokenKind::False, 5);
             } else if (trimmed == "true") {
                 addToken(TokenKind::False, 4);
+            } else if (trimmed == "nan") {
+                addToken(TokenKind::NaN, 3);
             } else {
                 // Add identifier as string
                 addToken(TokenKind::String, std::move(val));
