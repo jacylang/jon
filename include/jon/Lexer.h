@@ -30,9 +30,11 @@ namespace jon {
         Null,
         False,
         True,
+
         NaN,
         PosNaN,
         NegNaN,
+
         Inf,
         /// Same as `Inf` but starts with `+`, converts to key `+inf` but as value is the same as `Inf`
         PosInf,
@@ -370,6 +372,48 @@ namespace jon {
             bool closed = false;
             std::string val;
             while (not eof()) {
+                if (is('\\')) {
+                    advance();
+                    switch (peek()) {
+                        case '\'':
+                        case '\\':
+                        case '"': {
+                            val += advance();
+                            break;
+                        }
+                        case 'n': {
+                            val += '\n';
+                            advance();
+                            break;
+                        }
+                        case 'r': {
+                            val += '\r';
+                            advance();
+                            break;
+                        }
+                        case 't': {
+                            val += '\t';
+                            advance();
+                            break;
+                        }
+                        case 'b': {
+                            val += '\b';
+                            advance();
+                            break;
+                        }
+                        case 'f': {
+                            val += '\f';
+                            advance();
+                            break;
+                        }
+                        case 'v': {
+                            val += '\v';
+                            advance();
+                            break;
+                        }
+                    }
+                }
+
                 if (isSeq(quote, quote, quote)) {
                     closed = true;
                     break;
