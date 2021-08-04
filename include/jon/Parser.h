@@ -123,6 +123,12 @@ namespace jon {
                 case TokenKind::NegInf: {
                     return ast::Ident {"-inf"};
                 }
+                case TokenKind::DecInt:
+                case TokenKind::BinInt:
+                case TokenKind::HexInt:
+                case TokenKind::OctoInt: {
+                    return ast::Ident {advance().val};
+                }
                 default: {
                     expectedError("key");
                 }
