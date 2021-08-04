@@ -105,7 +105,7 @@ namespace jon {
             switch (peek().kind) {
                 case TokenKind::String: {
                     return ast::Ident {
-                        skip(TokenKind::String, "key", true).val
+                        skip(TokenKind::String, "[jon bug] key", true).val
                     };
                 }
                 case TokenKind::Null: {
@@ -122,6 +122,9 @@ namespace jon {
                 }
                 case TokenKind::NegInf: {
                     return ast::Ident {"-inf"};
+                }
+                default: {
+                    expectedError("key");
                 }
             }
         }
