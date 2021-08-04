@@ -170,8 +170,8 @@ namespace jon {
                 }
             }
 
-            Type t;
             std::variant<null_t, bool_t, int_t, float_t, str_t, obj_t, arr_t> v;
+            Type t;
 
         private:
             template<class T>

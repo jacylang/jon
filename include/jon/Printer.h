@@ -10,7 +10,7 @@ namespace jon {
     class Printer : public ast::ValueVisitor {
     public:
         Printer() {}
-        ~Printer() = default;
+        virtual ~Printer() = default;
 
         void printTokens(const TokenStream & tokens) {
             out("Tokens: [");
@@ -33,7 +33,7 @@ namespace jon {
     private:
         uint16_t indent;
 
-        void visit(const ast::Null & null) override {
+        void visit(const ast::Null&) override {
             out("null");
         }
 
