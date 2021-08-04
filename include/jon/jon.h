@@ -401,15 +401,18 @@ namespace jon {
         }
         
         bool isInf() const {
+            static_assert(std::numeric_limits<float>::is_iec559, "IEEE 754 required to use `jon::isInf`");
             return type() == Type::Float and std::isinf(get<float_t>());
         }
 
         bool isPosInf() const {
+            static_assert(std::numeric_limits<float>::is_iec559, "IEEE 754 required to use `jon::isPosInf`");
             return isInf() and get<float_t>() > std::numeric_limits<float_t>::max();
         }
 
         bool isNegInf() const {
-            return isInf() and get<float_t>() > std::numeric_limits<float_t>::lowest();
+            static_assert(std::numeric_limits<float>::is_iec559, "IEEE 754 required to use `jon::isNegInf`");
+            return isInf() and get<float_t>() < std::numeric_limits<float_t>::lowest();
         }
 
         // Object interface //
