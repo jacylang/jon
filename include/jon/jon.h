@@ -446,6 +446,31 @@ namespace jon {
             return (*it).second.get<T>();
         }
 
+        jon flatten() const {
+            if (isNull() or isInt() or isFloat() or isString()) {
+                return *this;
+            }
+
+            if (isObject()) {
+                jon flatObj = jon {obj_t {}};
+                for (const auto & entry : get<obj_t>()) {
+                    flatObj["/" + entry.first] = entry.second.flatten();
+                }
+                return flatObj;
+            }
+
+            if (isArray()) {
+                jon flatObj = jon {obj_t {}};
+                size_t index{0};
+                for (const auto & el : get<arr_t>()) {
+                    flatObj["/" + std::to_string(index)] = el.flatten();
+                }
+                return flatObj;
+            }
+
+            throw std::logic_error("[jon bug]: Unhandled type in `jon::flatten`");
+        }
+
         // Array interface //
     public:
         jon & operator[](size_t idx) {
