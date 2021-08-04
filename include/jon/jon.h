@@ -226,7 +226,7 @@ namespace jon {
         explicit jon(const arr_t & v) noexcept : value(v) {}
         explicit jon(arr_t && v) noexcept : value(std::move(v)) {}
 
-        jon(std::initializer_list<detail::jon_ref<jon>> init) {
+        jon(std::initializer_list<detail::jon_ref<jon>> init, bool typeDeduction = true, Type type = Type::Array) {
             if (init.size() == 0) {
                 value = Value {obj_t {}};
                 return;
@@ -236,6 +236,16 @@ namespace jon {
                 return el->isArray() and el->size() == 2 and el->at(0).isString();
             });
 
+            if (not typeDeduction) {
+                if (type == Type::Array) {
+                    isObjectProjection = false;
+                }
+
+                if (not isObjectProjection and type == Type::Array) {
+                    throw type_error("Cannot instantiate `jon` from non-object-like initializer_list");
+                }
+            }
+
             if (isObjectProjection) {
                 value = Value {obj_t {}};
                 for (const auto & el : init) {
@@ -243,7 +253,7 @@ namespace jon {
                     value.get<obj_t>().emplace(pair.at(0).get<str_t>(), pair.at(1));
                 }
             } else {
-                value = Value {arr_t {}};
+                value = Value {arr_t {init.begin(), init.end()}};
             }
         }
 
@@ -758,7 +768,7 @@ namespace jon {
                         }
                     }
                     return jon {
-                        mstr("Type mismatch: Expected ", expectedTypeStr, ", got ", typeStr())
+                        {"message", mstr("Type mismatch: Expected ", expectedTypeStr, ", got ", typeStr())}
                     };
                 }
             }
