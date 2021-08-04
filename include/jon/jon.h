@@ -1038,7 +1038,7 @@ namespace jon {
         {"array",  jon::Type::Array},
     };
 
-    const jon::float_t jon::NaN = std::nan("");
+    const jon::float_t jon::NaN = std::numeric_limits<jon::float_t>::quiet_NaN();
 
     namespace literal {
         jon operator""_jon(const char * str, std::size_t n) {
