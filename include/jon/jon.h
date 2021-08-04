@@ -897,6 +897,39 @@ namespace jon {
             return jon {};
         }
 
+        jon toErrorList() const {
+            if (isNull()) {
+                return jon {};
+            }
+
+            if (isBool()) {
+                throw jon_exception("`bool` is not a schema result type");
+            }
+
+            if (isInt()) {
+                throw jon_exception("`int` is not a schema result type");
+            }
+
+            if (isFloat()) {
+                throw jon_exception("`float` is not a schema result type");
+            }
+
+            if (isString()) {
+                return *this;
+            }
+
+            if (isObject()) {
+                jon list {arr_t {}};
+                for (const auto & entry : get<obj_t>()) {
+
+                }
+            }
+
+            if (isArray()) {
+                throw jon_exception("`array` is not a schema result type");
+            }
+        }
+
     private:
         static const std::map<std::string, Type> typeNames;
 
