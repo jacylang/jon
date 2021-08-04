@@ -882,9 +882,17 @@ namespace jon {
             }
         }
 
+        bool schemaCheck(Type type, const std::string & errorMsg) const {
+            try {
+                check(type);
+            } catch (type_error & te) {
+                throw invalid_schema(errorMsg);
+            }
+        }
+
         /// Helper overload for schema validation, throws `invalid_error` instead of `type_error`
         template<class T>
-        T schemaAt(const str_t & key) const {
+        const T & schemaAt(const str_t & key) const {
             try {
                 return at<T>(key);
             } catch (type_error & te) {
