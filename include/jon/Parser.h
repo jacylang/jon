@@ -164,6 +164,11 @@ namespace jon {
                 case TokenKind::False: {
                     return std::make_unique<ast::Bool>(advance().kind == TokenKind::True);
                 }
+                case TokenKind::NaN:
+                case TokenKind::PosNaN:
+                case TokenKind::NegNaN: {
+                    return std::make_unique<ast::Float>(std::numeric_limits<double>::quiet_NaN());
+                }
                 case TokenKind::Inf:
                 case TokenKind::NegInf:
                 case TokenKind::PosInf: {
