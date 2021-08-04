@@ -848,6 +848,22 @@ namespace jon {
                 return result.empty() ? jon {} : result;
             }
 
+            if (schema.has("anyOf")) {
+                const auto & anyOf = schema.schemaAt<arr_t>("anyOf");
+
+                bool someValid = false;
+                for (const auto & subSchema : anyOf) {
+                    const auto & subSchemaResult = validate(subSchema);
+                    if (subSchemaResult.isNull()) {
+                        someValid = true;
+                        break;
+                    }
+                }
+                if (not someValid) {
+                    return jon {str_t {"Does not match `anyOf` schemas"}};
+                }
+            }
+
             return jon {};
         }
 
