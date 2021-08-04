@@ -423,6 +423,9 @@ namespace jon {
                                 val += static_cast<char>(
                                     (advance() - '0') * 64 + (advance() - '0') * 8 + (advance() - '0')
                                 );
+                            } else if (is('x') and isHexDigit(lookup()) and isHexDigit(lookup(2))) {
+                                advance(); // Skip `x`
+                                val += static_cast<char>(hexChar2Int(advance()) * 16 + hexChar2Int(advance()));
                             }
                         }
                     }
