@@ -211,7 +211,7 @@ Comparison depends on type:
 - `null` - both values are `null`
 - `bool` - `bool == bool`
 - `int` - `int64_t == int64_t`
-- `float` - `double == double`
+- `float` - `std::abs(get<float_t>() - other.get<float_t>()) < std::numeric_limits<double>::epsilon()`
 - `string` - `std::string == std::string`
 - `object` - `std::equal(get<obj_t>().begin(), get<obj_t>().end(), other.get<obj_t>().begin())`
 - `array` - `std::equal(get<arr_t>().begin(), get<arr_t>().end(), other.get<arr_t>().begin())`
