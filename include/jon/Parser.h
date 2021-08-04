@@ -120,6 +120,12 @@ namespace jon {
                 case TokenKind::NaN: {
                     return ast::Ident {"nan"};
                 }
+                case TokenKind::PosNaN: {
+                    return ast::Ident {"+nan"};
+                }
+                case TokenKind::NegNaN: {
+                    return ast::Ident {"-nan"};
+                }
                 case TokenKind::Inf: {
                     return ast::Ident {"inf"};
                 }
