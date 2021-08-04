@@ -67,10 +67,12 @@ namespace jon {
         return escaped;
     }
 
-    static inline void rtrim(std::string &s) {
-        s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+    static inline std::string rtrim(const std::string & s) {
+        std::string res = s;
+        res.erase(std::find_if(res.rbegin(), res.rend(), [](unsigned char ch) {
             return !std::isspace(ch);
-        }).base(), s.end());
+        }).base(), res.end());
+        return res;
     }
 }
 

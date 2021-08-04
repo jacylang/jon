@@ -496,6 +496,11 @@ namespace jon {
                 val += advance();
             }
 
+            const auto & trimmed = rtrim(val);
+            if (trimmed == "null") {
+                addToken()
+            }
+
             // Add identifier as string
             addToken(TokenKind::String, std::move(val));
         }
