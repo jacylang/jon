@@ -19,7 +19,7 @@ namespace jon {
             Lexer lexer;
             tokens = lexer.lex(source);
 
-            return parseObject(true);
+            return parseValue(true);
         }
 
     private:
