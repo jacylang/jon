@@ -428,6 +428,9 @@ This keywords can be applied to schema for any type.
 
 - `type` [`string`]: Type of value. (Default: `any`)
 - `nullable` [`bool`]: Allows value to be `null`, similar to `type: ['{TYPE}', 'null']`. (Default: `false`)
+- `anyOf` [`array` of schemas]: Value is valid if any of schemas in array is valid for value.
+- `oneOf` [`array` of schemas]: Value is valid if EXACTLY ONE of schemas in array is valid for value.
+- `allOf` [`array` of schemas]: Value is valid if ALL of schemas in array is valid for value.
 
 #### Integer Keywords
 
