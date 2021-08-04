@@ -430,7 +430,20 @@ namespace jon {
                             } else if (is('u') and isHexDigit(lookup()) and isHexDigit(lookup(2))) {
                                 advance(); // Skip `u`
                                 // Hex representation of unicode point below 10000
-                                val += static_cast<char>(hexChar2Int(advance()) * 4096 + hexChar2Int(advance()) * 256);
+                                val += static_cast<char>(hexChar2Int(advance()) * 16 + hexChar2Int(advance()));
+                                val += static_cast<char>(hexChar2Int(advance()) * 16 + hexChar2Int(advance()));
+                            } else if (
+                                is('U')
+                                and isHexDigit(lookup())
+                                and isHexDigit(lookup(2))
+                                and isHexDigit(lookup(3))
+                                and isHexDigit(lookup(4))
+                            ) {
+                                advance(); // Skip `U`
+                                // Hex representation of unicode point
+                                val += static_cast<char>(hexChar2Int(advance()) * 16 + hexChar2Int(advance()));
+                                val += static_cast<char>(hexChar2Int(advance()) * 16 + hexChar2Int(advance()));
+                                val += static_cast<char>(hexChar2Int(advance()) * 16 + hexChar2Int(advance()));
                                 val += static_cast<char>(hexChar2Int(advance()) * 16 + hexChar2Int(advance()));
                             }
                         }
