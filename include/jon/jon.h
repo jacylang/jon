@@ -404,6 +404,10 @@ namespace jon {
             return type() == Type::Float and std::isinf(get<float_t>());
         }
 
+        bool isPosInf() const {
+            return isInf() and get<float_t>() > std::numeric_limits<float_t>::max;
+        }
+
         // Object interface //
     public:
         jon & operator[](const str_t & key) {
