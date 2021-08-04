@@ -126,7 +126,8 @@ namespace jon {
                 case TokenKind::DecInt:
                 case TokenKind::BinInt:
                 case TokenKind::HexInt:
-                case TokenKind::OctoInt: {
+                case TokenKind::OctoInt:
+                case TokenKind::Float: {
                     return ast::Ident {advance().val};
                 }
                 default: {
