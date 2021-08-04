@@ -399,6 +399,10 @@ namespace jon {
         bool isNaN() const {
             return type() == Type::Float and std::isnan(get<float_t>());
         }
+        
+        bool isInf() const {
+            return type() == Type::Float and std::isinf(get<float_t>());
+        }
 
         // Object interface //
     public:
