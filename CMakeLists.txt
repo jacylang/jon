@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.16)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
 include(jon)
 
-project(jon VERSION 0.0.3 LANGUAGES CXX)
+project(jon VERSION 0.0.5 LANGUAGES CXX)
 
 ### Compiler flags
 set(CMAKE_CXX_STANDARD 17)
