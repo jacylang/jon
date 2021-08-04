@@ -83,11 +83,11 @@ namespace jon {
         }
 
         if (c >= 'a' and c <= 'f') {
-            return static_cast<uint8_t>(c - 'a');
+            return static_cast<uint8_t>(c - 'a') + 10;
         }
 
         if (c >= 'A' and c <= 'F') {
-            return static_cast<uint8_t>(c - 'A');
+            return static_cast<uint8_t>(c - 'A') + 10;
         }
 
         throw jon::jon_exception("[jon bug]: Called `hexChar2Int` with not a hex digit char");
