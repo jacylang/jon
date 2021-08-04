@@ -98,6 +98,15 @@ namespace jon {
                 case TokenKind::True: {
                     return "`true`";
                 }
+                case TokenKind::NaN: {
+                    return "`nan`";
+                }
+                case TokenKind::Inf: {
+                    return "`inf`";
+                }
+                case TokenKind::NegInf: {
+                    return "`-inf`";
+                }
                 case TokenKind::String: {
                     return "string '" + escstr(val) + "'";
                 }
