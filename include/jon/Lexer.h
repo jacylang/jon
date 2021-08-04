@@ -496,14 +496,19 @@ namespace jon {
                 val += advance();
             }
 
+            // Left spaces are already skipped, thus trim right side of string to check for constant
             const auto & trimmed = rtrim(val);
             if (trimmed == "null") {
-                addToken()
+                addToken(TokenKind::Null, 4);
+            } else if (trimmed == "false") {
+                addToken(TokenKind::False, 5);
+            } else if (trimmed == "true") {
+                addToken(TokenKind::False, 4);
+            } else {
+                // Add identifier as string
+                addToken(TokenKind::String, std::move(val));
             }
-
-            // Add identifier as string
-            addToken(TokenKind::String, std::move(val));
-        }
+       }
 
         // Tokens //
         TokenStream tokens;
