@@ -53,7 +53,7 @@ if (JON_BUILD_EXAMPLES)
     add_subdirectory(src)
 endif()
 
-add_library(jon INTERFACE)
+add_library(jon INTERFACE include/jon/ref.h)
 add_library(jon::jon ALIAS jon)
 add_subdirectory(include)
 

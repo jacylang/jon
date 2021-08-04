@@ -1026,7 +1026,11 @@ namespace jon {
 //                return;
 //            }
 //
+//            std::string errorMsg;
 //
+//            for (const auto & el : toErrorList().get<arr_t>()) {
+//
+//            }
 //        }
 
     private:
