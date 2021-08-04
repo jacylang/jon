@@ -391,8 +391,21 @@ namespace jon {
 
             bool baseSpecific = false;
 
+            bool sign = false;
+            if (is('+')) {
+                advance();
+            } else if (is('-')) {
+                val += '-';
+                advance();
+                sign = true;
+            }
+
             // Binary //
             if (peek() == '0' and (lookup() == 'b' or lookup() == 'B')) {
+                if (sign) {
+                    error("Signed binary numbers are not allowed");
+                }
+
                 baseSpecific = true;
 
                 advance(2);
@@ -412,6 +425,10 @@ namespace jon {
 
             // Hexadecimal //
             if (peek() == '0' and (lookup() == 'x' or lookup() == 'X')) {
+                if (sign) {
+                    error("Signed hexadecimal numbers are not allowed");
+                }
+
                 baseSpecific = true;
 
                 advance(2);
@@ -429,13 +446,17 @@ namespace jon {
                 kind = TokenKind::HexInt;
             }
 
-            // Octodecimal //
+            // Octal //
             if (peek() == '0' and (lookup() == 'o' or lookup() == 'O')) {
+                if (sign) {
+                    error("Signed octal numbers are not allowed");
+                }
+
                 baseSpecific = true;
 
                 advance(2);
                 if (not isOctDigit()) {
-                    expectedError("octodecimal digit");
+                    expectedError("octal digit");
                 }
                 while (not eof()) {
                     skipOpt('_');
@@ -489,7 +510,7 @@ namespace jon {
                 return;
             }
 
-            if ((is('-') or is('+')) and isDigit()) {
+            if (isDigit() or (is('-') or is('+')) and isDigit(lookup())) {
                 return lexNum();
             }
 
