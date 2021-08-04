@@ -864,6 +864,25 @@ namespace jon {
                 }
             }
 
+            if (schema.has("oneOf")) {
+                const auto & oneOf = schema.schemaAt<arr_t>("oneOf");
+
+                bool oneValid = false;
+                for (const auto & subSchema : oneOf) {
+                    const auto & subSchemaResult = validate(subSchema);
+                    if (subSchemaResult.isNull()) {
+                        if (oneValid) {
+                            return jon {str_t {"Matches more than `oneOf` schemas"}};
+                        }
+                        oneValid = true;
+                        break;
+                    }
+                }
+                if (not oneValid) {
+                    return jon {str_t {"Does not match any of `oneOf` schemas"}};
+                }
+            }
+
             return jon {};
         }
 
