@@ -224,6 +224,27 @@ namespace jon {
         explicit jon(const arr_t & v) noexcept : value(v) {}
         explicit jon(arr_t && v) noexcept : value(std::move(v)) {}
 
+        jon(std::initializer_list<jon> init) {
+            if (init.size() == 0) {
+                value = Value {obj_t {}};
+                return;
+            }
+
+            bool isObjectProjection = std::all_of(init.begin(), init.end(), [](const jon & el) {
+                return el.isArray() and el.size() == 2 and el.at(0).isString();
+            });
+
+            if (isObjectProjection) {
+                value = Value {obj_t {}};
+                for (const auto & el : init) {
+                    const auto & pair = el.get<arr_t>();
+                    value.get<obj_t>().emplace(pair.at(0).get<str_t>(), pair.at(1));
+                }
+            } else {
+                value = Value {arr_t {}};
+            }
+        }
+
         // Custom constructors //
     public:
         static jon fromFile(const std::filesystem::path & path) {
@@ -734,7 +755,7 @@ namespace jon {
                             }
                         }
                     }
-                    return jon{
+                    return jon {
                         mstr("Type mismatch: Expected ", expectedTypeStr, ", got ", typeStr())
                     };
                 }
@@ -999,6 +1020,14 @@ namespace jon {
 
             throw jon_exception("[jon bug]: Unhandled type in `jon::toErrorList`");
         }
+
+//        void assertValid() const {
+//            if (empty()) {
+//                return;
+//            }
+//
+//
+//        }
 
     private:
         static const std::map<std::string, Type> typeNames;
