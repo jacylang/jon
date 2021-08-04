@@ -51,6 +51,7 @@ namespace jon::ast {
 
     struct Value {
         Value(ValueKind kind) : kind(kind) {}
+        virtual ~Value() = default;
 
         ValueKind kind;
 

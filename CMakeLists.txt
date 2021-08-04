@@ -32,6 +32,7 @@ add_compile_options(
 
         -Wvariadic-macros
         -Wwrite-strings
+        -Wno-logical-op-parentheses
 )
 
 ### Compiler flags
