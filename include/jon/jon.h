@@ -405,7 +405,11 @@ namespace jon {
         }
 
         bool isPosInf() const {
-            return isInf() and get<float_t>() > std::numeric_limits<float_t>::max;
+            return isInf() and get<float_t>() > std::numeric_limits<float_t>::max();
+        }
+
+        bool isNegInf() const {
+            return isInf() and get<float_t>() > std::numeric_limits<float_t>::lowest();
         }
 
         // Object interface //
