@@ -32,6 +32,8 @@ namespace jon {
         True,
         NaN,
         Inf,
+        /// Same as `Inf` but starts with `+`, converts to key `+inf` but as value is the same as `Inf`
+        PosInf,
         NegInf,
 
         BinInt,
@@ -545,8 +547,10 @@ namespace jon {
                 addToken(TokenKind::NaN, 3);
             } else if (trimmed == "inf") {
                 addToken(TokenKind::Inf, 3);
+            } else if (trimmed == "+inf") {
+                addToken(TokenKind::Inf, 4);
             } else if (trimmed == "-inf") {
-                addToken(TokenKind::NegInf, 3);
+                addToken(TokenKind::NegInf, 4);
             } else {
                 // Add identifier as string
                 addToken(TokenKind::String, std::move(val));
