@@ -883,6 +883,17 @@ namespace jon {
                 }
             }
 
+            if (schema.has("allOf")) {
+                const auto & allOf = schema.schemaAt<arr_t>("allOf");
+
+                for (const auto & subSchema : allOf) {
+                    const auto & subSchemaResult = validate(subSchema);
+                    if (not subSchemaResult.isNull()) {
+                        return subSchemaResult;
+                    }
+                }
+            }
+
             return jon {};
         }
 
