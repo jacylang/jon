@@ -1008,11 +1008,14 @@ namespace jon {
                 const auto & anyOf = schema.schemaAt<arr_t>("anyOf");
 
                 bool someValid = false;
-                size_t index{0};
                 for (const auto & subSchema : anyOf) {
-                    const auto subSchemaPath = path + "/anyOf/" + std::to_string(index);
-                    _validate(subSchema, subSchemaPath, result[subSchemaPath]);
-                    index++;
+                    // Not, use `validate`, but not `_validate` as we don't need an error,
+                    //  just the fact that some of `anyOf` variants matched
+                    const auto subSchemaResult = validate(subSchema);
+                    if (subSchemaResult.isNull()) {
+                        someValid = true;
+                        break;
+                    }
                 }
                 if (not someValid) {
                     result[path + "/anyOf"] = jon({
