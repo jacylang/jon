@@ -732,6 +732,11 @@ namespace jon {
         // Schemas //
     public:
         jon validate(const jon & schema) const {
+            return _validate(schema, "/");
+        }
+
+    private:
+        jon _validate(const jon & schema, const str_t & path) const {
             // Check nullability, does not require any other constraints if value is null
             const auto nullable = schema.has("nullable") and schema.schemaAt<bool_t>("nullable");
             if (nullable and isNull()) {
