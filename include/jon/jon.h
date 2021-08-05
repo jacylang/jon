@@ -483,7 +483,10 @@ namespace jacylang {
 
         // Float interface //
     public:
-        static const float_t NaN;
+        static float_t getNaN() {
+            static const float_t NaN = std::numeric_limits<jon::float_t>::quiet_NaN();
+            return NaN;
+        }
 
         bool isNaN() const {
             return type() == Type::Float and std::isnan(get<float_t>());
@@ -1226,10 +1229,8 @@ namespace jacylang {
         }
     };
 
-    const jon::float_t jon::NaN = std::numeric_limits<jon::float_t>::quiet_NaN();
-
     namespace literal {
-        jon operator""_jon(const char * str, std::size_t n) {
+        static inline jon operator""_jon(const char * str, std::size_t n) {
             return jon::parse(std::string(str, n));
         }
     }
