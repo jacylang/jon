@@ -90,7 +90,7 @@ namespace jacylang {
             return static_cast<uint8_t>(c - 'A') + 10;
         }
 
-        throw jon::jon_exception("[jon bug]: Called `hexChar2Int` with not a hex digit char");
+        throw jacylang::jon_exception("[jon bug]: Called `hexChar2Int` with not a hex digit char");
     }
 }
 

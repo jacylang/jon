@@ -11,5 +11,4 @@ TEST_CASE("static typeStr") {
     CHECK(jon::typeStr(jon::Type::String) == "string");
     CHECK(jon::typeStr(jon::Type::Object) == "object");
     CHECK(jon::typeStr(jon::Type::Array) == "array");
-
 }
