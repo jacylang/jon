@@ -967,10 +967,15 @@ namespace jon {
 
                     for (const auto & entry : objectValue) {
                         const auto & prop = props.find(entry.first);
+                        const auto entryPath = path + "/" + entry.first;
                         if (not extras and prop == props.end()) {
-                            result[path + "/" + entry.first] = jon {str_t {"Extra property (`extras` are not allowed)"}};
+                            result[entryPath + "/extras"] = jon({
+                                {"message", "Extra property (`extras` are not allowed)"},
+                                {"data", entry.second},
+                                {"keyword", "extras"},
+                            });
                         } else {
-                            entry.second._validate(prop->second, path + "/" + entry.first, result[entry.first]);
+                            entry.second._validate(prop->second, entryPath, result[entryPath]);
                             checkedProps.emplace_back(entry.first);
                         }
                     }
@@ -997,20 +1002,17 @@ namespace jon {
                         {"keyword", "extras"},
                     });
                 }
-
-                return result.empty() ? jon {} : result;
             }
 
             if (schema.has("anyOf")) {
                 const auto & anyOf = schema.schemaAt<arr_t>("anyOf");
 
                 bool someValid = false;
+                size_t index{0};
                 for (const auto & subSchema : anyOf) {
-                    _validate(subSchema, path + "/" + entry.first, result[path + "/" + entry.first]);
-                    if (subSchemaResult.isNull()) {
-                        someValid = true;
-                        break;
-                    }
+                    const auto subSchemaPath = path + "/anyOf/" + std::to_string(index);
+                    _validate(subSchema, subSchemaPath, result[subSchemaPath]);
+                    index++;
                 }
                 if (not someValid) {
                     result[path + "/anyOf"] = jon({
