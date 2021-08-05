@@ -1046,9 +1046,9 @@ namespace jon {
                 }
                 if (not oneValid) {
                     result[path + "/oneOf"] = jon({
-                        {"message", "Does not match `anyOf` schemas"},
+                        {"message", "Does not match any of `oneOf` schemas"},
                         {"data", {}},
-                        {"keyword", "anyOf"},
+                        {"keyword", "oneOf"},
                     });
                 }
             }
@@ -1059,12 +1059,15 @@ namespace jon {
                 for (const auto & subSchema : allOf) {
                     const auto & subSchemaResult = validate(subSchema);
                     if (not subSchemaResult.isNull()) {
-                        return subSchemaResult;
+                        result[path + "/allOf"] = jon({
+                            {"message", "Does not `allOf` schemas"},
+                            {"data", {}},
+                            {"keyword", "allOf"},
+                        });
+                        break;
                     }
                 }
             }
-
-            return jon {};
         }
 
     public:
