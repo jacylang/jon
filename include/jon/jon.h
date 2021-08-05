@@ -866,18 +866,22 @@ namespace jon {
                 if (schema.has("minLen")) {
                     auto min = schema.schemaAt<int_t>("minLen");
                     if (stringValue.size() < min) {
-                        return jon {
-                            mstr("Invalid string size: ", stringValue.size(), " is less than ", min)
-                        };
+                        return jon({
+                            {"message", mstr("Invalid string length: ", stringValue.size(), " is less than ", min)},
+                            {"data", *this},
+                            {"keyword", "minLen"},
+                        });
                     }
                 }
 
                 if (schema.has("maxLen")) {
                     auto max = schema.schemaAt<int_t>("maxLen");
                     if (stringValue.size() > max) {
-                        return jon {
-                            mstr("Invalid string size: ", stringValue.size(), " is greater than ", max)
-                        };
+                        return jon({
+                            {"message", mstr("Invalid string length: ", stringValue.size(), " is greater than ", max)},
+                            {"data", *this},
+                            {"keyword", "maxLen"},
+                        });
                     }
                 }
 
