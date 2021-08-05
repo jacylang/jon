@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
-include(jon)
 
 project(jon VERSION 0.0.5 LANGUAGES CXX)
 
@@ -47,6 +46,10 @@ add_compile_options(
 
 include(GNUInstallDirs)
 
+add_library(jon INTERFACE)
+add_library(jon::jon ALIAS jon)
+add_subdirectory(include)
+
 set(JON_STANDALONE_PROJECT OFF)
 if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     set(JON_STANDALONE_PROJECT ON)
@@ -56,6 +59,6 @@ if (JON_BUILD_EXAMPLES)
     add_subdirectory(src)
 endif()
 
-add_library(jon INTERFACE)
-add_library(jon::jon ALIAS jon)
-add_subdirectory(include)
+if (JON_BUILD_TESTS)
+    add_subdirectory(test)
+endif()
