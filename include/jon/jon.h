@@ -1184,11 +1184,11 @@ namespace jon {
 
         /// Helper overload for schema validation, throws `invalid_error` instead of `type_error`
         template<class T>
-        const T & schemaAt(const str_t & key) const {
+        const T & schemaAt(const str_t & key, const std::string & path) const {
             try {
                 return at<T>(key);
             } catch (type_error & te) {
-                throw invalid_schema(mstr(key, " must be ", typeStrArticle<T>()));
+                throw invalid_schema(mstr(key, " must be ", typeStrArticle<T>()), path);
             }
         }
     };
