@@ -44,8 +44,8 @@ namespace jacylang {
         static std::string typeStr(Type type) {
             switch (type) {
                 case Type::Null: return "null";
-                case Type::Bool: return "boolean";
-                case Type::Int: return "integer";
+                case Type::Bool: return "bool";
+                case Type::Int: return "int";
                 case Type::Float: return "float";
                 case Type::String: return "string";
                 case Type::Object: return "object";
