@@ -818,18 +818,22 @@ namespace jon {
                 if (schema.has("minInt")) {
                     auto min = schema.schemaAt<int_t>("minInt");
                     if (intValue < min) {
-                        return jon {
-                            mstr("Invalid integer size: ", intValue, " is less than ", min)
-                        };
+                        return jon({
+                            {"message", mstr("Invalid integer size: ", intValue, " is less than ", min)},
+                            {"data", *this},
+                            {"keyword", "minInt"},
+                        });
                     }
                 }
 
                 if (schema.has("maxInt")) {
                     auto max = schema.schemaAt<int_t>("maxInt");
                     if (intValue > max) {
-                        return jon {
-                            mstr("Invalid integer size: ", intValue, " is greater than ", max)
-                        };
+                        return jon({
+                            {"message", mstr("Invalid integer size: ", intValue, " is greater than ", max)},
+                            {"data", *this},
+                            {"keyword", "maxInt"},
+                        });
                     }
                 }
             } else if (valueType == Type::Float) {
