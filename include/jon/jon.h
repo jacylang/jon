@@ -794,9 +794,11 @@ namespace jon {
                             }
                         }
                     }
-                    return jon {
-                        {"message", mstr("Type mismatch: Expected ", expectedTypeStr, ", got ", typeStr())}
-                    };
+                    return jon({
+                        {"message", mstr("Type mismatch: Expected ", expectedTypeStr, ", got ", typeStr())},
+                        {"data", *this},
+                        {"keyword", "type"},
+                    });
                 }
             }
 
