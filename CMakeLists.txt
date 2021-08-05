@@ -5,6 +5,9 @@ include(jon)
 
 project(jon VERSION 0.0.5 LANGUAGES CXX)
 
+### Target
+set(JON_TARGET_NAME ${PROJECT_NAME})
+
 ### Compiler flags
 set(CMAKE_CXX_STANDARD 17)
 
@@ -53,9 +56,6 @@ if (JON_BUILD_EXAMPLES)
     add_subdirectory(src)
 endif()
 
-add_library(jon INTERFACE include/jon/ref.h)
+add_library(jon INTERFACE)
 add_library(jon::jon ALIAS jon)
 add_subdirectory(include)
-
-### Target
-set(JON_TARGET_NAME ${PROJECT_NAME})
