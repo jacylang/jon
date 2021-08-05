@@ -889,12 +889,13 @@ namespace jon {
                     // TODO: Return parts failed to match
                     const auto pattern = schema.schemaAt<str_t>("pattern");
                     const std::regex regex(pattern);
-                    if (std::regex_match(stringValue, regex)) {
-                        return jon {};
+                    if (not std::regex_match(stringValue, regex)) {
+                        return jon({
+                            {"message", mstr("Invalid string value: '", stringValue, "' does not match pattern '", pattern, "'")},
+                            {"data", *this},
+                            {"keyword", "maxLen"},
+                        });
                     }
-                    return jon {
-                        mstr("Invalid string: Failed to match pattern '", pattern, "'")
-                    };
                 }
             } else if (valueType == Type::Array) {
                 const auto & arrayValue = get<arr_t>();
