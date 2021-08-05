@@ -732,15 +732,17 @@ namespace jon {
         // Schemas //
     public:
         jon validate(const jon & schema) const {
-            return _validate(schema, "/");
+            jon result {obj_t {}};
+            _validate(schema, "", result);
+            return result;
         }
 
     private:
-        jon _validate(const jon & schema, const str_t & path) const {
+        void _validate(const jon & schema, const str_t & path, jon & result) const {
             // Check nullability, does not require any other constraints if value is null
             const auto nullable = schema.has("nullable") and schema.schemaAt<bool_t>("nullable");
             if (nullable and isNull()) {
-                return jon {};
+                return;
             }
 
             std::vector<str_t> expectedTypeNames;
@@ -799,7 +801,7 @@ namespace jon {
                             }
                         }
                     }
-                    return jon({
+                    result[path + "/type"] = jon({
                         {"message", mstr("Type mismatch: Expected ", expectedTypeStr, ", got ", typeStr())},
                         {"data", *this},
                         {"keyword", "type"},
@@ -809,7 +811,7 @@ namespace jon {
 
             if (schema.isString()) {
                 // Schema is just a type as string, type is checked above thus just don't run other checks
-                return jon {};
+                return;
             }
 
             if (valueType == Type::Int) {
@@ -818,7 +820,7 @@ namespace jon {
                 if (schema.has("minInt")) {
                     auto min = schema.schemaAt<int_t>("minInt");
                     if (intValue < min) {
-                        return jon({
+                        result[path + "/minInt"] = jon({
                             {"message", mstr("Invalid integer size: ", intValue, " is less than ", min)},
                             {"data", *this},
                             {"keyword", "minInt"},
@@ -829,7 +831,7 @@ namespace jon {
                 if (schema.has("maxInt")) {
                     auto max = schema.schemaAt<int_t>("maxInt");
                     if (intValue > max) {
-                        return jon({
+                        result[path + "/maxInt"] = jon({
                             {"message", mstr("Invalid integer value: ", intValue, " is greater than ", max)},
                             {"data", *this},
                             {"keyword", "maxInt"},
@@ -842,7 +844,7 @@ namespace jon {
                 if (schema.has("minFloat")) {
                     auto min = schema.schemaAt<float_t>("minFloat");
                     if (floatValue < min) {
-                        return jon({
+                        result[path + "/minFloat"] = jon({
                             {"message", mstr("Invalid float value: ", floatValue, " is less than ", min)},
                             {"data", *this},
                             {"keyword", "minFloat"},
@@ -853,7 +855,7 @@ namespace jon {
                 if (schema.has("maxFloat")) {
                     auto max = schema.schemaAt<float_t>("maxFloat");
                     if (floatValue > max) {
-                        return jon({
+                        result[path + "/maxFloat"] = jon({
                             {"message", mstr("Invalid float value: ", floatValue, " is greater than ", max)},
                             {"data", *this},
                             {"keyword", "maxFloat"},
@@ -866,7 +868,7 @@ namespace jon {
                 if (schema.has("minLen")) {
                     auto min = schema.schemaAt<int_t>("minLen");
                     if (stringValue.size() < min) {
-                        return jon({
+                        result[path + "/minLen"] = jon({
                             {"message", mstr("Invalid string length: ", stringValue.size(), " is less than ", min)},
                             {"data", *this},
                             {"keyword", "minLen"},
@@ -877,7 +879,7 @@ namespace jon {
                 if (schema.has("maxLen")) {
                     auto max = schema.schemaAt<int_t>("maxLen");
                     if (stringValue.size() > max) {
-                        return jon({
+                        result[path + "/maxLen"] = jon({
                             {"message", mstr("Invalid string length: ", stringValue.size(), " is greater than ", max)},
                             {"data", *this},
                             {"keyword", "maxLen"},
@@ -890,10 +892,10 @@ namespace jon {
                     const auto pattern = schema.schemaAt<str_t>("pattern");
                     const std::regex regex(pattern);
                     if (not std::regex_match(stringValue, regex)) {
-                        return jon({
+                        result[path + "/pattern"] = jon({
                             {"message", mstr("Invalid string value: '", stringValue, "' does not match pattern '", pattern, "'")},
                             {"data", *this},
-                            {"keyword", "maxLen"},
+                            {"keyword", "pattern"},
                         });
                     }
                 }
@@ -903,7 +905,7 @@ namespace jon {
                 if (schema.has("minSize")) {
                     auto min = schema.schemaAt<int_t>("minSize");
                     if (arrayValue.size() < min) {
-                        return jon({
+                        result[path + "/minSize"] = jon({
                             {"message", mstr("Invalid array size: ", arrayValue.size(), " is less than ", min)},
                             {"data", *this},
                             {"keyword", "minSize"},
@@ -914,7 +916,7 @@ namespace jon {
                 if (schema.has("maxSize")) {
                     auto max = schema.schemaAt<int_t>("maxSize");
                     if (arrayValue.size() > max) {
-                        return jon({
+                        result[path + "/maxSize"] = jon({
                             {"message", mstr("Invalid array size: ", arrayValue.size(), " is greater than ", max)},
                             {"data", *this},
                             {"keyword", "maxSize"},
@@ -923,19 +925,12 @@ namespace jon {
                 }
 
                 if (schema.has("items")) {
-                    jon result {obj_t {}};
                     const auto & itemsSchema = schema.at("items");
                     size_t index{0};
                     for (const auto & el : arrayValue) {
-                        const auto elValidation = el.validate(itemsSchema);
-                        if (not elValidation.isNull()) {
-                            result[index] = elValidation;
-                        }
+                        const auto & itemPath = path + "/" + std::to_string(index);
+                        el._validate(itemsSchema, itemPath, result[itemPath]);
                         index++;
-                    }
-
-                    if (not result.empty()) {
-                        return result;
                     }
                 }
             } else if (valueType == Type::Object) {
@@ -944,22 +939,24 @@ namespace jon {
                 if (schema.has("minProps")) {
                     auto min = schema.schemaAt<int_t>("minProps");
                     if (objectValue.size() < min) {
-                        return jon {
-                            mstr("Invalid object properties count: ", objectValue.size(), " is less than ", min)
-                        };
+                        result[path + "/minProps"] = jon({
+                            {"message", mstr("Invalid object properties count: ", objectValue.size(), " is less than ", min)},
+                            {"data", *this},
+                            {"keyword", "minProps"},
+                        });
                     }
                 }
 
                 if (schema.has("maxProps")) {
                     auto max = schema.schemaAt<int_t>("maxProps");
                     if (objectValue.size() > max) {
-                        return jon {
-                            mstr("Invalid object properties count: ", objectValue.size(), " is greater than ", max)
-                        };
+                        result[path + "/maxProps"] = jon({
+                            {"message", mstr("Invalid object properties count: ", objectValue.size(), " is greater than ", max)},
+                            {"data", *this},
+                            {"keyword", "maxProps"},
+                        });
                     }
                 }
-
-                jon result {obj_t {}};
 
                 bool extras = schema.has("extras") and schema.schemaAt<bool_t>("extras");
 
@@ -971,12 +968,9 @@ namespace jon {
                     for (const auto & entry : objectValue) {
                         const auto & prop = props.find(entry.first);
                         if (not extras and prop == props.end()) {
-                            result[entry.first] = jon {str_t {"Extra property (`extras` are not allowed)"}};
+                            result[path + "/" + entry.first] = jon {str_t {"Extra property (`extras` are not allowed)"}};
                         } else {
-                            const auto & entryValidation = entry.second.validate(prop->second);
-                            if (not entryValidation.isNull()) {
-                                result[entry.first] = entryValidation;
-                            }
+                            entry.second._validate(prop->second, path + "/" + entry.first, result[entry.first]);
                             checkedProps.emplace_back(entry.first);
                         }
                     }
@@ -989,13 +983,19 @@ namespace jon {
                             if (std::find(checkedProps.begin(), checkedProps.end(), prop.first) != checkedProps.end()) {
                                 continue;
                             }
-                            result[prop.first] = jon {str_t {"Missing property"}};
+                            result[path + "/" + prop.first] = jon({
+                                {"message", "Missing property"},
+                                {"data", {}},
+                                {"keyword", "!optional"},
+                            });
                         }
                     }
                 } else if (not extras and not objectValue.empty()) {
-                    return jon {
-                        mstr("No properties allowed in this object as `extras: false` and no `props` specified")
-                    };
+                    result[path + "/extras"] = jon({
+                        {"message", mstr("No properties allowed in this object as `extras: false` and no `props` specified")},
+                        {"data", *this},
+                        {"keyword", "extras"},
+                    });
                 }
 
                 return result.empty() ? jon {} : result;
@@ -1006,14 +1006,18 @@ namespace jon {
 
                 bool someValid = false;
                 for (const auto & subSchema : anyOf) {
-                    const auto & subSchemaResult = validate(subSchema);
+                    _validate(subSchema, path + "/" + entry.first, result[path + "/" + entry.first]);
                     if (subSchemaResult.isNull()) {
                         someValid = true;
                         break;
                     }
                 }
                 if (not someValid) {
-                    return jon {str_t {"Does not match `anyOf` schemas"}};
+                    result[path + "/anyOf"] = jon({
+                        {"message", "Does not match `anyOf` schemas"},
+                        {"data", {}},
+                        {"keyword", "anyOf"},
+                    });
                 }
             }
 
@@ -1025,14 +1029,22 @@ namespace jon {
                     const auto & subSchemaResult = validate(subSchema);
                     if (subSchemaResult.isNull()) {
                         if (oneValid) {
-                            return jon {str_t {"Matches more than `oneOf` schemas"}};
+                            result[path + "/oneOf"] = jon({
+                                {"message", "Matches more than `oneOf` schemas"},
+                                {"data", {}},
+                                {"keyword", "anyOf"},
+                            });
                         }
                         oneValid = true;
                         break;
                     }
                 }
                 if (not oneValid) {
-                    return jon {str_t {"Does not match any of `oneOf` schemas"}};
+                    result[path + "/oneOf"] = jon({
+                        {"message", "Does not match `anyOf` schemas"},
+                        {"data", {}},
+                        {"keyword", "anyOf"},
+                    });
                 }
             }
 
