@@ -6,6 +6,6 @@ FetchContent_Declare(doctest
 
 FetchContent_MakeAvailable(doctest)
 
-add_executable(test src/unit-typeStr.cpp)
+add_executable(test src/unit-typeStr.cpp src/unit.cpp)
 target_link_libraries(test doctest)
 target_link_libraries(test jon)
