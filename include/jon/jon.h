@@ -1068,6 +1068,30 @@ namespace jon {
                     }
                 }
             }
+
+            if (schema.has("not")) {
+                if (schema.at("not").isArray()) {
+                    for (const auto & subSchema : schema.schemaAt<arr_t>("not")) {
+                        const auto & subSchemaResult = validate(subSchema);
+                        if (subSchemaResult.isNull()) {
+                            result[path + "/not"] = jon({
+                                {"message", "Matches some of `not` schemas"},
+                                {"data", {}},
+                                {"keyword", "not"},
+                            });
+                            break;
+                        }
+                    }
+                } else {
+                    if (validate(schema.at("not")).isNull()) {
+                        result[path + "/not"] = jon({
+                            {"message", "Matches `not` schema"},
+                            {"data", {}},
+                            {"keyword", "not"},
+                        });
+                    }
+                }
+            }
         }
 
     public:
