@@ -934,7 +934,9 @@ namespace jon {
                         index++;
                     }
 
-                    return result.empty() ? jon {} : result;
+                    if (not result.empty()) {
+                        return result;
+                    }
                 }
             } else if (valueType == Type::Object) {
                 const auto & objectValue = get<obj_t>();
