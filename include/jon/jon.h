@@ -813,11 +813,7 @@ namespace jacylang {
                         continue;
                     }
 
-                    const auto & foundType = typeNames.find(typeName);
-                    if (foundType == typeNames.end()) {
-                        throw invalid_schema("unknown `type` '" + typeName + "'", path + "/type");
-                    }
-                    validType |= valueType == foundType->second;
+                    validType |= valueType == getTypeByName(typeName, path);
                 }
 
                 if (not validType) {
@@ -1165,7 +1161,23 @@ namespace jacylang {
         }
 
     private:
-        static const std::map<std::string, Type> typeNames;
+        static Type getTypeByName(const std::string & name, const std::string & path) {
+            static const std::map<std::string, jon::Type> typeNames = {
+                {"null",   jon::Type::Null},
+                {"bool",   jon::Type::Bool},
+                {"int",    jon::Type::Int},
+                {"float",  jon::Type::Float},
+                {"string", jon::Type::String},
+                {"object", jon::Type::Object},
+                {"array",  jon::Type::Array},
+            };
+
+            const auto & foundType = typeNames.find(name);
+            if (foundType == typeNames.end()) {
+                throw invalid_schema("unknown `type` '" + name + "'", path + "/type");
+            }
+            return foundType->second;
+        }
 
         template<class T>
         static constexpr const char * typeStrArticle() {
@@ -1212,16 +1224,6 @@ namespace jacylang {
                 throw invalid_schema(mstr(key, " must be ", typeStrArticle<T>()), path + "/" + key);
             }
         }
-    };
-
-    const std::map<std::string, jon::Type> jon::typeNames = {
-        {"null",   jon::Type::Null},
-        {"bool",   jon::Type::Bool},
-        {"int",    jon::Type::Int},
-        {"float",  jon::Type::Float},
-        {"string", jon::Type::String},
-        {"object", jon::Type::Object},
-        {"array",  jon::Type::Array},
     };
 
     const jon::float_t jon::NaN = std::numeric_limits<jon::float_t>::quiet_NaN();

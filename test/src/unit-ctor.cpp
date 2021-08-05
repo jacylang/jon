@@ -4,12 +4,12 @@
 using jon = jacylang::jon;
 
 TEST_CASE("constructors") {
-    SUBCASE("empty") {
+    SUBCASE("empty (null_t implicit)") {
         auto empty_ctor = jon {};
         CHECK(empty_ctor.isNull());
     }
 
-    SUBCASE("nullptr_t") {
+    SUBCASE("nullptr_t (explicit)") {
         auto nullptr_t_ctor = jon {nullptr};
         CHECK(nullptr_t_ctor.isNull());
     }
