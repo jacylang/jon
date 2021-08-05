@@ -171,6 +171,11 @@ namespace jon {
                 }
             }
 
+            Value & operator=(const Value & other) {
+                t = other.t;
+                v = other.v;
+            }
+
             std::variant<null_t, bool_t, int_t, float_t, str_t, obj_t, arr_t> v;
             Type t;
 
@@ -227,7 +232,9 @@ namespace jon {
         explicit jon(arr_t && v) noexcept : value(std::move(v)) {}
 
         jon(const jon & other) noexcept : value(other.value) {}
-        jon(jon && other) noexcept : value(std::move(other).value) {}
+        jon(jon && other) noexcept : value(std::move(other).value) {
+            *this = other;
+        }
 
         jon(std::initializer_list<detail::jon_ref<jon>> init, bool typeDeduction = true, Type type = Type::Array) {
             if (init.size() == 0) {
@@ -258,6 +265,10 @@ namespace jon {
             } else {
                 value = Value {arr_t {init.begin(), init.end()}};
             }
+        }
+
+        jon & operator=(const jon & other) {
+            value = other.value;
         }
 
         // Custom constructors //
