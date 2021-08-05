@@ -367,37 +367,14 @@ namespace jacylang {
 
         // Operators //
     public:
-        template<class T>
-        bool operator==(const T & rhs) {
-            if constexpr (std::is_same_v<T, null_t>) {
-                return isNull();
-            }
+        template<class T, typename std::enable_if_t<std::is_scalar_v<T>, int> = 0>
+        friend bool operator==(const jon & lhs, const T & rhs) noexcept {
+            return lhs == jon(rhs);
+        }
 
-            if constexpr (std::is_same_v<T, bool_t>) {
-                return rhs == get<bool_t>();
-            }
-
-            if constexpr (std::is_same_v<T, int_t>) {
-                return rhs == get<int_t>();
-            }
-
-            if constexpr (std::is_same_v<T, float_t>) {
-                return rhs == get<float_t>();
-            }
-
-            if constexpr (std::is_same_v<T, str_t>) {
-                return rhs == get<str_t>();
-            }
-
-            if constexpr (std::is_same_v<T, obj_t>) {
-                return std::equal(get<obj_t>().begin(), get<obj_t>().end(), rhs.begin());
-            }
-
-            if constexpr (std::is_same_v<T, arr_t>) {
-                return std::equal(get<arr_t>().begin(), get<arr_t>().end(), rhs.begin());
-            }
-
-            return false;
+        template<class T, typename std::enable_if_t<std::is_scalar_v<T>, int> = 0>
+        friend bool operator==(const T & lhs, const jon & rhs) noexcept {
+            return jon(lhs) == rhs;
         }
 
         bool operator==(const jon & other) const {
