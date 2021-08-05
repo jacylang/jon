@@ -1131,18 +1131,6 @@ namespace jon {
             throw jon_exception("[jon bug]: Unhandled type in `jon::toErrorList`");
         }
 
-//        void assertValid() const {
-//            if (empty()) {
-//                return;
-//            }
-//
-//            std::string errorMsg;
-//
-//            for (const auto & el : toErrorList().get<arr_t>()) {
-//
-//            }
-//        }
-
     private:
         static const std::map<std::string, Type> typeNames;
 
