@@ -302,10 +302,7 @@ namespace jacylang {
 
         static jon parse(const str_t & source) {
             Parser parser;
-
-            jon result {};
-            result.value = fromAst(parser.parse(source));
-            return result;
+            return fromValue(fromAst(parser.parse(source)));
         }
 
         // Common methods //
