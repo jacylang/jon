@@ -214,7 +214,6 @@ namespace jacylang {
 
     private:
         Value value;
-        jon(Value && value) : value(std::move(value)) {}
 
         // Constructors //
     public:
@@ -299,9 +298,9 @@ namespace jacylang {
         static jon parse(const str_t & source) {
             Parser parser;
 
-            return jon {
-                fromAst(parser.parse(source))
-            };
+            jon result {};
+            result.value = fromAst(parser.parse(source));
+            return result;
         }
 
         // Common methods //
