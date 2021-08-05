@@ -925,7 +925,7 @@ namespace jon {
                 }
 
                 if (schema.has("items")) {
-                    const auto & itemsSchema = schema.at("items");
+                    const auto & itemsSchema = schema.schemaAt<arr_t>("items", path);
                     size_t index{0};
                     for (const auto & el : arrayValue) {
                         const auto & itemPath = path + "/" + std::to_string(index);
