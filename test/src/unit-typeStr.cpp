@@ -1,7 +1,8 @@
 #include "doctest/doctest.h"
+#include "jon/jon.h"
 
-#include <iostream>
+using jon = jon::jon;
 
-int main() {
-    std::cout << "AAAAAA" << std::endl;
+TEST_CASE("static typeStr") {
+    CHECK(jon::typeStr())
 }

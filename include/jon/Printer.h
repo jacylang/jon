@@ -6,7 +6,7 @@
 #include "ast.h"
 #include "utils.h"
 
-namespace jon {
+namespace jacylang {
     class Printer : public ast::ValueVisitor {
     public:
         Printer() {}

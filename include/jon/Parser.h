@@ -5,7 +5,7 @@
 #include "Printer.h"
 #include "ast.h"
 
-namespace jon {
+namespace jacylang {
     class Parser {
     public:
         Parser() {}

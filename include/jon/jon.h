@@ -17,7 +17,7 @@
 #include "Printer.h"
 #include "ref.h"
 
-namespace jon {
+namespace jacylang {
     class jon {
     public:
         using null_t = std::monostate;

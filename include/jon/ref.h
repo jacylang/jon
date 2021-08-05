@@ -3,7 +3,7 @@
 
 #include <type_traits>
 
-namespace jon::detail {
+namespace jacylang::detail {
     template<class T>
     class jon_ref {
     public:

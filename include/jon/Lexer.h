@@ -10,7 +10,7 @@
 #include "utils.h"
 #include "error.h"
 
-namespace jon {
+namespace jacylang {
     struct Token;
     using TokenStream = std::vector<Token>;
 

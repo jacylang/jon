@@ -6,7 +6,7 @@
 
 #include "error.h"
 
-namespace jon {
+namespace jacylang {
     struct Indent {
         using size_type = int32_t;
 

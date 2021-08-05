@@ -5,7 +5,7 @@
 #include <vector>
 #include <memory>
 
-namespace jon::ast {
+namespace jacylang::ast {
     struct Null;
     struct Bool;
     struct Int;
@@ -28,7 +28,7 @@ namespace jon::ast {
     };
 }
 
-namespace jon::ast {
+namespace jacylang::ast {
     struct Value;
     using value_ptr = std::unique_ptr<Value>;
     using value_list = std::vector<value_ptr>;

@@ -3,7 +3,7 @@
 
 #include <stdexcept>
 
-namespace jon {
+namespace jacylang {
     struct jon_exception : std::exception {
         jon_exception(const std::string & msg) : msg(msg) {}
 
