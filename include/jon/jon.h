@@ -1031,6 +1031,7 @@ namespace jon {
             return jon {};
         }
 
+    public:
         jon toErrorList() const {
             if (isNull()) {
                 return jon {};
