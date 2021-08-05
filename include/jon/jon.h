@@ -903,18 +903,22 @@ namespace jon {
                 if (schema.has("minSize")) {
                     auto min = schema.schemaAt<int_t>("minSize");
                     if (arrayValue.size() < min) {
-                        return jon {
-                            mstr("Invalid array size: ", arrayValue.size(), " is less than ", min)
-                        };
+                        return jon({
+                            {"message", mstr("Invalid array size: ", arrayValue.size(), " is less than ", min)},
+                            {"data", *this},
+                            {"keyword", "minSize"},
+                        });
                     }
                 }
 
                 if (schema.has("maxSize")) {
                     auto max = schema.schemaAt<int_t>("maxSize");
                     if (arrayValue.size() > max) {
-                        return jon {
-                            mstr("Invalid array size: ", arrayValue.size(), " is greater than ", max)
-                        };
+                        return jon({
+                            {"message", mstr("Invalid array size: ", arrayValue.size(), " is greater than ", max)},
+                            {"data", *this},
+                            {"keyword", "maxSize"},
+                        });
                     }
                 }
 
