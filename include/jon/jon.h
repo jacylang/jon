@@ -218,21 +218,21 @@ namespace jon {
 
         // Constructors //
     public:
-        explicit jon() : value(null_t {}) {}
-        explicit jon(std::nullptr_t) noexcept : value(null_t {}) {}
-        explicit jon(null_t) noexcept : value(null_t {}) {}
-        explicit jon(bool_t v) noexcept : value(v) {}
-        explicit jon(int_t v) noexcept : value(v) {}
-        explicit jon(float_t v) noexcept : value(v) {}
+        jon() : value(null_t {}) {}
+        jon(std::nullptr_t) noexcept : value(null_t {}) {}
+        jon(null_t) noexcept : value(null_t {}) {}
+        jon(bool_t v) noexcept : value(v) {}
+        jon(int_t v) noexcept : value(v) {}
+        jon(float_t v) noexcept : value(v) {}
 
-        explicit jon(const str_t & v) noexcept : value(v) {}
-        explicit jon(str_t && v) noexcept : value(std::move(v)) {}
+        jon(const str_t & v) noexcept : value(v) {}
+        jon(str_t && v) noexcept : value(std::move(v)) {}
 
-        explicit jon(const obj_t & v) noexcept : value(v) {}
-        explicit jon(obj_t && v) noexcept : value(std::move(v)) {}
+        jon(const obj_t & v) noexcept : value(v) {}
+        jon(obj_t && v) noexcept : value(std::move(v)) {}
 
-        explicit jon(const arr_t & v) noexcept : value(v) {}
-        explicit jon(arr_t && v) noexcept : value(std::move(v)) {}
+        jon(const arr_t & v) noexcept : value(v) {}
+        jon(arr_t && v) noexcept : value(std::move(v)) {}
 
         jon(const jon & other) noexcept : value(other.value) {}
         jon(jon && other) noexcept : value(std::move(other).value) {
@@ -795,7 +795,7 @@ namespace jon {
                         }
                     }
                     return jon {
-                        obj_el_t {"message", mstr("Type mismatch: Expected ", expectedTypeStr, ", got ", typeStr())}
+                        {"message", mstr("Type mismatch: Expected ", expectedTypeStr, ", got ", typeStr())}
                     };
                 }
             }
