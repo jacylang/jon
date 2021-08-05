@@ -740,7 +740,7 @@ namespace jon {
     private:
         void _validate(const jon & schema, const str_t & path, jon & result) const {
             // Check nullability, does not require any other constraints if value is null
-            const auto nullable = schema.has("nullable") and schema.schemaAt<bool_t>("nullable");
+            const auto nullable = schema.has("nullable") and schema.schemaAt<bool_t>("nullable", path);
             if (nullable and isNull()) {
                 return;
             }
@@ -818,7 +818,7 @@ namespace jon {
                 auto intValue = get<int_t>();
 
                 if (schema.has("minInt")) {
-                    auto min = schema.schemaAt<int_t>("minInt");
+                    auto min = schema.schemaAt<int_t>("minInt", path);
                     if (intValue < min) {
                         result[path + "/minInt"] = jon({
                             {"message", mstr("Invalid integer size: ", intValue, " is less than ", min)},
@@ -829,7 +829,7 @@ namespace jon {
                 }
 
                 if (schema.has("maxInt")) {
-                    auto max = schema.schemaAt<int_t>("maxInt");
+                    auto max = schema.schemaAt<int_t>("maxInt", path);
                     if (intValue > max) {
                         result[path + "/maxInt"] = jon({
                             {"message", mstr("Invalid integer value: ", intValue, " is greater than ", max)},
@@ -842,7 +842,7 @@ namespace jon {
                 auto floatValue = get<float_t>();
 
                 if (schema.has("minFloat")) {
-                    auto min = schema.schemaAt<float_t>("minFloat");
+                    auto min = schema.schemaAt<float_t>("minFloat", path);
                     if (floatValue < min) {
                         result[path + "/minFloat"] = jon({
                             {"message", mstr("Invalid float value: ", floatValue, " is less than ", min)},
@@ -853,7 +853,7 @@ namespace jon {
                 }
 
                 if (schema.has("maxFloat")) {
-                    auto max = schema.schemaAt<float_t>("maxFloat");
+                    auto max = schema.schemaAt<float_t>("maxFloat", path);
                     if (floatValue > max) {
                         result[path + "/maxFloat"] = jon({
                             {"message", mstr("Invalid float value: ", floatValue, " is greater than ", max)},
@@ -866,7 +866,7 @@ namespace jon {
                 const auto & stringValue = get<str_t>();
 
                 if (schema.has("minLen")) {
-                    auto min = schema.schemaAt<int_t>("minLen");
+                    auto min = schema.schemaAt<int_t>("minLen", path);
                     if (stringValue.size() < min) {
                         result[path + "/minLen"] = jon({
                             {"message", mstr("Invalid string length: ", stringValue.size(), " is less than ", min)},
@@ -877,7 +877,7 @@ namespace jon {
                 }
 
                 if (schema.has("maxLen")) {
-                    auto max = schema.schemaAt<int_t>("maxLen");
+                    auto max = schema.schemaAt<int_t>("maxLen", path);
                     if (stringValue.size() > max) {
                         result[path + "/maxLen"] = jon({
                             {"message", mstr("Invalid string length: ", stringValue.size(), " is greater than ", max)},
@@ -889,7 +889,7 @@ namespace jon {
 
                 if (schema.has("pattern")) {
                     // TODO: Return parts failed to match
-                    const auto pattern = schema.schemaAt<str_t>("pattern");
+                    const auto pattern = schema.schemaAt<str_t>("pattern", path);
                     const std::regex regex(pattern);
                     if (not std::regex_match(stringValue, regex)) {
                         result[path + "/pattern"] = jon({
@@ -903,7 +903,7 @@ namespace jon {
                 const auto & arrayValue = get<arr_t>();
 
                 if (schema.has("minSize")) {
-                    auto min = schema.schemaAt<int_t>("minSize");
+                    auto min = schema.schemaAt<int_t>("minSize", path);
                     if (arrayValue.size() < min) {
                         result[path + "/minSize"] = jon({
                             {"message", mstr("Invalid array size: ", arrayValue.size(), " is less than ", min)},
@@ -914,7 +914,7 @@ namespace jon {
                 }
 
                 if (schema.has("maxSize")) {
-                    auto max = schema.schemaAt<int_t>("maxSize");
+                    auto max = schema.schemaAt<int_t>("maxSize", path);
                     if (arrayValue.size() > max) {
                         result[path + "/maxSize"] = jon({
                             {"message", mstr("Invalid array size: ", arrayValue.size(), " is greater than ", max)},
@@ -937,7 +937,7 @@ namespace jon {
                 const auto & objectValue = get<obj_t>();
 
                 if (schema.has("minProps")) {
-                    auto min = schema.schemaAt<int_t>("minProps");
+                    auto min = schema.schemaAt<int_t>("minProps", path);
                     if (objectValue.size() < min) {
                         result[path + "/minProps"] = jon({
                             {"message", mstr("Invalid object properties count: ", objectValue.size(), " is less than ", min)},
@@ -948,7 +948,7 @@ namespace jon {
                 }
 
                 if (schema.has("maxProps")) {
-                    auto max = schema.schemaAt<int_t>("maxProps");
+                    auto max = schema.schemaAt<int_t>("maxProps", path);
                     if (objectValue.size() > max) {
                         result[path + "/maxProps"] = jon({
                             {"message", mstr("Invalid object properties count: ", objectValue.size(), " is greater than ", max)},
@@ -958,10 +958,10 @@ namespace jon {
                     }
                 }
 
-                bool extras = schema.has("extras") and schema.schemaAt<bool_t>("extras");
+                bool extras = schema.has("extras") and schema.schemaAt<bool_t>("extras", path);
 
                 if (schema.has("props")) {
-                    const auto & props = schema.schemaAt<obj_t>("props");
+                    const auto & props = schema.schemaAt<obj_t>("props", path);
 
                     std::vector<std::string> checkedProps;
 
@@ -1005,7 +1005,7 @@ namespace jon {
             }
 
             if (schema.has("anyOf")) {
-                const auto & anyOf = schema.schemaAt<arr_t>("anyOf");
+                const auto & anyOf = schema.schemaAt<arr_t>("anyOf", path);
 
                 bool someValid = false;
                 for (const auto & subSchema : anyOf) {
@@ -1027,7 +1027,7 @@ namespace jon {
             }
 
             if (schema.has("oneOf")) {
-                const auto & oneOf = schema.schemaAt<arr_t>("oneOf");
+                const auto & oneOf = schema.schemaAt<arr_t>("oneOf", path);
 
                 bool oneValid = false;
                 for (const auto & subSchema : oneOf) {
@@ -1054,7 +1054,7 @@ namespace jon {
             }
 
             if (schema.has("allOf")) {
-                const auto & allOf = schema.schemaAt<arr_t>("allOf");
+                const auto & allOf = schema.schemaAt<arr_t>("allOf", path);
 
                 for (const auto & subSchema : allOf) {
                     const auto & subSchemaResult = validate(subSchema);
@@ -1071,7 +1071,7 @@ namespace jon {
 
             if (schema.has("not")) {
                 if (schema.at("not").isArray()) {
-                    for (const auto & subSchema : schema.schemaAt<arr_t>("not")) {
+                    for (const auto & subSchema : schema.schemaAt<arr_t>("not", path)) {
                         const auto & subSchemaResult = validate(subSchema);
                         if (subSchemaResult.isNull()) {
                             result[path + "/not"] = jon({
@@ -1188,7 +1188,7 @@ namespace jon {
             try {
                 return at<T>(key);
             } catch (type_error & te) {
-                throw invalid_schema(mstr(key, " must be ", typeStrArticle<T>()), path);
+                throw invalid_schema(mstr(key, " must be ", typeStrArticle<T>()), path + "/" + key);
             }
         }
     };
