@@ -732,7 +732,7 @@ namespace jon {
         // Schemas //
     public:
         jon validate(const jon & schema) const {
-            jon result {obj_t {}};
+            jon result;
             _validate(schema, "", result);
             return result;
         }
