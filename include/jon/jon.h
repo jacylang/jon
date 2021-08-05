@@ -214,6 +214,11 @@ namespace jacylang {
 
     private:
         Value value;
+        static jon fromValue(Value && value) {
+            jon result {};
+            result.value = std::move(value);
+            return result;
+        }
 
         // Constructors //
     public:
@@ -341,7 +346,7 @@ namespace jacylang {
         }
 
         void clear() noexcept {
-            *this = Value {type()};
+            value = Value {type()};
         }
 
         size_t size() const noexcept {
@@ -628,14 +633,14 @@ namespace jacylang {
                 case ast::ValueKind::Object: {
                     obj_t entries;
                     for (auto && keyVal : ast::Value::as<ast::Object>(std::move(ast))->entries) {
-                        entries.emplace(keyVal.key.val, jon {fromAst(std::move(keyVal.val))});
+                        entries.emplace(keyVal.key.val, jon::fromValue(fromAst(std::move(keyVal.val))));
                     }
                     return Value {entries};
                 }
                 case ast::ValueKind::Array: {
                     arr_t values;
                     for (auto && val : ast::Value::as<ast::Array>(std::move(ast))->values) {
-                        values.emplace_back(jon {fromAst(std::move(val))});
+                        values.emplace_back(jon::fromValue(fromAst(std::move(val))));
                     }
                     return Value {values};
                 }
