@@ -28,6 +28,9 @@ namespace jon {
         using obj_t = std::map<str_t, jon>;
         using arr_t = std::vector<jon>;
 
+        using obj_el_t = std::pair<str_t, jon>;
+        using storage_t = std::variant<null_t, bool_t, int_t, float_t, str_t, obj_t, arr_t>;
+
         enum class Type {
             Null,
             Bool,
@@ -176,7 +179,7 @@ namespace jon {
                 v = other.v;
             }
 
-            std::variant<null_t, bool_t, int_t, float_t, str_t, obj_t, arr_t> v;
+            storage_t v;
             Type t;
 
         private:
@@ -267,8 +270,14 @@ namespace jon {
             }
         }
 
-        jon & operator=(const jon & other) {
-            value = other.value;
+        jon & operator=(jon other) noexcept (
+            std::is_nothrow_move_constructible_v<storage_t> &&
+            std::is_nothrow_move_assignable_v<storage_t> &&
+            std::is_nothrow_move_constructible_v<storage_t> &&
+            std::is_nothrow_move_assignable_v<storage_t>
+        ) {
+            std::swap(value, other.value);
+            return *this;
         }
 
         // Custom constructors //
@@ -785,9 +794,9 @@ namespace jon {
                             }
                         }
                     }
-                    return obj({
-                        {"message", mstr("Type mismatch: Expected ", expectedTypeStr, ", got ", typeStr())}
-                    });
+                    return jon {
+                        obj_el_t {"message", mstr("Type mismatch: Expected ", expectedTypeStr, ", got ", typeStr())}
+                    };
                 }
             }
 
