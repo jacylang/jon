@@ -830,7 +830,7 @@ namespace jon {
                     auto max = schema.schemaAt<int_t>("maxInt");
                     if (intValue > max) {
                         return jon({
-                            {"message", mstr("Invalid integer size: ", intValue, " is greater than ", max)},
+                            {"message", mstr("Invalid integer value: ", intValue, " is greater than ", max)},
                             {"data", *this},
                             {"keyword", "maxInt"},
                         });
@@ -842,18 +842,22 @@ namespace jon {
                 if (schema.has("minFloat")) {
                     auto min = schema.schemaAt<float_t>("minFloat");
                     if (floatValue < min) {
-                        return jon {
-                            mstr("Invalid float size: ", floatValue, " is less than ", min)
-                        };
+                        return jon({
+                            {"message", mstr("Invalid float value: ", floatValue, " is less than ", min)},
+                            {"data", *this},
+                            {"keyword", "minFloat"},
+                        });
                     }
                 }
 
                 if (schema.has("maxFloat")) {
                     auto max = schema.schemaAt<float_t>("maxFloat");
                     if (floatValue > max) {
-                        return jon {
-                            mstr("Invalid float size: ", floatValue, " is greater than ", max)
-                        };
+                        return jon({
+                            {"message", mstr("Invalid float value: ", floatValue, " is greater than ", max)},
+                            {"data", *this},
+                            {"keyword", "maxFloat"},
+                        });
                     }
                 }
             } else if (valueType == Type::String) {
