@@ -367,6 +367,39 @@ namespace jacylang {
 
         // Operators //
     public:
+        template<class T>
+        bool operator==(const T & rhs) {
+            if constexpr (std::is_same_v<T, null_t>) {
+                return isNull();
+            }
+
+            if constexpr (std::is_same_v<T, bool_t>) {
+                return rhs == get<bool_t>();
+            }
+
+            if constexpr (std::is_same_v<T, int_t>) {
+                return rhs == get<int_t>();
+            }
+
+            if constexpr (std::is_same_v<T, float_t>) {
+                return rhs == get<float_t>();
+            }
+
+            if constexpr (std::is_same_v<T, str_t>) {
+                return rhs == get<str_t>();
+            }
+
+            if constexpr (std::is_same_v<T, obj_t>) {
+                return std::equal(get<obj_t>().begin(), get<obj_t>().end(), rhs.begin());
+            }
+
+            if constexpr (std::is_same_v<T, arr_t>) {
+                return std::equal(get<arr_t>().begin(), get<arr_t>().end(), rhs.begin());
+            }
+
+            return false;
+        }
+
         bool operator==(const jon & other) const {
             if (other.type() != type()) {
                 return false;

@@ -14,7 +14,7 @@ TEST_CASE("constructors") {
         CHECK(nullptr_t_ctor.isNull());
     }
 
-    SUBCASE("variant types") {
+    SUBCASE("empty variant types") {
         SUBCASE ("null_t") {
             auto null_t_ctor = jon {jon::null_t {}};
             CHECK(null_t_ctor.type() == jon::Type::Null);
