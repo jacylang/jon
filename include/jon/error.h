@@ -32,7 +32,7 @@ namespace jon {
     };
 
     struct invalid_schema : jon_exception {
-        invalid_schema(const std::string & msg) : jon_exception("[jon::invalid_schema]: " + msg) {}
+        invalid_schema(const std::string & msg, const std::string & path) : jon_exception("[jon::invalid_schema]: " + msg + " '" + path + "'") {}
     };
 }
 
