@@ -758,12 +758,12 @@ namespace jon {
                         expectedTypeNames.emplace_back(typeName.get<str_t>());
                     }
                     if (expectedTypeNames.empty()) {
-                        throw invalid_schema("`type` cannot be an empty array");
+                        throw invalid_schema("`type` cannot be an empty array", path + "/type");
                     }
                 } else if (schema.at("type").isNull()) {
                     anyType = true;
                 } else {
-                    throw invalid_schema("`type` must be either string, array or null");
+                    throw invalid_schema("`type` must be either string, array or null", path + "/type");
                 }
             } else {
                 anyType = true;
@@ -782,7 +782,7 @@ namespace jon {
 
                     const auto & foundType = typeNames.find(typeName);
                     if (foundType == typeNames.end()) {
-                        throw invalid_schema("unknown `type` '" + typeName + "'");
+                        throw invalid_schema("unknown `type` '" + typeName + "'", path + "/type");
                     }
                     validType |= valueType == foundType->second;
                 }
@@ -1174,11 +1174,11 @@ namespace jon {
             }
         }
 
-        bool schemaCheck(Type type, const std::string & errorMsg) const {
+        bool schemaCheck(Type type, const std::string & errorMsg, const std::string & path) const {
             try {
                 check(type);
             } catch (type_error & te) {
-                throw invalid_schema(errorMsg);
+                throw invalid_schema(errorMsg, path);
             }
         }
 
