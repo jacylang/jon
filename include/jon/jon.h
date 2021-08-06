@@ -174,11 +174,6 @@ namespace jacylang {
                 }
             }
 
-            Value & operator=(const Value & other) {
-                t = other.t;
-                v = other.v;
-            }
-
             storage_t v;
             Type t;
 
@@ -368,12 +363,12 @@ namespace jacylang {
 
         // Operators //
     public:
-        template<class T, typename std::enable_if_t<std::is_scalar_v<T>, int> = 0>
+        template<class T, typename = typename std::enable_if_t<std::is_scalar_v<T>, T>>
         friend bool operator==(const jon & lhs, const T & rhs) noexcept {
             return lhs == jon(rhs);
         }
 
-        template<class T, typename std::enable_if_t<std::is_scalar_v<T>, int> = 0>
+        template<class T, typename = typename std::enable_if_t<std::is_scalar_v<T>, T>>
         friend bool operator==(const T & lhs, const jon & rhs) noexcept {
             return jon(lhs) == rhs;
         }
