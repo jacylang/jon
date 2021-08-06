@@ -15,6 +15,24 @@ _JON_ (Jacy Object Notation) is an alternative to JSON used by Jacy programming
 - Serialization / Deserialization
 - JON string literals (`"..."_jon`)
 - Built-in JON schema validator [Schemas](#schemas)
+- First-Access conversions
+
+### Tutorial
+
+#### First-Access conversions
+
+This is the way to work with `jon` value as dynamically-typed. When you create an empty `jon` value (which defaults to `null`) and then access it with type-dependent method, type is automatically set to requested.
+
+Example:
+```c++
+jon useAsArray;
+
+std::cout << useAsArray.typeStr() << std::endl; // prints `null`
+
+useAsArray.push(jon {123});
+
+std::cout << useAsArray.typeStr() << std::endl; // prints `array`
+```
 
 ### API
 
