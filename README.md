@@ -307,6 +307,74 @@ auto jon2 = R"(
 )"_jon;
 ```
 
+##### `jon::jon::getNaN`
+
+```c++
+static float_t getNaN();
+```
+
+Returns `NaN` `float_t` value used as NaN in `jon`.
+This is the value you get when use `nan` literal, which is sign-independent, thus you always get `NaN` for `nan`, `+nan` and `-nan`.
+
+##### `jon::jon::isNaN`
+
+```c++
+bool isNaN() const;
+```
+
+Checks if value is of type `float_t` and is `NaN`.
+
+##### `jon::jon::isInf`
+
+```c++
+bool isInf() const;
+```
+
+Checks if value is of type `float_t` and is infinity.
+
+##### `jon::jon::isPosInf`
+
+```c++
+bool isPosInf() const;
+```
+
+Checks if value is of type `float_t` and is positive infinity.
+
+##### `jon::jon::isNegInf`
+
+```c++
+bool isNegInf() const;
+```
+
+Checks if value is of type `float_t` and is negative infinity.
+
+##### `jon::jon::obj`
+
+```c++
+static jon obj(std::initializer_list<detail::jon_ref<jon>> init = {});
+```
+
+Creates an object `jon` value from initializer list.
+Accepts `initializer_list` which is a list of key-value pairs where each key is a string and value is `jon`-compatible value.
+
+##### `jon::jon::flatten`
+
+```c++
+jon flatten() const;
+```
+
+Flattens `jon` value, does not, every converts object or array to one-level object where each key is a path-like string to value.
+
+##### `jon::jon::push`
+
+```c++
+void push(const jon & el);
+```
+
+Pushes value to jon array.
+
+> Supports "Array First Access"
+
 #### Classes
 
 ##### `Indent`
@@ -431,6 +499,7 @@ This keywords can be applied to schema for any type.
 - `anyOf` [`array` of schemas]: Value is valid if any of schemas in array is valid for value.
 - `oneOf` [`array` of schemas]: Value is valid if EXACTLY ONE of schemas in array is valid for value.
 - `allOf` [`array` of schemas]: Value is valid if ALL of schemas in array is valid for value.
+- `not` [`array` of schemas / schema]: Value is valid if it does not match any schema in `not` array (if it is an array) or the one `not` schema (if it is not an array).
 
 #### Integer Keywords
 
