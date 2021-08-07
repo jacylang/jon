@@ -346,12 +346,13 @@ namespace jacylang {
 
         template<class T, class U = std::remove_cv<std::remove_reference_t<T>>,
             std::enable_if_t<!std::is_same_v<U, jon>, int> = 0>
-        jon(T && val) noexcept(
-            noexcept(
+        jon(T && val) noexcept(noexcept(
             detail::Serializer<U>::toJon(std::declval<jon&>(), std::forward<T>(val))
         )) {
             detail::Serializer<U>::toJon(*this, std::forward<T>(val));
         }
+
+        jon(const detail::jon_ref<jon> & ref) : jon(ref.get()) {}
 
         jon(const jon & other) noexcept : value(other.value) {}
         jon(jon && other) noexcept : value(std::move(other.value)) {}
@@ -378,8 +379,8 @@ namespace jacylang {
 
             if (isObjectProjection) {
                 value = obj_t {};
-                for (const auto & el : init) {
-                    const auto & pair = el.get().get<arr_t>();
+                for (auto & el : init) {
+                    auto pair = el.get().get<arr_t>();
                     get<obj_t>().emplace(pair.at(0).get<str_t>(), pair.at(1));
                 }
             } else {
@@ -458,7 +459,7 @@ namespace jacylang {
         }
 
         void clear() noexcept {
-            *this = jon {type()};
+            *this = jon(type());
         }
 
         size_t size() const noexcept {
@@ -603,7 +604,7 @@ namespace jacylang {
         // Object interface //
     public:
         static jon obj(std::initializer_list<detail::jon_ref<jon>> init = {}) {
-            return jon {init, false, Type::Object};
+            return jon(init, false, Type::Object);
         }
 
         jon & operator[](const str_t & key) {
@@ -873,6 +874,10 @@ namespace jacylang {
             if (nullable and isNull()) {
                 return;
             }
+
+            jon i = {{
+                {"aasdas", 123}
+            }};
 
             std::vector<str_t> expectedTypeNames;
 
