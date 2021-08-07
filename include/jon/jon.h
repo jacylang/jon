@@ -157,7 +157,7 @@ namespace jacylang {
         template<typename JonT, typename T1, typename T2, std::enable_if_t<
             std::is_constructible_v<JonT, T1> &&
             std::is_constructible_v<JonT, T2>, int> = 0>
-        void to_json(JonT & j, const std::pair<T1, T2> & p)
+        void toJon(JonT & j, const std::pair<T1, T2> & p)
         {
             j = {p.first, p.second};
         }
@@ -346,10 +346,8 @@ namespace jacylang {
 
         template<class T, class U = std::remove_cv<std::remove_reference_t<T>>,
             std::enable_if_t<!std::is_same_v<U, jon>, int> = 0>
-        jon(T && val) noexcept(noexcept(
-            detail::Serializer<U>::toJon(std::declval<jon&>(), std::forward<T>(val))
-        )) {
-            detail::Serializer<U>::toJon(*this, std::forward<T>(val));
+        jon(T && val) {
+            detail::toJon(*this, std::forward<T>(val));
         }
 
         jon(const detail::jon_ref<jon> & ref) : jon(ref.get()) {}
@@ -381,7 +379,7 @@ namespace jacylang {
                 value = obj_t {};
                 for (auto & el : init) {
                     auto pair = el.get().get<arr_t>();
-                    get<obj_t>().emplace(pair.at(0).get<str_t>(), pair.at(1));
+                    get<obj_t>().emplace(pair.at(0).get<str_t>(), std::move(pair.at(1)));
                 }
             } else {
                 value = arr_t(init.begin(), init.end());
