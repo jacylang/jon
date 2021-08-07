@@ -136,6 +136,61 @@ namespace jacylang {
             }
         }
 
+        // Converters //
+    public:
+        template<typename T, std::enable_if_t<std::is_same_v<T, typename jon::bool_t>, int> = 0>
+        friend void toJon(jon & j, T val) noexcept {
+            j.value = val;
+        }
+
+        template<typename T, std::enable_if_t<std::is_same_v<T, typename jon::str_t>, int> = 0>
+        friend void toJon(jon & j, const T & val) noexcept {
+            j.value = val;
+        }
+
+        friend void toJon(jon & j, str_t && val) noexcept {
+            j.value = std::move(val);
+        }
+
+        template<class T, std::enable_if_t<std::is_floating_point_v<T>, int> = 0>
+        friend void toJon(jon & j, T val) noexcept {
+            j.value = static_cast<float_t>(val);
+        }
+
+        template<class T, std::enable_if_t<std::is_integral_v<T>, int> = 0 && !std::is_same_v<T, bool>>
+        friend void toJon(jon & j, T val) noexcept {
+            j.value = static_cast<int_t>(val);
+        }
+
+        friend void toJon(jon & j, const obj_t & val) noexcept {
+            j.value = val;
+        }
+
+        friend void toJon(jon & j, obj_t && val) noexcept {
+            j.value = std::move(val);
+        }
+
+        friend void toJon(jon & j, const arr_t & val) noexcept {
+            j.value = val;
+        }
+
+        friend void toJon(jon & j, arr_t && val) noexcept {
+            j.value = std::move(val);
+        }
+
+        // Serializer //
+    private:
+        template<class VT>
+        struct Serializer {
+            template<typename BasicJsonType, typename TargetType = VT>
+            static auto to_jon(BasicJsonType& j, TargetType && val) noexcept(
+            noexcept(to_jon(j, std::forward<TargetType>(val))))
+            -> decltype(to_jon(j, std::forward<TargetType>(val)), void())
+            {
+                to_jon(j, std::forward<TargetType>(val));
+            }
+        };
+
         // Constructors //
     public:
         jon(std::nullptr_t = nullptr) noexcept : value(null_t {}) {}
@@ -171,6 +226,13 @@ namespace jacylang {
                     break;
                 }
             }
+        }
+
+        template<class T, class U = std::remove_cv<std::remove_reference_t<T>>>
+        jon(T && val) noexcept(
+            Serializer<U>::to_jon(std::declval<jon&>(), std::forward<T>(val))
+        ) {
+
         }
 
         jon(const jon & other) noexcept : value(other.value) {}
@@ -217,13 +279,6 @@ namespace jacylang {
         ) {
             std::swap(value, other.value);
             return *this;
-        }
-
-        // Converters //
-    public:
-        template<typename T, std::enable_if_t<std::is_same_v<T, typename jon::bool_t>, int> = 0>
-        friend void toJon(jon & j, T bv) noexcept {
-            j.value = bv;
         }
 
         // Custom constructors //
