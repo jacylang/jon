@@ -388,8 +388,6 @@ namespace jacylang {
 
         jon & operator=(jon other) noexcept (
             std::is_nothrow_move_constructible_v<storage_t> &&
-            std::is_nothrow_move_assignable_v<storage_t> &&
-            std::is_nothrow_move_constructible_v<storage_t> &&
             std::is_nothrow_move_assignable_v<storage_t>
         ) {
             std::swap(value, other.value);
@@ -873,10 +871,6 @@ namespace jacylang {
                 return;
             }
 
-            jon i = {{
-                {"aasdas", 123}
-            }};
-
             std::vector<str_t> expectedTypeNames;
 
             bool anyType = false;
@@ -929,11 +923,11 @@ namespace jacylang {
                             }
                         }
                     }
-                    result[path + "/type"] = jon({
+                    result[path + "/type"] = obj_t {
                         {"message", mstr("Type mismatch: Expected ", expectedTypeStr, ", got ", typeStr())},
                         {"data", *this},
                         {"keyword", "type"},
-                    });
+                    };
                 }
             }
 
@@ -948,22 +942,22 @@ namespace jacylang {
                 if (schema.has("minInt")) {
                     auto min = schema.schemaAt<int_t>("minInt", path);
                     if (intValue < min) {
-                        result[path + "/minInt"] = jon({
+                        result[path + "/minInt"] = obj_t {
                             {"message", mstr("Invalid integer size: ", intValue, " is less than ", min)},
                             {"data", *this},
                             {"keyword", "minInt"},
-                        });
+                        };
                     }
                 }
 
                 if (schema.has("maxInt")) {
                     auto max = schema.schemaAt<int_t>("maxInt", path);
                     if (intValue > max) {
-                        result[path + "/maxInt"] = jon({
+                        result[path + "/maxInt"] = obj_t {
                             {"message", mstr("Invalid integer value: ", intValue, " is greater than ", max)},
                             {"data", *this},
                             {"keyword", "maxInt"},
-                        });
+                        };
                     }
                 }
             } else if (valueType == Type::Float) {
@@ -972,22 +966,22 @@ namespace jacylang {
                 if (schema.has("minFloat")) {
                     auto min = schema.schemaAt<float_t>("minFloat", path);
                     if (floatValue < min) {
-                        result[path + "/minFloat"] = jon({
+                        result[path + "/minFloat"] = obj_t {
                             {"message", mstr("Invalid float value: ", floatValue, " is less than ", min)},
                             {"data", *this},
                             {"keyword", "minFloat"},
-                        });
+                        };
                     }
                 }
 
                 if (schema.has("maxFloat")) {
                     auto max = schema.schemaAt<float_t>("maxFloat", path);
                     if (floatValue > max) {
-                        result[path + "/maxFloat"] = jon({
+                        result[path + "/maxFloat"] = obj_t {
                             {"message", mstr("Invalid float value: ", floatValue, " is greater than ", max)},
                             {"data", *this},
                             {"keyword", "maxFloat"},
-                        });
+                        };
                     }
                 }
             } else if (valueType == Type::String) {
@@ -996,22 +990,22 @@ namespace jacylang {
                 if (schema.has("minLen")) {
                     auto min = schema.schemaAt<int_t>("minLen", path);
                     if (stringValue.size() < min) {
-                        result[path + "/minLen"] = jon({
+                        result[path + "/minLen"] = obj_t {
                             {"message", mstr("Invalid string length: ", stringValue.size(), " is less than ", min)},
                             {"data", *this},
                             {"keyword", "minLen"},
-                        });
+                        };
                     }
                 }
 
                 if (schema.has("maxLen")) {
                     auto max = schema.schemaAt<int_t>("maxLen", path);
                     if (stringValue.size() > max) {
-                        result[path + "/maxLen"] = jon({
+                        result[path + "/maxLen"] = obj_t {
                             {"message", mstr("Invalid string length: ", stringValue.size(), " is greater than ", max)},
                             {"data", *this},
                             {"keyword", "maxLen"},
-                        });
+                        };
                     }
                 }
 
@@ -1020,11 +1014,11 @@ namespace jacylang {
                     const auto pattern = schema.schemaAt<str_t>("pattern", path);
                     const std::regex regex(pattern);
                     if (not std::regex_match(stringValue, regex)) {
-                        result[path + "/pattern"] = jon({
+                        result[path + "/pattern"] = obj_t {
                             {"message", mstr("Invalid string value: '", stringValue, "' does not match pattern '", pattern, "'")},
                             {"data", *this},
                             {"keyword", "pattern"},
-                        });
+                        };
                     }
                 }
             } else if (valueType == Type::Array) {
@@ -1033,22 +1027,22 @@ namespace jacylang {
                 if (schema.has("minSize")) {
                     auto min = schema.schemaAt<int_t>("minSize", path);
                     if (arrayValue.size() < min) {
-                        result[path + "/minSize"] = jon({
+                        result[path + "/minSize"] = obj_t{
                             {"message", mstr("Invalid array size: ", arrayValue.size(), " is less than ", min)},
-                            {"data", *this},
+                            {"data",    *this},
                             {"keyword", "minSize"},
-                        });
+                        };
                     }
                 }
 
                 if (schema.has("maxSize")) {
                     auto max = schema.schemaAt<int_t>("maxSize", path);
                     if (arrayValue.size() > max) {
-                        result[path + "/maxSize"] = jon({
+                        result[path + "/maxSize"] = obj_t {
                             {"message", mstr("Invalid array size: ", arrayValue.size(), " is greater than ", max)},
                             {"data", *this},
                             {"keyword", "maxSize"},
-                        });
+                        };
                     }
                 }
 
@@ -1067,22 +1061,22 @@ namespace jacylang {
                 if (schema.has("minProps")) {
                     auto min = schema.schemaAt<int_t>("minProps", path);
                     if (objectValue.size() < min) {
-                        result[path + "/minProps"] = jon({
+                        result[path + "/minProps"] = obj_t {
                             {"message", mstr("Invalid object properties count: ", objectValue.size(), " is less than ", min)},
                             {"data", *this},
                             {"keyword", "minProps"},
-                        });
+                        };
                     }
                 }
 
                 if (schema.has("maxProps")) {
                     auto max = schema.schemaAt<int_t>("maxProps", path);
                     if (objectValue.size() > max) {
-                        result[path + "/maxProps"] = jon({
+                        result[path + "/maxProps"] = obj_t {
                             {"message", mstr("Invalid object properties count: ", objectValue.size(), " is greater than ", max)},
                             {"data", *this},
                             {"keyword", "maxProps"},
-                        });
+                        };
                     }
                 }
 
@@ -1097,11 +1091,11 @@ namespace jacylang {
                         const auto & prop = props.find(entry.first);
                         const auto entryPath = path + "/" + entry.first;
                         if (not extras and prop == props.end()) {
-                            result[entryPath + "/extras"] = jon({
+                            result[entryPath + "/extras"] = obj_t {
                                 {"message", "Extra property (`extras` are not allowed)"},
                                 {"data", entry.second},
                                 {"keyword", "extras"},
-                            });
+                            };
                         } else {
                             entry.second._validate(prop->second, entryPath, result[entryPath]);
                             checkedProps.emplace_back(entry.first);
@@ -1116,19 +1110,19 @@ namespace jacylang {
                             if (std::find(checkedProps.begin(), checkedProps.end(), prop.first) != checkedProps.end()) {
                                 continue;
                             }
-                            result[path + "/" + prop.first] = jon({
+                            result[path + "/" + prop.first] = obj_t {
                                 {"message", "Missing property"},
                                 {"data", {}},
                                 {"keyword", "!optional"},
-                            });
+                            };
                         }
                     }
                 } else if (not extras and not objectValue.empty()) {
-                    result[path + "/extras"] = jon({
+                    result[path + "/extras"] = obj_t {
                         {"message", mstr("No properties allowed in this object as `extras: false` and no `props` specified")},
                         {"data", *this},
                         {"keyword", "extras"},
-                    });
+                    };
                 }
             }
 
@@ -1146,11 +1140,11 @@ namespace jacylang {
                     }
                 }
                 if (not someValid) {
-                    result[path + "/anyOf"] = jon({
+                    result[path + "/anyOf"] = obj_t {
                         {"message", "Does not match `anyOf` schemas"},
                         {"data", {}},
                         {"keyword", "anyOf"},
-                    });
+                    };
                 }
             }
 
@@ -1162,22 +1156,22 @@ namespace jacylang {
                     const auto & subSchemaResult = validate(subSchema);
                     if (subSchemaResult.isNull()) {
                         if (oneValid) {
-                            result[path + "/oneOf"] = jon({
+                            result[path + "/oneOf"] = obj_t {
                                 {"message", "Matches more than `oneOf` schemas"},
                                 {"data", {}},
                                 {"keyword", "anyOf"},
-                            });
+                            };
                         }
                         oneValid = true;
                         break;
                     }
                 }
                 if (not oneValid) {
-                    result[path + "/oneOf"] = jon({
+                    result[path + "/oneOf"] = obj_t {
                         {"message", "Does not match any of `oneOf` schemas"},
                         {"data", {}},
                         {"keyword", "oneOf"},
-                    });
+                    };
                 }
             }
 
@@ -1187,11 +1181,11 @@ namespace jacylang {
                 for (const auto & subSchema : allOf) {
                     const auto & subSchemaResult = validate(subSchema);
                     if (not subSchemaResult.isNull()) {
-                        result[path + "/allOf"] = jon({
+                        result[path + "/allOf"] = obj_t {
                             {"message", "Does not `allOf` schemas"},
                             {"data", {}},
                             {"keyword", "allOf"},
-                        });
+                        };
                         break;
                     }
                 }
@@ -1202,21 +1196,21 @@ namespace jacylang {
                     for (const auto & subSchema : schema.schemaAt<arr_t>("not", path)) {
                         const auto & subSchemaResult = validate(subSchema);
                         if (subSchemaResult.isNull()) {
-                            result[path + "/not"] = jon({
+                            result[path + "/not"] = obj_t {
                                 {"message", "Matches some of `not` schemas"},
                                 {"data", {}},
                                 {"keyword", "not"},
-                            });
+                            };
                             break;
                         }
                     }
                 } else {
                     if (validate(schema.at("not")).isNull()) {
-                        result[path + "/not"] = jon({
+                        result[path + "/not"] = obj_t {
                             {"message", "Matches `not` schema"},
                             {"data", {}},
                             {"keyword", "not"},
-                        });
+                        };
                     }
                 }
             }

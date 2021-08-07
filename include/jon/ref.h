@@ -11,7 +11,7 @@ namespace jacylang::detail {
         jon_ref(const T & val) : ref(&val) {}
         jon_ref(std::initializer_list<jon_ref> init) : owned(init) {}
 
-        template<class ...Args, std::enable_if<std::is_constructible_v<T, Args...>, int> = 0>
+        template<class ...Args, std::enable_if<std::is_constructible<T, Args...>::value, int> = 0>
         jon_ref(Args && ...args) : owned(std::forward<Args>(args)...) {}
 
         jon_ref(jon_ref&&) noexcept = default;
