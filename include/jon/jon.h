@@ -60,7 +60,6 @@ namespace jacylang {
         // Value //
     private:
         storage_t value;
-        Type t;
 
         void assertType(Type check, const std::string & errorMsg) const {
             if (this->type() != check) {
@@ -254,7 +253,7 @@ namespace jacylang {
         }
 
         void clear() noexcept {
-            value = Value {type()};
+            value = type();
         }
 
         size_t size() const noexcept {
@@ -332,7 +331,7 @@ namespace jacylang {
         // Type checks //
     public:
         Type type() const noexcept {
-            return value.type();
+            return static_cast<Type>(value.index());
         }
 
         auto check(Type expectedType) const {
