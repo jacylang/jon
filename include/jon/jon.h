@@ -347,7 +347,7 @@ namespace jacylang {
         template<class T, class U = std::remove_cv<std::remove_reference_t<T>>,
             std::enable_if_t<!std::is_same_v<U, jon>, int> = 0>
         jon(T && val) {
-            detail::toJon(*this, std::forward<T>(val));
+            detail::Serializer<U>::toJon(*this, std::forward<T>(val));
         }
 
         jon(const detail::jon_ref<jon> & ref) : jon(ref.get()) {}
@@ -728,30 +728,30 @@ namespace jacylang {
                     return jon {};
                 }
                 case ast::ValueKind::Bool: {
-                    return jon {ast::Value::as<ast::Bool>(std::move(ast))->val};
+                    return jon(ast::Value::as<ast::Bool>(std::move(ast))->val);
                 }
                 case ast::ValueKind::Int: {
-                    return jon {ast::Value::as<ast::Int>(std::move(ast))->val};
+                    return jon(ast::Value::as<ast::Int>(std::move(ast))->val);
                 }
                 case ast::ValueKind::Float: {
-                    return jon {ast::Value::as<ast::Float>(std::move(ast))->val};
+                    return jon(ast::Value::as<ast::Float>(std::move(ast))->val);
                 }
                 case ast::ValueKind::String: {
-                    return jon {ast::Value::as<ast::String>(std::move(ast))->val};
+                    return jon(ast::Value::as<ast::String>(std::move(ast))->val);
                 }
                 case ast::ValueKind::Object: {
                     obj_t entries;
                     for (auto && keyVal : ast::Value::as<ast::Object>(std::move(ast))->entries) {
                         entries.emplace(keyVal.key.val, fromAst(std::move(keyVal.val)));
                     }
-                    return jon {entries};
+                    return jon(std::move(entries));
                 }
                 case ast::ValueKind::Array: {
                     arr_t values;
                     for (auto && val : ast::Value::as<ast::Array>(std::move(ast))->values) {
                         values.emplace_back(fromAst(std::move(val)));
                     }
-                    return jon {values};
+                    return jon(std::move(values));
                 }
                 default: {
                     throw std::logic_error("[jon bug]: Unhandled `ast::ValueKind` in `jon::fromAst");
@@ -1027,7 +1027,7 @@ namespace jacylang {
                 if (schema.has("minSize")) {
                     auto min = schema.schemaAt<int_t>("minSize", path);
                     if (arrayValue.size() < min) {
-                        result[path + "/minSize"] = obj_t{
+                        result[path + "/minSize"] = obj_t {
                             {"message", mstr("Invalid array size: ", arrayValue.size(), " is less than ", min)},
                             {"data",    *this},
                             {"keyword", "minSize"},
