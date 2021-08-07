@@ -287,7 +287,7 @@ namespace jacylang {
         }
 
         void clear() noexcept {
-            value = type();
+            *this = jon {type()};
         }
 
         size_t size() const noexcept {
