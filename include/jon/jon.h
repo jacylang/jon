@@ -72,7 +72,7 @@ namespace jacylang {
         }
 
         void assertArrayFirstAccess() {
-            if (t == Type::Null) {
+            if (type() == Type::Null) {
                 value = arr_t {};
             } else {
                 assertTypeArray();
@@ -84,7 +84,7 @@ namespace jacylang {
         }
 
         void assertObjectFirstAccess(const std::string & key) {
-            if (t == Type::Null) {
+            if (type() == Type::Null) {
                 value = obj_t {};
             } else {
                 assertTypeObject(key);
@@ -139,6 +139,40 @@ namespace jacylang {
         // Constructors //
     public:
         jon(std::nullptr_t = nullptr) noexcept : value(null_t {}) {}
+
+        jon(Type t) noexcept {
+            switch (t) {
+                case Type::Null: {
+                    value = null_t {};
+                    break;
+                }
+                case Type::Bool: {
+                    value = bool_t {};
+                    break;
+                }
+                case Type::Int: {
+                    value = int_t {};
+                    break;
+                }
+                case Type::Float: {
+                    value = float_t {};
+                    break;
+                }
+                case Type::String: {
+                    value = str_t {};
+                    break;
+                }
+                case Type::Object: {
+                    value = obj_t {};
+                    break;
+                }
+                case Type::Array: {
+                    value = arr_t {};
+                    break;
+                }
+            }
+        }
+
         jon(const jon & other) noexcept : value(other.value) {}
         jon(jon && other) noexcept : value(std::move(other).value) {
             *this = other;
