@@ -20,6 +20,16 @@
 
 namespace jacylang {
     namespace detail {
+        enum class Type : uint8_t {
+            Null,
+            Bool,
+            Int,
+            Float,
+            String,
+            Object,
+            Array,
+        };
+
         using null_t = std::monostate;
         using bool_t = bool;
         using int_t = int64_t;
@@ -32,50 +42,116 @@ namespace jacylang {
         template<class JonT>
         using arr_t = std::vector<JonT>;
 
+        // Constructors //
+        template<Type> struct jonCtor;
+
+        template<>
+        struct jonCtor<Type::Bool> {
+            template<class JonT>
+            static void make(JonT & j, typename JonT::bool_t val) noexcept {
+                j.value = val;
+            }
+        };
+
+        template<>
+        struct jonCtor<Type::Int> {
+            template<class JonT>
+            static void make(JonT & j, typename JonT::int_t val) noexcept {
+                j.value = val;
+            }
+        };
+
+        template<>
+        struct jonCtor<Type::Float> {
+            template<class JonT>
+            static void make(JonT & j, typename JonT::float_t val) noexcept {
+                j.value = val;
+            }
+        };
+
+        template<>
+        struct jonCtor<Type::String> {
+            template<class JonT>
+            static void make(JonT & j, const typename JonT::str_t & val) noexcept {
+                j.value = val;
+            }
+
+            template<class JonT>
+            static void make(JonT & j, typename JonT::str_t && val) noexcept {
+                j.value = std::move(val);
+            }
+        };
+
+        template<>
+        struct jonCtor<Type::Object> {
+            template<class JonT>
+            static void make(JonT & j, const typename JonT::obj_t & val) noexcept {
+                j.value = val;
+            }
+
+            template<class JonT>
+            static void make(JonT & j, typename JonT::obj_t && val) noexcept {
+                j.value = std::move(val);
+            }
+        };
+
+        template<>
+        struct jonCtor<Type::Array> {
+            template<class JonT>
+            static void make(JonT & j, const typename JonT::arr_t & val) noexcept {
+                j.value = val;
+            }
+
+            template<class JonT>
+            static void make(JonT & j, typename JonT::arr_t && val) noexcept {
+                j.value = std::move(val);
+            }
+        };
+
         // Converters //
         template<typename JonT, typename T, std::enable_if_t<std::is_same_v<T, bool_t>, int> = 0>
         void toJon(JonT & j, T val) noexcept {
-            j.value = val;
+            jonCtor<Type::Bool>::make(j, val);
         }
 
         template<typename JonT, typename T, std::enable_if_t<std::is_same_v<T, str_t>, int> = 0>
         void toJon(JonT & j, const T & val) noexcept {
-            j.value = val;
+            jonCtor<Type::String>::make(j, val);
         }
 
         template<typename JonT>
         void toJon(JonT & j, str_t && val) noexcept {
-            j.value = std::move(val);
+            jonCtor<Type::String>::make(j, std::move(val));
         }
 
         template<typename JonT, class T, std::enable_if_t<std::is_floating_point_v<T>, int> = 0>
         void toJon(JonT & j, T val) noexcept {
-            j.value = static_cast<float_t>(val);
+            jonCtor<Type::Float>::make(j, static_cast<float_t>(val));
         }
 
         template<typename JonT, class T, std::enable_if_t<std::is_integral_v<T> && !std::is_same_v<T, bool>, int> = 0>
         void toJon(JonT & j, T val) noexcept {
-            j.value = static_cast<int_t>(val);
+            jonCtor<Type::Int>::make(j, static_cast<int_t>(val));
         }
 
         template<typename JonT>
         void toJon(JonT & j, const obj_t<JonT> & val) noexcept {
-            j.value = val;
+            jonCtor<Type::Object>::make(j, val);
         }
 
         template<typename JonT>
         void toJon(JonT & j, obj_t<JonT> && val) noexcept {
-            j.value = std::move(val);
+            jonCtor<Type::Object>::make(j, std::move(val));
         }
 
         template<typename JonT>
         void toJon(JonT & j, const arr_t<JonT> & val) noexcept {
-            j.value = val;
+            jonCtor<Type::Array>::make(j, val);
         }
 
         template<typename JonT>
         void toJon(JonT & j, arr_t<JonT> && val) noexcept {
-            j.value = std::move(val);
+            jonCtor<Type::Array>::make(j, std::move(val));
         }
 
         struct toJonFunc {
@@ -111,15 +187,9 @@ namespace jacylang {
         using obj_el_t = std::pair<str_t, jon>;
         using storage_t = std::variant<null_t, bool_t, int_t, float_t, str_t, obj_t, arr_t>;
 
-        enum class Type : uint8_t {
-            Null,
-            Bool,
-            Int,
-            Float,
-            String,
-            Object,
-            Array,
-        };
+        using Type = detail::Type;
+
+        template<detail::Type> friend struct detail::jonCtor;
 
         static std::string typeStr(Type type) {
             switch (type) {
@@ -222,9 +292,9 @@ namespace jacylang {
         struct Serializer {
             template<class TT = VT>
             static auto toJon(jon & j, TT && val) noexcept(
-                noexcept(jon::toJon(j, std::forward<TT>(val)))
-            ) -> decltype(jon::toJon(j, std::forward<TT>(val)), void()) {
-                toJon(j, std::forward<TT>(val));
+                noexcept(detail::toJon(j, std::forward<TT>(val)))
+            ) -> decltype(detail::toJon(j, std::forward<TT>(val)), void()) {
+                detail::toJon(j, std::forward<TT>(val));
             }
         };
 
