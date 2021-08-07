@@ -27,7 +27,7 @@ TEST_CASE("constructors") {
         SUBCASE ("int_t") {
             auto int_t_ctor = jon {jon::int_t {}};
             CHECK(int_t_ctor.type() == jon::Type::Int);
-            CHECK(int_t_ctor == (jon::int_t)0);
+            CHECK(int_t_ctor == 0);
         }
         SUBCASE ("float_t") {
             auto float_t_ctor = jon {jon::float_t {}};

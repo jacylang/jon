@@ -31,7 +31,7 @@ namespace jacylang {
         using obj_el_t = std::pair<str_t, jon>;
         using storage_t = std::variant<null_t, bool_t, int_t, float_t, str_t, obj_t, arr_t>;
 
-        enum class Type {
+        enum class Type : uint8_t {
             Null,
             Bool,
             Int,
@@ -57,182 +57,89 @@ namespace jacylang {
             return typeStr(type());
         }
 
+        // Value //
     private:
-        struct Value {
-            explicit Value() : t(Type::Null) {}
-            explicit Value(null_t) : t(Type::Null) {}
-            explicit Value(bool_t v) noexcept : v(v), t(Type::Bool) {}
-            explicit Value(int_t v) noexcept : v(v), t(Type::Int) {}
-            explicit Value(float_t v) noexcept : v(v), t(Type::Float) {}
+        storage_t value;
+        Type t;
 
-            explicit Value(const str_t & v) noexcept : v(v), t(Type::String) {}
-            explicit Value(str_t && v) noexcept : v(std::move(v)), t(Type::String) {}
-
-            explicit Value(const obj_t & v) noexcept : v(v), t(Type::Object) {}
-            explicit Value(obj_t && v) noexcept : v(std::move(v)), t(Type::Object) {}
-
-            explicit Value(const arr_t & v) noexcept : v(v), t(Type::Array) {}
-            explicit Value(arr_t && v) noexcept : v(std::move(v)), t(Type::Array) {}
-
-            explicit Value(Type t) noexcept : t(t) {
-                switch (t) {
-                    case Type::Null: {
-                        v = std::monostate {};
-                        break;
-                    }
-                    case Type::Bool: {
-                        v = false;
-                        break;
-                    }
-                    case Type::Int: {
-                        v = 0L;
-                        break;
-                    }
-                    case Type::Float: {
-                        v = 0.0;
-                        break;
-                    }
-                    case Type::String: {
-                        v = "";
-                        break;
-                    }
-                    case Type::Object: {
-                        v = obj_t {};
-                        break;
-                    }
-                    case Type::Array: {
-                        v = arr_t {};
-                        break;
-                    }
-                }
+        void assertType(Type check, const std::string & errorMsg) const {
+            if (this->type() != check) {
+                throw type_error(errorMsg);
             }
+        }
 
-            Type type() const noexcept {
+        void assertTypeArray() const {
+            assertType(Type::Array, mstr("Cannot access ", typeStr(), " as array"));
+        }
+
+        void assertArrayFirstAccess() {
+            if (t == Type::Null) {
+                value = arr_t {};
+            } else {
+                assertTypeArray();
+            }
+        }
+
+        void assertTypeObject(const std::string & key) const {
+            assertType(Type::Object, mstr("Cannot access property ", key, " of ", typeStr()));
+        }
+
+        void assertObjectFirstAccess(const std::string & key) {
+            if (t == Type::Null) {
+                value = obj_t {};
+            } else {
+                assertTypeObject(key);
+            }
+        }
+
+        template<class T>
+        constexpr void getTypeAssert() const {
+            if constexpr (std::is_same_v<T, null_t>) {
+                assertType(Type::Null, "called `get<null_t>` with not a `null_t` `jon`");
+            }
+            else if constexpr (std::is_same_v<T, bool_t>) {
+                assertType(Type::Bool, "called `get<bool_t>` with not a `bool_t` `jon`");
+            }
+            else if constexpr (std::is_same_v<T, int_t>) {
+                assertType(Type::Int, "called `get<int_t>` with not a `int_t` `jon`");
+            }
+            else if constexpr (std::is_same_v<T, float_t>) {
+                assertType(Type::Float, "called `get<float_t>` with not a `float_t` `jon`");
+            }
+            else if constexpr (std::is_same_v<T, str_t>) {
+                assertType(Type::String, "called `get<str_t>` with not a `str_t` `jon`");
+            }
+            else if constexpr (std::is_same_v<T, obj_t>) {
+                assertType(Type::Object, "called `get<obj_t>` with not a `obj_t` `jon`");
+            }
+            else if constexpr (std::is_same_v<T, arr_t>) {
+                assertType(Type::Array, "called `get<arr_t>` with not a `arr_t` `jon`");
+            }
+            else {
+                throw type_error("called `get` with invalid type");
+            }
+        }
+
+        template<class T>
+        static constexpr const char * valueAsKey(const T & t) {
+            if constexpr (std::is_same_v<T, null_t>) {
+                return "null";
+            } else if constexpr (std::is_same_v<T, bool_t>) {
+                return t ? "true" : "false";
+            } else if constexpr (std::is_same_v<T, int_t> or std::is_same_v<T, float_t>) {
+                return std::to_string(t);
+            } else if constexpr (std::is_same_v<T, str_t>) {
                 return t;
+            } else if constexpr (std::is_same_v<T, obj_t>) {
+                throw type_error("Unable to use object as object key");
+            } else if constexpr (std::is_same_v<T, arr_t>) {
+                throw type_error("Unable to use array as object key");
             }
-
-            void assertType(Type check, const std::string & errorMsg) const {
-                if (this->type() != check) {
-                    throw type_error(errorMsg);
-                }
-            }
-
-            void assertTypeArray() const {
-                assertType(Type::Array, mstr("Cannot access ", typeStr(), " as array"));
-            }
-
-            void assertArrayFirstAccess() {
-                if (t == Type::Null) {
-                    v = arr_t {};
-                } else {
-                    assertTypeArray();
-                }
-            }
-
-            void assertTypeObject(const std::string & key) const {
-                assertType(Type::Object, mstr("Cannot access property ", key, " of ", typeStr()));
-            }
-
-            void assertObjectFirstAccess(const std::string & key) {
-                if (t == Type::Null) {
-                    v = obj_t {};
-                } else {
-                    assertTypeObject(key);
-                }
-            }
-
-            template<class T>
-            constexpr T & get() {
-                getTypeAssert<T>();
-                return std::get<T>(v);
-            }
-
-            template<class T>
-            constexpr const T & get() const {
-                getTypeAssert<T>();
-                return std::get<T>(v);
-            }
-
-            std::string typeStr() const {
-                return jon::typeStr(t);
-            }
-
-            template<class T>
-            static constexpr const char * valueAsKey(const T & t) {
-                if constexpr (std::is_same_v<T, null_t>) {
-                    return "null";
-                } else if constexpr (std::is_same_v<T, bool_t>) {
-                    return t ? "true" : "false";
-                } else if constexpr (std::is_same_v<T, int_t> or std::is_same_v<T, float_t>) {
-                    return std::to_string(t);
-                } else if constexpr (std::is_same_v<T, str_t>) {
-                    return t;
-                } else if constexpr (std::is_same_v<T, obj_t>) {
-                    throw type_error("Unable to use object as object key");
-                } else if constexpr (std::is_same_v<T, arr_t>) {
-                    throw type_error("Unable to use array as object key");
-                }
-            }
-
-            storage_t v;
-            Type t;
-
-        private:
-            template<class T>
-            constexpr void getTypeAssert() const {
-                if constexpr (std::is_same_v<T, null_t>) {
-                    assertType(Type::Null, "called `get<null_t>` with not a `null_t` `jon`");
-                }
-                else if constexpr (std::is_same_v<T, bool_t>) {
-                    assertType(Type::Bool, "called `get<bool_t>` with not a `bool_t` `jon`");
-                }
-                else if constexpr (std::is_same_v<T, int_t>) {
-                    assertType(Type::Int, "called `get<int_t>` with not a `int_t` `jon`");
-                }
-                else if constexpr (std::is_same_v<T, float_t>) {
-                    assertType(Type::Float, "called `get<float_t>` with not a `float_t` `jon`");
-                }
-                else if constexpr (std::is_same_v<T, str_t>) {
-                    assertType(Type::String, "called `get<str_t>` with not a `str_t` `jon`");
-                }
-                else if constexpr (std::is_same_v<T, obj_t>) {
-                    assertType(Type::Object, "called `get<obj_t>` with not a `obj_t` `jon`");
-                }
-                else if constexpr (std::is_same_v<T, arr_t>) {
-                    assertType(Type::Array, "called `get<arr_t>` with not a `arr_t` `jon`");
-                }
-                else {
-                    throw type_error("called `get` with invalid type");
-                }
-            }
-        };
-
-    private:
-        Value value;
-        static jon fromValue(Value && value) {
-            jon result {};
-            result.value = std::move(value);
-            return result;
         }
 
         // Constructors //
     public:
-        jon() : value(null_t {}) {}
-        jon(std::nullptr_t) noexcept : value(null_t {}) {}
-        jon(null_t) noexcept : value(null_t {}) {}
-        jon(bool_t v) noexcept : value(v) {}
-        jon(int_t v) noexcept : value(v) {}
-        jon(float_t v) noexcept : value(v) {}
-
-        jon(const str_t & v) noexcept : value(v) {}
-        jon(str_t && v) noexcept : value(std::move(v)) {}
-
-        jon(const obj_t & v) noexcept : value(v) {}
-        jon(obj_t && v) noexcept : value(std::move(v)) {}
-
-        jon(const arr_t & v) noexcept : value(v) {}
-        jon(arr_t && v) noexcept : value(std::move(v)) {}
-
+        jon(std::nullptr_t = nullptr) noexcept : value(null_t {}) {}
         jon(const jon & other) noexcept : value(other.value) {}
         jon(jon && other) noexcept : value(std::move(other).value) {
             *this = other;
@@ -240,7 +147,7 @@ namespace jacylang {
 
         jon(std::initializer_list<detail::jon_ref<jon>> init, bool typeDeduction = true, Type type = Type::Array) {
             if (init.size() == 0) {
-                value = Value {obj_t {}};
+                value = obj_t {};
                 return;
             }
 
@@ -259,7 +166,7 @@ namespace jacylang {
             }
 
             if (isObjectProjection) {
-                value = Value {obj_t {}};
+                value = obj_t {};
                 for (const auto & el : init) {
                     const auto & pair = el.get().get<arr_t>();
                     value.get<obj_t>().emplace(pair.at(0).get<str_t>(), pair.at(1));
@@ -277,6 +184,13 @@ namespace jacylang {
         ) {
             std::swap(value, other.value);
             return *this;
+        }
+
+        // Converters //
+    public:
+        template<typename T, std::enable_if_t<std::is_same_v<T, typename jon::bool_t>, int> = 0>
+        friend void toJon(jon & j, T bv) noexcept {
+            j.value = bv;
         }
 
         // Custom constructors //
@@ -297,19 +211,21 @@ namespace jacylang {
 
         static jon parse(const str_t & source) {
             Parser parser;
-            return fromValue(fromAst(parser.parse(source)));
+            return fromAst(parser.parse(source));
         }
 
         // Common methods //
     public:
         template<class T>
         constexpr T & get() {
-            return value.get<T>();
+            getTypeAssert<T>();
+            return std::get<T>(value);
         }
 
         template<class T>
         constexpr const T & get() const {
-            return value.get<T>();
+            getTypeAssert<T>();
+            return std::get<T>(value);
         }
 
         bool empty() const noexcept {
@@ -605,36 +521,36 @@ namespace jacylang {
 
         // Serialization/Deserialization //
     private:
-        static Value fromAst(ast::value_ptr && ast) {
+        static jon fromAst(ast::value_ptr && ast) {
             switch (ast->kind) {
                 case ast::ValueKind::Null: {
-                    return Value {};
+                    return jon {};
                 }
                 case ast::ValueKind::Bool: {
-                    return Value {ast::Value::as<ast::Bool>(std::move(ast))->val};
+                    return jon {ast::Value::as<ast::Bool>(std::move(ast))->val};
                 }
                 case ast::ValueKind::Int: {
-                    return Value {ast::Value::as<ast::Int>(std::move(ast))->val};
+                    return jon {ast::Value::as<ast::Int>(std::move(ast))->val};
                 }
                 case ast::ValueKind::Float: {
-                    return Value {ast::Value::as<ast::Float>(std::move(ast))->val};
+                    return jon {ast::Value::as<ast::Float>(std::move(ast))->val};
                 }
                 case ast::ValueKind::String: {
-                    return Value {ast::Value::as<ast::String>(std::move(ast))->val};
+                    return jon {ast::Value::as<ast::String>(std::move(ast))->val};
                 }
                 case ast::ValueKind::Object: {
                     obj_t entries;
                     for (auto && keyVal : ast::Value::as<ast::Object>(std::move(ast))->entries) {
-                        entries.emplace(keyVal.key.val, jon::fromValue(fromAst(std::move(keyVal.val))));
+                        entries.emplace(keyVal.key.val, fromAst(std::move(keyVal.val)));
                     }
-                    return Value {entries};
+                    return jon {entries};
                 }
                 case ast::ValueKind::Array: {
                     arr_t values;
                     for (auto && val : ast::Value::as<ast::Array>(std::move(ast))->values) {
-                        values.emplace_back(jon::fromValue(fromAst(std::move(val))));
+                        values.emplace_back(fromAst(std::move(val)));
                     }
-                    return Value {values};
+                    return jon {values};
                 }
                 default: {
                     throw std::logic_error("[jon bug]: Unhandled `ast::ValueKind` in `jon::fromAst");
@@ -1201,6 +1117,13 @@ namespace jacylang {
             }
         }
     };
+
+//    namespace to_jon {
+//        template<class Jon, class ValT>
+//        static auto to_jon(Jon & j, ValT && val) noexcept (
+//            noexcept()
+//        )
+//    }
 
     namespace literal {
         static inline jon operator""_jon(const char * str, std::size_t n) {
