@@ -174,6 +174,19 @@ namespace jacylang {
         constexpr const auto & toJon = static_const<detail::toJonFunc>::value;
     }
 
+    namespace detail {
+        // Serializer //
+        template<class VT>
+        struct Serializer {
+            template<class JonT, class TT = VT>
+            static auto toJon(JonT & j, TT && val) noexcept(
+            noexcept(::jacylang::toJon(j, std::forward<TT>(val)))
+            ) -> decltype(::jacylang::toJon(j, std::forward<TT>(val)), void()) {
+                ::jacylang::toJon(j, std::forward<TT>(val));
+            }
+        };
+    }
+
     class jon {
     public:
         using null_t = detail::null_t;
@@ -286,18 +299,6 @@ namespace jacylang {
             }
         }
 
-        // Serializer //
-    private:
-        template<class VT>
-        struct Serializer {
-            template<class TT = VT>
-            static auto toJon(jon & j, TT && val) noexcept(
-                noexcept(detail::toJon(j, std::forward<TT>(val)))
-            ) -> decltype(detail::toJon(j, std::forward<TT>(val)), void()) {
-                detail::toJon(j, std::forward<TT>(val));
-            }
-        };
-
         // Constructors //
     public:
         jon(std::nullptr_t = nullptr) noexcept : value(null_t {}) {}
@@ -337,10 +338,11 @@ namespace jacylang {
 
         template<class T, class U = std::remove_cv<std::remove_reference_t<T>>,
             std::enable_if_t<!std::is_same_v<U, jon>, int> = 0>
-        jon(T && val) noexcept(noexcept(
-            Serializer<U>::toJon(std::declval<jon&>(), std::forward<T>(val))
+        jon(T && val) noexcept(
+            noexcept(
+            detail::Serializer<U>::toJon(std::declval<jon&>(), std::forward<T>(val))
         )) {
-            Serializer<U>::toJon(*this, std::forward<T>(val));
+            detail::Serializer<U>::toJon(*this, std::forward<T>(val));
         }
 
         jon(const jon & other) noexcept : value(other.value) {}
@@ -373,7 +375,7 @@ namespace jacylang {
                     get<obj_t>().emplace(pair.at(0).get<str_t>(), pair.at(1));
                 }
             } else {
-                value = arr_t {init.begin(), init.end()};
+                value = arr_t(init.begin(), init.end());
             }
         }
 
