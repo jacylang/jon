@@ -169,10 +169,10 @@ namespace jacylang {
                 value = obj_t {};
                 for (const auto & el : init) {
                     const auto & pair = el.get().get<arr_t>();
-                    value.get<obj_t>().emplace(pair.at(0).get<str_t>(), pair.at(1));
+                    get<obj_t>().emplace(pair.at(0).get<str_t>(), pair.at(1));
                 }
             } else {
-                value = Value {arr_t {init.begin(), init.end()}};
+                value = arr_t {init.begin(), init.end()};
             }
         }
 
