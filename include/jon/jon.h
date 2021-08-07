@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <regex>
 #include <cmath>
+#include <utility>
 
 #include "Lexer.h"
 #include "Parser.h"
@@ -157,7 +158,7 @@ namespace jacylang {
             j.value = static_cast<float_t>(val);
         }
 
-        template<class T, std::enable_if_t<std::is_integral_v<T>, int> = 0 && !std::is_same_v<T, bool>>
+        template<class T, std::enable_if_t<std::is_integral_v<T> && !std::is_same_v<T, bool>, int> = 0>
         friend void toJon(jon & j, T val) noexcept {
             j.value = static_cast<int_t>(val);
         }
@@ -182,12 +183,11 @@ namespace jacylang {
     private:
         template<class VT>
         struct Serializer {
-            template<typename BasicJsonType, typename TargetType = VT>
-            static auto to_jon(BasicJsonType& j, TargetType && val) noexcept(
-            noexcept(to_jon(j, std::forward<TargetType>(val))))
-            -> decltype(to_jon(j, std::forward<TargetType>(val)), void())
-            {
-                to_jon(j, std::forward<TargetType>(val));
+            template<class TT = VT>
+            static auto toJon(jon & j, TT && val) noexcept(
+                noexcept(jon::toJon(j, std::forward<TT>(val)))
+            ) -> decltype(jon::toJon(j, std::forward<TT>(val)), void()) {
+                toJon(j, std::forward<TT>(val));
             }
         };
 
@@ -228,17 +228,16 @@ namespace jacylang {
             }
         }
 
-        template<class T, class U = std::remove_cv<std::remove_reference_t<T>>>
-        jon(T && val) noexcept(
-            Serializer<U>::to_jon(std::declval<jon&>(), std::forward<T>(val))
-        ) {
-
+        template<class T, class U = std::remove_cv<std::remove_reference_t<T>>,
+            std::enable_if_t<!std::is_same_v<U, jon>, int> = 0>
+        jon(T && val) noexcept(noexcept(
+            Serializer<U>::toJon(std::declval<jon&>(), std::forward<T>(val))
+        )) {
+            Serializer<U>::toJon(*this, std::forward<T>(val));
         }
 
         jon(const jon & other) noexcept : value(other.value) {}
-        jon(jon && other) noexcept : value(std::move(other).value) {
-            *this = other;
-        }
+        jon(jon && other) noexcept : value(std::move(other.value)) {}
 
         jon(std::initializer_list<detail::jon_ref<jon>> init, bool typeDeduction = true, Type type = Type::Array) {
             if (init.size() == 0) {
