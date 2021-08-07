@@ -19,15 +19,94 @@
 #include "ref.h"
 
 namespace jacylang {
-    class jon {
-    public:
+    namespace detail {
         using null_t = std::monostate;
         using bool_t = bool;
         using int_t = int64_t;
         using float_t = double;
         using str_t = std::string;
-        using obj_t = std::map<str_t, jon>;
-        using arr_t = std::vector<jon>;
+
+        template<class JonT>
+        using obj_t = std::map<str_t, JonT>;
+
+        template<class JonT>
+        using arr_t = std::vector<JonT>;
+
+        // Converters //
+        template<typename JonT, typename T, std::enable_if_t<std::is_same_v<T, bool_t>, int> = 0>
+        void toJon(JonT & j, T val) noexcept {
+            j.value = val;
+        }
+
+        template<typename JonT, typename T, std::enable_if_t<std::is_same_v<T, str_t>, int> = 0>
+        void toJon(JonT & j, const T & val) noexcept {
+            j.value = val;
+        }
+
+        template<typename JonT>
+        void toJon(JonT & j, str_t && val) noexcept {
+            j.value = std::move(val);
+        }
+
+        template<typename JonT, class T, std::enable_if_t<std::is_floating_point_v<T>, int> = 0>
+        void toJon(JonT & j, T val) noexcept {
+            j.value = static_cast<float_t>(val);
+        }
+
+        template<typename JonT, class T, std::enable_if_t<std::is_integral_v<T> && !std::is_same_v<T, bool>, int> = 0>
+        void toJon(JonT & j, T val) noexcept {
+            j.value = static_cast<int_t>(val);
+        }
+
+        template<typename JonT>
+        void toJon(JonT & j, const obj_t<JonT> & val) noexcept {
+            j.value = val;
+        }
+
+        template<typename JonT>
+        void toJon(JonT & j, obj_t<JonT> && val) noexcept {
+            j.value = std::move(val);
+        }
+
+        template<typename JonT>
+        void toJon(JonT & j, const arr_t<JonT> & val) noexcept {
+            j.value = val;
+        }
+
+        template<typename JonT>
+        void toJon(JonT & j, arr_t<JonT> && val) noexcept {
+            j.value = std::move(val);
+        }
+
+        struct toJonFunc {
+            template<typename JonT, typename T>
+            auto operator()(JonT & j, T && val) const noexcept(noexcept(toJon(j, std::forward<T>(val))))
+            -> decltype(toJon(j, std::forward<T>(val)), void())
+            {
+                return toJon(j, std::forward<T>(val));
+            }
+        };
+    }
+
+    namespace {
+        template<typename T>
+        struct static_const
+        {
+            static constexpr T value{};
+        };
+
+        constexpr const auto & toJon = static_const<detail::toJonFunc>::value;
+    }
+
+    class jon {
+    public:
+        using null_t = detail::null_t;
+        using bool_t = detail::bool_t;
+        using int_t = detail::int_t;
+        using float_t = detail::float_t;
+        using str_t = detail::str_t;
+        using obj_t = detail::obj_t<jon>;
+        using arr_t = detail::arr_t<jon>;
 
         using obj_el_t = std::pair<str_t, jon>;
         using storage_t = std::variant<null_t, bool_t, int_t, float_t, str_t, obj_t, arr_t>;
@@ -135,48 +214,6 @@ namespace jacylang {
             } else if constexpr (std::is_same_v<T, arr_t>) {
                 throw type_error("Unable to use array as object key");
             }
-        }
-
-        // Converters //
-    public:
-        template<typename T, std::enable_if_t<std::is_same_v<T, typename jon::bool_t>, int> = 0>
-        friend void toJon(jon & j, T val) noexcept {
-            j.value = val;
-        }
-
-        template<typename T, std::enable_if_t<std::is_same_v<T, typename jon::str_t>, int> = 0>
-        friend void toJon(jon & j, const T & val) noexcept {
-            j.value = val;
-        }
-
-        friend void toJon(jon & j, str_t && val) noexcept {
-            j.value = std::move(val);
-        }
-
-        template<class T, std::enable_if_t<std::is_floating_point_v<T>, int> = 0>
-        friend void toJon(jon & j, T val) noexcept {
-            j.value = static_cast<float_t>(val);
-        }
-
-        template<class T, std::enable_if_t<std::is_integral_v<T> && !std::is_same_v<T, bool>, int> = 0>
-        friend void toJon(jon & j, T val) noexcept {
-            j.value = static_cast<int_t>(val);
-        }
-
-        friend void toJon(jon & j, const obj_t & val) noexcept {
-            j.value = val;
-        }
-
-        friend void toJon(jon & j, obj_t && val) noexcept {
-            j.value = std::move(val);
-        }
-
-        friend void toJon(jon & j, const arr_t & val) noexcept {
-            j.value = val;
-        }
-
-        friend void toJon(jon & j, arr_t && val) noexcept {
-            j.value = std::move(val);
         }
 
         // Serializer //
