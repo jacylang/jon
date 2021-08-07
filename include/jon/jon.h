@@ -370,7 +370,7 @@ namespace jacylang {
 
         auto check(Type expectedType) const {
             if (type() != expectedType) {
-                throw type_error(mstr("`get` expected type ", typeStr(expectedType), " got ", value.typeStr()));
+                throw type_error(mstr("`get` expected type ", typeStr(expectedType), " got ", typeStr()));
             }
             return *this;
         }
@@ -436,17 +436,17 @@ namespace jacylang {
         }
 
         jon & operator[](const str_t & key) {
-            value.assertObjectFirstAccess(key);
+            assertObjectFirstAccess(key);
             return get<obj_t>()[key];
         }
 
         template<class T>
         jon & operator[](const T & key) {
-            return operator[](Value::valueAsKey(key));
+            return operator[](valueAsKey(key));
         }
 
         const jon & at(const str_t & key) const {
-            value.assertTypeObject(key);
+            assertTypeObject(key);
             auto obj = get<obj_t>();
             auto it = obj.find(key);
             if (it == obj.end()) {
@@ -456,7 +456,7 @@ namespace jacylang {
         }
 
         jon & at(const str_t & key) {
-            value.assertObjectFirstAccess(key);
+            assertObjectFirstAccess(key);
             auto & obj = get<obj_t>();
             auto it = obj.find(key);
             if (it == obj.end()) {
@@ -467,7 +467,7 @@ namespace jacylang {
 
         template<class T>
         const T & at(const str_t & key) const {
-            value.assertTypeObject(key);
+            assertTypeObject(key);
             const auto & obj = get<obj_t>();
             auto it = obj.find(key);
             if (it == obj.end()) {
@@ -478,7 +478,7 @@ namespace jacylang {
 
         template<class T>
         T & at(const str_t & key) {
-            value.assertObjectFirstAccess(key);
+            assertObjectFirstAccess(key);
             auto obj = get<obj_t>();
             auto it = obj.find(key);
             if (it == obj.end()) {
@@ -527,12 +527,12 @@ namespace jacylang {
             if (isObject()) {
                 return operator[](str_t {std::to_string(idx)});
             }
-            value.assertArrayFirstAccess();
+            assertArrayFirstAccess();
             return get<arr_t>()[idx];
         }
 
         const jon & at(size_t idx) const {
-            value.assertTypeArray();
+            assertTypeArray();
             if (idx > get<arr_t>().size()) {
                 throw out_of_range(mstr("`at` by index '", idx, "'"));
             }
@@ -540,7 +540,7 @@ namespace jacylang {
         }
 
         jon & at(size_t idx) {
-            value.assertTypeArray();
+            assertTypeArray();
             if (idx > get<arr_t>().size()) {
                 throw out_of_range(mstr("`at` by index '", idx, "'"));
             }
@@ -548,7 +548,7 @@ namespace jacylang {
         }
 
         void push(const jon & el) {
-            value.assertArrayFirstAccess();
+            assertArrayFirstAccess();
             get<arr_t>().push_back(el);
         }
 
