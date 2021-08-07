@@ -43,7 +43,7 @@ namespace jacylang {
         using arr_t = std::vector<JonT>;
 
         // Constructors //
-        template<Type> struct jonCtor;
+        template<Type> struct jonCtor {};
 
         template<>
         struct jonCtor<Type::Bool> {
@@ -152,6 +152,14 @@ namespace jacylang {
         template<typename JonT>
         void toJon(JonT & j, arr_t<JonT> && val) noexcept {
             jonCtor<Type::Array>::make(j, std::move(val));
+        }
+
+        template<typename JonT, typename T1, typename T2, std::enable_if_t<
+            std::is_constructible_v<JonT, T1> &&
+            std::is_constructible_v<JonT, T2>, int> = 0>
+        void to_json(JonT & j, const std::pair<T1, T2> & p)
+        {
+            j = {p.first, p.second};
         }
 
         struct toJonFunc {
@@ -354,7 +362,7 @@ namespace jacylang {
                 return;
             }
 
-            bool isObjectProjection = std::all_of(init.begin(), init.end(), [](const auto & el) {
+            bool isObjectProjection = std::all_of(init.begin(), init.end(), [](const detail::jon_ref<jon> & el) {
                 return el->isArray() and el->size() == 2 and el->at(0).isString();
             });
 
@@ -363,8 +371,8 @@ namespace jacylang {
                     isObjectProjection = false;
                 }
 
-                if (not isObjectProjection and type == Type::Array) {
-                    throw type_error("Cannot instantiate `jon` from non-object-like initializer_list");
+                if (not isObjectProjection and type == Type::Object) {
+                    throw type_error("Cannot instantiate `jon` object from non-object-like initializer_list");
                 }
             }
 
@@ -1313,13 +1321,6 @@ namespace jacylang {
             }
         }
     };
-
-//    namespace to_jon {
-//        template<class Jon, class ValT>
-//        static auto to_jon(Jon & j, ValT && val) noexcept (
-//            noexcept()
-//        )
-//    }
 
     namespace literal {
         static inline jon operator""_jon(const char * str, std::size_t n) {
