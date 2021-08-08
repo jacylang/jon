@@ -13,6 +13,7 @@ namespace jacylang::ast {
     struct String;
     struct Object;
     struct Array;
+    struct Ref;
 
     struct ValueVisitor {
     public:
@@ -25,6 +26,7 @@ namespace jacylang::ast {
         virtual void visit(const String&) = 0;
         virtual void visit(const Object&) = 0;
         virtual void visit(const Array&) = 0;
+        virtual void visit(const Ref&) = 0;
     };
 }
 
@@ -147,6 +149,10 @@ namespace jacylang::ast {
         Ref(Ident && name) : Value(ValueKind::Ref), name(std::move(name)) {}
 
         Ident name;
+
+        void accept(ValueVisitor & visitor) const override {
+            visitor.visit(*this);
+        }
     };
 }
 
