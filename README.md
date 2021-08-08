@@ -33,7 +33,7 @@ For now, there's no "single-header" variant, thus you need the whole `include
  `target_include_directories(thirdparty/jon)` to `CMakeLists.txt`
 4. Use 😊
 ```c++
-#include "thirdparty/jon"
+#include "jon/jon.h"
 
 // Don't use `using namespace jacylang`, better write:
 using jon = jacylang::jon;
