@@ -197,6 +197,9 @@ namespace jacylang {
                 case TokenKind::String: {
                     return std::make_unique<ast::String>(advance().val);
                 }
+                case TokenKind::Ref: {
+                    return std::make_unique<ast::Ref>(ast::Ident {advance().val});
+                }
                 default: {
                     if (root) {
                         return parseObject(root);
