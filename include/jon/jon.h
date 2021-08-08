@@ -445,7 +445,47 @@ namespace jacylang {
 
         static jon parse(const str_t & source) {
             Parser parser;
-            return fromAst(parser.parse(source));
+            std::vector<detail::jon_ref<jon>> refs;
+            return fromAst(parser.parse(source), refs);
+        }
+
+        // Serialization/Deserialization //
+    private:
+        static jon fromAst(ast::value_ptr && ast, std::vector<detail::jon_ref<jon>> & refs) {
+            switch (ast->kind) {
+                case ast::ValueKind::Null: {
+                    return jon {};
+                }
+                case ast::ValueKind::Bool: {
+                    return jon(ast::Value::as<ast::Bool>(std::move(ast))->val);
+                }
+                case ast::ValueKind::Int: {
+                    return jon(ast::Value::as<ast::Int>(std::move(ast))->val);
+                }
+                case ast::ValueKind::Float: {
+                    return jon(ast::Value::as<ast::Float>(std::move(ast))->val);
+                }
+                case ast::ValueKind::String: {
+                    return jon(ast::Value::as<ast::String>(std::move(ast))->val);
+                }
+                case ast::ValueKind::Object: {
+                    obj_t entries;
+                    for (auto && keyVal : ast::Value::as<ast::Object>(std::move(ast))->entries) {
+                        entries.emplace(keyVal.key.val, fromAst(std::move(keyVal.val), refs));
+                    }
+                    return jon(std::move(entries));
+                }
+                case ast::ValueKind::Array: {
+                    arr_t values;
+                    for (auto && val : ast::Value::as<ast::Array>(std::move(ast))->values) {
+                        values.emplace_back(fromAst(std::move(val), refs));
+                    }
+                    return jon(std::move(values));
+                }
+                default: {
+                    throw std::logic_error("[jon bug]: Unhandled `ast::ValueKind` in `jon::fromAst");
+                }
+            }
         }
 
         // Common methods //
@@ -614,7 +654,7 @@ namespace jacylang {
         bool isNaN() const {
             return type() == Type::Float and std::isnan(get<float_t>());
         }
-        
+
         bool isInf() const {
             static_assert(std::numeric_limits<float>::is_iec559, "IEEE 754 required to use `jon::isInf`");
             return type() == Type::Float and std::isinf(get<float_t>());
@@ -751,45 +791,6 @@ namespace jacylang {
         void push(const jon & el) {
             assertArrayFirstAccess();
             get<arr_t>().push_back(el);
-        }
-
-        // Serialization/Deserialization //
-    private:
-        static jon fromAst(ast::value_ptr && ast) {
-            switch (ast->kind) {
-                case ast::ValueKind::Null: {
-                    return jon {};
-                }
-                case ast::ValueKind::Bool: {
-                    return jon(ast::Value::as<ast::Bool>(std::move(ast))->val);
-                }
-                case ast::ValueKind::Int: {
-                    return jon(ast::Value::as<ast::Int>(std::move(ast))->val);
-                }
-                case ast::ValueKind::Float: {
-                    return jon(ast::Value::as<ast::Float>(std::move(ast))->val);
-                }
-                case ast::ValueKind::String: {
-                    return jon(ast::Value::as<ast::String>(std::move(ast))->val);
-                }
-                case ast::ValueKind::Object: {
-                    obj_t entries;
-                    for (auto && keyVal : ast::Value::as<ast::Object>(std::move(ast))->entries) {
-                        entries.emplace(keyVal.key.val, fromAst(std::move(keyVal.val)));
-                    }
-                    return jon(std::move(entries));
-                }
-                case ast::ValueKind::Array: {
-                    arr_t values;
-                    for (auto && val : ast::Value::as<ast::Array>(std::move(ast))->values) {
-                        values.emplace_back(fromAst(std::move(val)));
-                    }
-                    return jon(std::move(values));
-                }
-                default: {
-                    throw std::logic_error("[jon bug]: Unhandled `ast::ValueKind` in `jon::fromAst");
-                }
-            }
         }
 
     public:
