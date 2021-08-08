@@ -46,6 +46,14 @@ namespace jacylang {
         template<Type> struct jonCtor {};
 
         template<>
+        struct jonCtor<Type::Null> {
+            template<class JonT>
+            static void make(JonT & j, typename JonT::null_t) noexcept {
+                j.value = null_t {};
+            }
+        };
+
+        template<>
         struct jonCtor<Type::Bool> {
             template<class JonT>
             static void make(JonT & j, typename JonT::bool_t val) noexcept {
@@ -109,6 +117,11 @@ namespace jacylang {
         };
 
         // Converters //
+        template<typename JonT, typename T, std::enable_if_t<std::is_same_v<T, null_t>, int> = 0>
+        void toJon(JonT & j, T val) noexcept {
+            jonCtor<Type::Null>::make(j, val);
+        }
+
         template<typename JonT, typename T, std::enable_if_t<std::is_same_v<T, bool_t>, int> = 0>
         void toJon(JonT & j, T val) noexcept {
             jonCtor<Type::Bool>::make(j, val);
@@ -1047,11 +1060,11 @@ namespace jacylang {
                 }
 
                 if (schema.has("items")) {
-                    const auto & itemsSchema = schema.schemaAt<arr_t>("items", path);
+                    auto itemsSchema = schema.schemaAt<arr_t>("items", path);
                     size_t index{0};
                     for (const auto & el : arrayValue) {
                         const auto & itemPath = path + "/" + std::to_string(index);
-                        el._validate(itemsSchema, itemPath, result[itemPath]);
+                        el._validate(std::move(itemsSchema), itemPath, result[itemPath]);
                         index++;
                     }
                 }
