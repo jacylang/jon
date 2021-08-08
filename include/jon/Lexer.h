@@ -50,6 +50,8 @@ namespace jacylang {
         /// Either string enclosed into quotes (maybe triple if multi-line) or identifier
         // Note: Separate with identifier if would be needed
         String,
+
+        Ref,
     };
 
     struct Span {
@@ -610,6 +612,12 @@ namespace jacylang {
                 return lexNum();
             }
 
+            bool isRef = false;
+            if (is('$')) {
+                advance();
+                isRef = true;
+            }
+
             // Identifier is anything not containing specific tokens
             std::string val;
             while (not eof()) {
@@ -619,29 +627,33 @@ namespace jacylang {
                 val += advance();
             }
 
-            // Left spaces are already skipped by `isHidden`, thus trim right side of string to check for constant
-            const auto & trimmed = rtrim(val);
-            if (trimmed == "null") {
-                addToken(TokenKind::Null, 4);
-            } else if (trimmed == "false") {
-                addToken(TokenKind::False, 5);
-            } else if (trimmed == "true") {
-                addToken(TokenKind::False, 4);
-            } else if (trimmed == "nan") {
-                addToken(TokenKind::NaN, 3);
-            } else if (trimmed == "-nan") {
-                addToken(TokenKind::NegNaN, 4);
-            } else if (trimmed == "+nan") {
-                addToken(TokenKind::PosNaN, 4);
-            } else if (trimmed == "inf") {
-                addToken(TokenKind::Inf, 3);
-            } else if (trimmed == "+inf") {
-                addToken(TokenKind::PosInf, 4);
-            } else if (trimmed == "-inf") {
-                addToken(TokenKind::NegInf, 4);
+            if (not isRef) {
+                // Left spaces are already skipped by `isHidden`, thus trim right side of string to check for constant
+                const auto & trimmed = rtrim(val);
+                if (trimmed == "null") {
+                    addToken(TokenKind::Null, 4);
+                } else if (trimmed == "false") {
+                    addToken(TokenKind::False, 5);
+                } else if (trimmed == "true") {
+                    addToken(TokenKind::False, 4);
+                } else if (trimmed == "nan") {
+                    addToken(TokenKind::NaN, 3);
+                } else if (trimmed == "-nan") {
+                    addToken(TokenKind::NegNaN, 4);
+                } else if (trimmed == "+nan") {
+                    addToken(TokenKind::PosNaN, 4);
+                } else if (trimmed == "inf") {
+                    addToken(TokenKind::Inf, 3);
+                } else if (trimmed == "+inf") {
+                    addToken(TokenKind::PosInf, 4);
+                } else if (trimmed == "-inf") {
+                    addToken(TokenKind::NegInf, 4);
+                } else {
+                    // Add identifier as string
+                    addToken(TokenKind::String, std::move(val));
+                }
             } else {
-                // Add identifier as string
-                addToken(TokenKind::String, std::move(val));
+                addToken(TokenKind::Ref, std::move(val));
             }
        }
 
