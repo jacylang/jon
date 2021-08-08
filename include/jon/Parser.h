@@ -142,6 +142,9 @@ namespace jacylang {
                 case TokenKind::Float: {
                     return ast::Ident {advance().val};
                 }
+                case TokenKind::Ref: {
+                    return ast::Ident {"$" + advance().val};
+                }
                 default: {
                     expectedError("key");
                 }
