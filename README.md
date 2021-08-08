@@ -29,7 +29,7 @@ If you work in VSCode install `Jacy` extension, it includes syntax highlighting 
 
 No other IDEs supported, and if it will be, likely, `Jon` will be included into `Jacy` extensions.
 Anyway, just for syntax highlighting you can associate `*.jon` files with `*.yaml` extension as syntax is pretty similar.
-For JetBrains IntelliJ IDEA, go to `Settings > Editor > File Types` and peek `YAML`, click `+` and add `*.jon` to list of associated files.
+For JetBrains IntelliJ IDEA, go to `Settings > Editor > File Types` and peek `YAML` (if there's no `YAML` file type, YAML plugin is disabled), click `+` and add `*.jon` to list of associated files.
 
 #### Installation
 
