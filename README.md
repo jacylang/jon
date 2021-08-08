@@ -93,6 +93,8 @@ jon objectValue = jon::obj({
 jon objectInit = jon::obj_t {
     {"name", "Jon"},
 };
+// Create an empty object
+jon emptyObj = jon({});
 ```
 
 #### First-Access conversions
