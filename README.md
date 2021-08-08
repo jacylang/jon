@@ -19,6 +19,18 @@ _JON_ (Jacy Object Notation) is an alternative to JSON used by Jacy programming
 
 ### Tutorial
 
+#### IDE support
+
+##### Visual Studio Code
+
+If you work in VSCode install `Jacy` extension, it includes syntax highlighting for `Jon`.
+
+##### Other IDE support
+
+No other IDEs supported, and if it will be, likely, `Jon` will be included into `Jacy` extensions.
+Anyway, just for syntax highlighting you can associate `*.jon` files with `*.yaml` extension as syntax is pretty similar.
+For JetBrains IntelliJ IDEA, go to `Settings > Editor > File Types` and peek `YAML`, click `+` and add `*.jon` to list of associated files.
+
 #### Installation
 
 This is a header-only library, all you need is to have source in your project.
