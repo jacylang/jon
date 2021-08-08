@@ -49,6 +49,7 @@ namespace jacylang::ast {
         String,
         Object,
         Array,
+        Ref,
     };
 
     struct Value {
@@ -140,6 +141,12 @@ namespace jacylang::ast {
         void accept(ValueVisitor & visitor) const override {
             visitor.visit(*this);
         }
+    };
+
+    struct Ref : Value {
+        Ref(Ident && name) : Value(ValueKind::Ref), name(std::move(name)) {}
+
+        Ident name;
     };
 }
 

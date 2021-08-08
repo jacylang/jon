@@ -451,13 +451,13 @@ namespace jacylang {
         // Common methods //
     public:
         template<class T>
-        constexpr T & get() {
+        inline constexpr T & get() {
             getTypeAssert<T>();
             return std::get<T>(value);
         }
 
         template<class T>
-        constexpr const T & get() const {
+        inline constexpr const T & get() const {
             getTypeAssert<T>();
             return std::get<T>(value);
         }
