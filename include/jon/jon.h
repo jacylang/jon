@@ -1313,14 +1313,6 @@ namespace jacylang {
             }
         }
 
-        bool schemaCheck(Type type, const std::string & errorMsg, const std::string & path) const {
-            try {
-                check(type);
-            } catch (type_error & te) {
-                throw invalid_schema(errorMsg, path);
-            }
-        }
-
         /// Helper overload for schema validation, throws `invalid_error` instead of `type_error`
         template<class T>
         const T & schemaAt(const str_t & key, const std::string & path) const {

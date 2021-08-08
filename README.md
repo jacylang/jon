@@ -19,11 +19,88 @@ _JON_ (Jacy Object Notation) is an alternative to JSON used by Jacy programming
 
 ### Tutorial
 
+#### Installation
+
+This is a header-only library, all you need is to have source in your project.
+For now, there's no "single-header" variant, thus you need the whole `include
+` jon subdirectory.
+
+##### Including in project
+
+1. Download latest [Jon](https://github.com/jacylang/jon) source from.
+2. Move files to directory you want, e.g. `thirdparty/jon`
+3. Add `jon` directory to your project using `-Ithirdparty/jon` or by adding
+ `target_include_directories(thirdparty/jon)` to `CMakeLists.txt`
+4. Use 😊
+```c++
+#include "thirdparty/jon"
+
+// Don't use `using namespace jacylang`, better write:
+using jon = jacylang::jon;
+
+// Add this to use `""_jon` string literals 
+using namespace jacylang::literal;
+
+int main() {
+    jon jonObject = R"(
+        app: 'Jon'
+        version: '1.0.0'
+        description: """
+            _JON_ (Jacy Object Notation) is an alternative to JSON used by
+            Jacy programming language.
+        """
+    )"_jon;
+
+    return 0;
+}
+```
+
+#### Literals
+
+```c++
+// Jon empty constructor defaults value to null
+jon nullValue;
+// Or like this
+jon nullValue1 {};
+// You can explicitly create a null_t value
+jon nullValueExplicit {jon::null_t {}};
+
+// boolean accepts `true` or `false`
+jon trueValue = true;
+jon falseValue = false;
+
+// `jon` constructors are smart enough to avoid problems with implicit
+// conversion from `int` to `bool` or `double`
+
+// Integers are stored as `int64_t`
+jon intValue = 123;
+jon negIntValue = -1812312;
+
+// `double` is used for floating-point numbers
+jon floatValue = 0.12312321;
+
+// Strings
+jon stringValue = "Hello, Jon!";
+
+// Objects
+// Using `jon::obj` method which accepts initializer_list of key-value pairs,
+// key must be a string
+jon objectValue = jon::obj({
+    {"key", "value"},
+});
+// Or by creating value of `jon::obj_t`
+// which is likely an `std::map<std::string, jon>`
+jon objectInit = jon::obj_t {
+    {"name", "Jon"},
+};
+```
+
 #### First-Access conversions
 
 This is the way to work with `jon` value as dynamically-typed. When you create an empty `jon` value (which defaults to `null`) and then access it with type-dependent method, type is automatically set to requested.
 
 Example:
+
 ```c++
 jon useAsArray;
 
