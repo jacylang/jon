@@ -334,6 +334,7 @@ namespace jacylang {
         static jon parse(const str_t & source) {
             Parser parser;
             std::vector<detail::jon_ref<jon>> refs;
+            Printer printer;
             return fromAst(parser.parse(source), refs);
         }
 

@@ -84,6 +84,10 @@ namespace jacylang {
             out("]");
         }
 
+        void visit(const ast::Ref & ref) override {
+            out("$", ref.name.val);
+        }
+
     public:
         template<class ...Args>
         void out(Args && ...args) {
