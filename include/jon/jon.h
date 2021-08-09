@@ -41,171 +41,6 @@ namespace jacylang {
 
         template<class JonT>
         using arr_t = std::vector<JonT>;
-
-        // Constructors //
-        template<Type> struct jonCtor {};
-
-        template<>
-        struct jonCtor<Type::Null> {
-            template<class JonT>
-            static void make(JonT & j, typename JonT::null_t) noexcept {
-                j.value = null_t {};
-            }
-        };
-
-        template<>
-        struct jonCtor<Type::Bool> {
-            template<class JonT>
-            static void make(JonT & j, typename JonT::bool_t val) noexcept {
-                j.value = val;
-            }
-        };
-
-        template<>
-        struct jonCtor<Type::Int> {
-            template<class JonT>
-            static void make(JonT & j, typename JonT::int_t val) noexcept {
-                j.value = val;
-            }
-        };
-
-        template<>
-        struct jonCtor<Type::Float> {
-            template<class JonT>
-            static void make(JonT & j, typename JonT::float_t val) noexcept {
-                j.value = val;
-            }
-        };
-
-        template<>
-        struct jonCtor<Type::String> {
-            template<class JonT>
-            static void make(JonT & j, const typename JonT::str_t & val) noexcept {
-                j.value = val;
-            }
-
-            template<class JonT>
-            static void make(JonT & j, typename JonT::str_t && val) noexcept {
-                j.value = std::move(val);
-            }
-        };
-
-        template<>
-        struct jonCtor<Type::Object> {
-            template<class JonT>
-            static void make(JonT & j, const typename JonT::obj_t & val) noexcept {
-                j.value = val;
-            }
-
-            template<class JonT>
-            static void make(JonT & j, typename JonT::obj_t && val) noexcept {
-                j.value = std::move(val);
-            }
-        };
-
-        template<>
-        struct jonCtor<Type::Array> {
-            template<class JonT>
-            static void make(JonT & j, const typename JonT::arr_t & val) noexcept {
-                j.value = val;
-            }
-
-            template<class JonT>
-            static void make(JonT & j, typename JonT::arr_t && val) noexcept {
-                j.value = std::move(val);
-            }
-        };
-
-        // Converters //
-        template<typename JonT, typename T, std::enable_if_t<std::is_same_v<T, null_t>, int> = 0>
-        void toJon(JonT & j, T val) noexcept {
-            jonCtor<Type::Null>::make(j, val);
-        }
-
-        template<typename JonT, typename T, std::enable_if_t<std::is_same_v<T, bool_t>, int> = 0>
-        void toJon(JonT & j, T val) noexcept {
-            jonCtor<Type::Bool>::make(j, val);
-        }
-
-        template<typename JonT, typename T, std::enable_if_t<std::is_same_v<T, str_t>, int> = 0>
-        void toJon(JonT & j, const T & val) noexcept {
-            jonCtor<Type::String>::make(j, val);
-        }
-
-        template<typename JonT>
-        void toJon(JonT & j, str_t && val) noexcept {
-            jonCtor<Type::String>::make(j, std::move(val));
-        }
-
-        template<typename JonT, class T, std::enable_if_t<std::is_floating_point_v<T>, int> = 0>
-        void toJon(JonT & j, T val) noexcept {
-            jonCtor<Type::Float>::make(j, static_cast<float_t>(val));
-        }
-
-        template<typename JonT, class T, std::enable_if_t<std::is_integral_v<T> && !std::is_same_v<T, bool>, int> = 0>
-        void toJon(JonT & j, T val) noexcept {
-            jonCtor<Type::Int>::make(j, static_cast<int_t>(val));
-        }
-
-        template<typename JonT>
-        void toJon(JonT & j, const obj_t<JonT> & val) noexcept {
-            jonCtor<Type::Object>::make(j, val);
-        }
-
-        template<typename JonT>
-        void toJon(JonT & j, obj_t<JonT> && val) noexcept {
-            jonCtor<Type::Object>::make(j, std::move(val));
-        }
-
-        template<typename JonT>
-        void toJon(JonT & j, const arr_t<JonT> & val) noexcept {
-            jonCtor<Type::Array>::make(j, val);
-        }
-
-        template<typename JonT>
-        void toJon(JonT & j, arr_t<JonT> && val) noexcept {
-            jonCtor<Type::Array>::make(j, std::move(val));
-        }
-
-        template<typename JonT, typename T1, typename T2, std::enable_if_t<
-            std::is_constructible_v<JonT, T1> &&
-            std::is_constructible_v<JonT, T2>, int> = 0>
-        void toJon(JonT & j, const std::pair<T1, T2> & p)
-        {
-            j = {p.first, p.second};
-        }
-
-        struct toJonFunc {
-            template<typename JonT, typename T>
-            auto operator()(JonT & j, T && val) const noexcept(noexcept(toJon(j, std::forward<T>(val))))
-            -> decltype(toJon(j, std::forward<T>(val)), void())
-            {
-                return toJon(j, std::forward<T>(val));
-            }
-        };
-    }
-
-    namespace {
-        template<typename T>
-        struct static_const
-        {
-            static constexpr T value{};
-        };
-
-        constexpr const auto & toJon = static_const<detail::toJonFunc>::value;
-    }
-
-    namespace detail {
-        // Serializer //
-        template<class VT>
-        struct Serializer {
-            template<class JonT, class TT = VT>
-            static auto toJon(JonT & j, TT && val) noexcept(
-            noexcept(::jacylang::toJon(j, std::forward<TT>(val)))
-            ) -> decltype(::jacylang::toJon(j, std::forward<TT>(val)), void()) {
-                ::jacylang::toJon(j, std::forward<TT>(val));
-            }
-        };
     }
 
     class jon {
@@ -222,8 +57,6 @@ namespace jacylang {
         using storage_t = std::variant<null_t, bool_t, int_t, float_t, str_t, obj_t, arr_t>;
 
         using Type = detail::Type;
-
-        template<detail::Type> friend struct detail::jonCtor;
 
         static std::string typeStr(Type type) {
             switch (type) {
@@ -357,16 +190,54 @@ namespace jacylang {
             }
         }
 
-        template<class T, class U = std::remove_cv<std::remove_reference_t<T>>,
-            std::enable_if_t<!std::is_same_v<U, jon>, int> = 0>
-        jon(T && val) {
-            detail::Serializer<U>::toJon(*this, std::forward<T>(val));
+        template<class T>
+        using no_cvr = std::remove_cv<std::remove_reference_t<T>>;
+
+        template<class T>
+        using is_jon = std::is_same<T, jon>;
+
+        explicit jon(bool val) {
+            value = val;
+        }
+
+        jon(int_t val) {
+            value = static_cast<int_t>(val);
+        }
+
+        jon(float_t val) {
+            value = static_cast<float_t>(val);
+        }
+
+        jon(const str_t & val) {
+            value = val;
+        }
+
+        jon(str_t && val) {
+            value = std::move(val);
+        }
+
+        jon(const obj_t & val) {
+            value = val;
+        }
+
+        jon(obj_t && val) {
+            value = std::move(val);
+        }
+
+        jon(const arr_t & val) {
+            value = val;
+        }
+
+        jon(arr_t && val) {
+            value = std::move(val);
         }
 
         jon(const detail::jon_ref<jon> & ref) : jon(ref.get()) {}
 
         jon(const jon & other) noexcept : value(other.value) {}
-        jon(jon && other) noexcept : value(std::move(other.value)) {}
+        jon(jon && other) noexcept : value(std::move(other.value)) {
+            other.value = {};
+        }
 
         constexpr jon(std::initializer_list<detail::jon_ref<jon>> init, bool typeDeduction = true, Type type = Type::Array) {
             if (init.size() == 0) {
@@ -957,11 +828,11 @@ namespace jacylang {
                             }
                         }
                     }
-                    result[path + "/type"] = obj_t {
+                    result[path + "/type"] = jon({
                         {"message", mstr("Type mismatch: Expected ", expectedTypeStr, ", got ", typeStr())},
                         {"data", *this},
                         {"keyword", "type"},
-                    };
+                    });
                 }
             }
 
@@ -976,22 +847,22 @@ namespace jacylang {
                 if (schema.has("minInt")) {
                     auto min = schema.schemaAt<int_t>("minInt", path);
                     if (intValue < min) {
-                        result[path + "/minInt"] = obj_t {
+                        result[path + "/minInt"] = jon({
                             {"message", mstr("Invalid integer size: ", intValue, " is less than ", min)},
                             {"data", *this},
                             {"keyword", "minInt"},
-                        };
+                        });
                     }
                 }
 
                 if (schema.has("maxInt")) {
                     auto max = schema.schemaAt<int_t>("maxInt", path);
                     if (intValue > max) {
-                        result[path + "/maxInt"] = obj_t {
+                        result[path + "/maxInt"] = jon({
                             {"message", mstr("Invalid integer value: ", intValue, " is greater than ", max)},
                             {"data", *this},
                             {"keyword", "maxInt"},
-                        };
+                        });
                     }
                 }
             } else if (valueType == Type::Float) {
@@ -1000,22 +871,22 @@ namespace jacylang {
                 if (schema.has("minFloat")) {
                     auto min = schema.schemaAt<float_t>("minFloat", path);
                     if (floatValue < min) {
-                        result[path + "/minFloat"] = obj_t {
+                        result[path + "/minFloat"] = jon({
                             {"message", mstr("Invalid float value: ", floatValue, " is less than ", min)},
                             {"data", *this},
                             {"keyword", "minFloat"},
-                        };
+                        });
                     }
                 }
 
                 if (schema.has("maxFloat")) {
                     auto max = schema.schemaAt<float_t>("maxFloat", path);
                     if (floatValue > max) {
-                        result[path + "/maxFloat"] = obj_t {
+                        result[path + "/maxFloat"] = jon({
                             {"message", mstr("Invalid float value: ", floatValue, " is greater than ", max)},
                             {"data", *this},
                             {"keyword", "maxFloat"},
-                        };
+                        });
                     }
                 }
             } else if (valueType == Type::String) {
@@ -1024,22 +895,22 @@ namespace jacylang {
                 if (schema.has("minLen")) {
                     auto min = schema.schemaAt<int_t>("minLen", path);
                     if (stringValue.size() < min) {
-                        result[path + "/minLen"] = obj_t {
+                        result[path + "/minLen"] = jon({
                             {"message", mstr("Invalid string length: ", stringValue.size(), " is less than ", min)},
                             {"data", *this},
                             {"keyword", "minLen"},
-                        };
+                        });
                     }
                 }
 
                 if (schema.has("maxLen")) {
                     auto max = schema.schemaAt<int_t>("maxLen", path);
                     if (stringValue.size() > max) {
-                        result[path + "/maxLen"] = obj_t {
+                        result[path + "/maxLen"] = jon({
                             {"message", mstr("Invalid string length: ", stringValue.size(), " is greater than ", max)},
                             {"data", *this},
                             {"keyword", "maxLen"},
-                        };
+                        });
                     }
                 }
 
@@ -1048,11 +919,11 @@ namespace jacylang {
                     const auto pattern = schema.schemaAt<str_t>("pattern", path);
                     const std::regex regex(pattern);
                     if (not std::regex_match(stringValue, regex)) {
-                        result[path + "/pattern"] = obj_t {
+                        result[path + "/pattern"] = jon({
                             {"message", mstr("Invalid string value: '", stringValue, "' does not match pattern '", pattern, "'")},
                             {"data", *this},
                             {"keyword", "pattern"},
-                        };
+                        });
                     }
                 }
             } else if (valueType == Type::Array) {
@@ -1061,22 +932,22 @@ namespace jacylang {
                 if (schema.has("minSize")) {
                     auto min = schema.schemaAt<int_t>("minSize", path);
                     if (arrayValue.size() < min) {
-                        result[path + "/minSize"] = obj_t {
+                        result[path + "/minSize"] = jon({
                             {"message", mstr("Invalid array size: ", arrayValue.size(), " is less than ", min)},
                             {"data",    *this},
                             {"keyword", "minSize"},
-                        };
+                        });
                     }
                 }
 
                 if (schema.has("maxSize")) {
                     auto max = schema.schemaAt<int_t>("maxSize", path);
                     if (arrayValue.size() > max) {
-                        result[path + "/maxSize"] = obj_t {
+                        result[path + "/maxSize"] = jon({
                             {"message", mstr("Invalid array size: ", arrayValue.size(), " is greater than ", max)},
                             {"data", *this},
                             {"keyword", "maxSize"},
-                        };
+                        });
                     }
                 }
 
@@ -1095,22 +966,22 @@ namespace jacylang {
                 if (schema.has("minProps")) {
                     auto min = schema.schemaAt<int_t>("minProps", path);
                     if (objectValue.size() < min) {
-                        result[path + "/minProps"] = obj_t {
+                        result[path + "/minProps"] = jon({
                             {"message", mstr("Invalid object properties count: ", objectValue.size(), " is less than ", min)},
                             {"data", *this},
                             {"keyword", "minProps"},
-                        };
+                        });
                     }
                 }
 
                 if (schema.has("maxProps")) {
                     auto max = schema.schemaAt<int_t>("maxProps", path);
                     if (objectValue.size() > max) {
-                        result[path + "/maxProps"] = obj_t {
+                        result[path + "/maxProps"] = jon({
                             {"message", mstr("Invalid object properties count: ", objectValue.size(), " is greater than ", max)},
                             {"data", *this},
                             {"keyword", "maxProps"},
-                        };
+                        });
                     }
                 }
 
@@ -1125,11 +996,11 @@ namespace jacylang {
                         const auto & prop = props.find(entry.first);
                         const auto entryPath = path + "/" + entry.first;
                         if (not extras and prop == props.end()) {
-                            result[entryPath + "/extras"] = obj_t {
+                            result[entryPath + "/extras"] = jon({
                                 {"message", "Extra property (`extras` are not allowed)"},
                                 {"data", entry.second},
                                 {"keyword", "extras"},
-                            };
+                            });
                         } else {
                             entry.second._validate(prop->second, entryPath, result[entryPath]);
                             checkedProps.emplace_back(entry.first);
@@ -1144,19 +1015,19 @@ namespace jacylang {
                             if (std::find(checkedProps.begin(), checkedProps.end(), prop.first) != checkedProps.end()) {
                                 continue;
                             }
-                            result[path + "/" + prop.first] = obj_t {
+                            result[path + "/" + prop.first] = jon({
                                 {"message", "Missing property"},
                                 {"data", {}},
                                 {"keyword", "!optional"},
-                            };
+                            });
                         }
                     }
                 } else if (not extras and not objectValue.empty()) {
-                    result[path + "/extras"] = obj_t {
+                    result[path + "/extras"] = jon({
                         {"message", mstr("No properties allowed in this object as `extras: false` and no `props` specified")},
                         {"data", *this},
                         {"keyword", "extras"},
-                    };
+                    });
                 }
             }
 
@@ -1174,11 +1045,11 @@ namespace jacylang {
                     }
                 }
                 if (not someValid) {
-                    result[path + "/anyOf"] = obj_t {
+                    result[path + "/anyOf"] = jon({
                         {"message", "Does not match `anyOf` schemas"},
                         {"data", {}},
                         {"keyword", "anyOf"},
-                    };
+                    });
                 }
             }
 
@@ -1190,22 +1061,22 @@ namespace jacylang {
                     const auto & subSchemaResult = validate(subSchema);
                     if (subSchemaResult.isNull()) {
                         if (oneValid) {
-                            result[path + "/oneOf"] = obj_t {
+                            result[path + "/oneOf"] = jon({
                                 {"message", "Matches more than `oneOf` schemas"},
                                 {"data", {}},
                                 {"keyword", "anyOf"},
-                            };
+                            });
                         }
                         oneValid = true;
                         break;
                     }
                 }
                 if (not oneValid) {
-                    result[path + "/oneOf"] = obj_t {
+                    result[path + "/oneOf"] = jon({
                         {"message", "Does not match any of `oneOf` schemas"},
                         {"data", {}},
                         {"keyword", "oneOf"},
-                    };
+                    });
                 }
             }
 
@@ -1215,11 +1086,11 @@ namespace jacylang {
                 for (const auto & subSchema : allOf) {
                     const auto & subSchemaResult = validate(subSchema);
                     if (not subSchemaResult.isNull()) {
-                        result[path + "/allOf"] = obj_t {
+                        result[path + "/allOf"] = jon({
                             {"message", "Does not `allOf` schemas"},
                             {"data", {}},
                             {"keyword", "allOf"},
-                        };
+                        });
                         break;
                     }
                 }
@@ -1230,21 +1101,21 @@ namespace jacylang {
                     for (const auto & subSchema : schema.schemaAt<arr_t>("not", path)) {
                         const auto & subSchemaResult = validate(subSchema);
                         if (subSchemaResult.isNull()) {
-                            result[path + "/not"] = obj_t {
+                            result[path + "/not"] = jon({
                                 {"message", "Matches some of `not` schemas"},
                                 {"data", {}},
                                 {"keyword", "not"},
-                            };
+                            });
                             break;
                         }
                     }
                 } else {
                     if (validate(schema.at("not")).isNull()) {
-                        result[path + "/not"] = obj_t {
+                        result[path + "/not"] = jon({
                             {"message", "Matches `not` schema"},
                             {"data", {}},
                             {"keyword", "not"},
-                        };
+                        });
                     }
                 }
             }

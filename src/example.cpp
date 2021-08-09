@@ -1,9 +1,11 @@
 #include "jon/jon.h"
 
-int main(const int, const char**) {
-    using namespace jon::literal;
+using jon = jacylang::jon;
 
-    auto file = jon::jon::fromFile("/home/hazer-hazer/dev/jacylang/jon/examples/sample_1.jon");
+int main(const int, const char**) {
+    using namespace jacylang::literal;
+
+    auto file = jon::fromFile("/home/hazer-hazer/dev/jacylang/jon/examples/sample_1.jon");
 
     auto val = file.at("value");
     auto schema = file.at("schema");

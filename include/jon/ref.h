@@ -15,12 +15,11 @@ namespace jacylang::detail {
         jon_ref(Args && ...args) : owned(std::forward<Args>(args)...) {}
 
         jon_ref(jon_ref&&) noexcept = default;
+        ~jon_ref() = default;
 
         jon_ref(const jon_ref&) = delete;
         jon_ref & operator=(const jon_ref&) = delete;
         jon_ref & operator=(jon_ref&&) = delete;
-
-        ~jon_ref() = default;
 
         T get() const {
             if (ref == nullptr) {
