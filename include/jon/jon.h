@@ -110,25 +110,25 @@ namespace jacylang {
 
         template<class T>
         constexpr void getTypeAssert() const {
-            if constexpr (std::is_same_v<T, null_t>) {
+            if constexpr (std::is_same<T, null_t>::value) {
                 assertType(Type::Null, "called `get<null_t>` with not a `null_t` `jon`");
             }
-            else if constexpr (std::is_same_v<T, bool_t>) {
+            else if constexpr (std::is_same<T, bool_t>::value) {
                 assertType(Type::Bool, "called `get<bool_t>` with not a `bool_t` `jon`");
             }
-            else if constexpr (std::is_same_v<T, int_t>) {
+            else if constexpr (std::is_same<T, int_t>::value) {
                 assertType(Type::Int, "called `get<int_t>` with not a `int_t` `jon`");
             }
-            else if constexpr (std::is_same_v<T, float_t>) {
+            else if constexpr (std::is_same<T, float_t>::value) {
                 assertType(Type::Float, "called `get<float_t>` with not a `float_t` `jon`");
             }
-            else if constexpr (std::is_same_v<T, str_t>) {
+            else if constexpr (std::is_same<T, str_t>::value) {
                 assertType(Type::String, "called `get<str_t>` with not a `str_t` `jon`");
             }
-            else if constexpr (std::is_same_v<T, obj_t>) {
+            else if constexpr (std::is_same<T, obj_t>::value) {
                 assertType(Type::Object, "called `get<obj_t>` with not a `obj_t` `jon`");
             }
-            else if constexpr (std::is_same_v<T, arr_t>) {
+            else if constexpr (std::is_same<T, arr_t>::value) {
                 assertType(Type::Array, "called `get<arr_t>` with not a `arr_t` `jon`");
             }
             else {
@@ -138,17 +138,17 @@ namespace jacylang {
 
         template<class T>
         static constexpr const char * valueAsKey(const T & t) {
-            if constexpr (std::is_same_v<T, null_t>) {
+            if constexpr (std::is_same<T, null_t>::value) {
                 return "null";
-            } else if constexpr (std::is_same_v<T, bool_t>) {
+            } else if constexpr (std::is_same<T, bool_t>::value) {
                 return t ? "true" : "false";
-            } else if constexpr (std::is_same_v<T, int_t> or std::is_same_v<T, float_t>) {
+            } else if constexpr (std::is_same<T, int_t>::value or std::is_same<T, float_t>::value) {
                 return std::to_string(t);
-            } else if constexpr (std::is_same_v<T, str_t>) {
+            } else if constexpr (std::is_same<T, str_t>::value) {
                 return t;
-            } else if constexpr (std::is_same_v<T, obj_t>) {
+            } else if constexpr (std::is_same<T, obj_t>::value) {
                 throw type_error("Unable to use object as object key");
-            } else if constexpr (std::is_same_v<T, arr_t>) {
+            } else if constexpr (std::is_same<T, arr_t>::value) {
                 throw type_error("Unable to use array as object key");
             }
         }
@@ -196,40 +196,54 @@ namespace jacylang {
         template<class T>
         using is_jon = std::is_same<T, jon>;
 
-        explicit jon(bool val) {
-            value = val;
+        template<class T, class U = no_cvr<T>>
+        jon(const T & val) noexcept {
+            if constexpr (std::is_same<U, bool_t>::value) {
+                value = static_cast<bool_t>(val);
+                return;
+            }
+
+            if constexpr (std::is_same<U, int_t>::value) {
+                value = static_cast<int_t>(val);
+                return;
+            }
+
+            if constexpr (std::is_same<U, float_t>::value) {
+                value = static_cast<float_t>(val);
+                return;
+            }
+
+            if constexpr (std::is_same<U, str_t>::value or std::is_same<U, obj_t>::value or std::is_same<U, arr_t>::value) {
+                value = val;
+                return;
+            }
+
+            static_assert(true, "Invalid type for jon constructor");
         }
 
-        jon(int_t val) {
-            value = static_cast<int_t>(val);
-        }
+        template<class T, class U = no_cvr<T>>
+        jon(T && val) noexcept {
+            if constexpr (std::is_same<U, bool_t>::value) {
+                value = static_cast<bool_t>(std::move(val));
+                return;
+            }
 
-        jon(float_t val) {
-            value = static_cast<float_t>(val);
-        }
+            if constexpr (std::is_same<U, int_t>::value) {
+                value = static_cast<int_t>(std::move(val));
+                return;
+            }
 
-        jon(const str_t & val) {
-            value = val;
-        }
+            if constexpr (std::is_same<U, float_t>::value) {
+                value = static_cast<float_t>(std::move(val));
+                return;
+            }
 
-        jon(str_t && val) {
-            value = std::move(val);
-        }
+            if constexpr (std::is_same<U, str_t>::value or std::is_same<U, obj_t>::value or std::is_same<U, arr_t>::value) {
+                value = std::move(val);
+                return;
+            }
 
-        jon(const obj_t & val) {
-            value = val;
-        }
-
-        jon(obj_t && val) {
-            value = std::move(val);
-        }
-
-        jon(const arr_t & val) {
-            value = val;
-        }
-
-        jon(arr_t && val) {
-            value = std::move(val);
+            static_assert(true, "Invalid type for jon constructor");
         }
 
         jon(const detail::jon_ref<jon> & ref) : jon(ref.get()) {}
@@ -239,7 +253,7 @@ namespace jacylang {
             other.value = {};
         }
 
-        constexpr jon(std::initializer_list<detail::jon_ref<jon>> init, bool typeDeduction = true, Type type = Type::Array) {
+        jon(std::initializer_list<detail::jon_ref<jon>> init, bool typeDeduction = true, Type type = Type::Array) {
             if (init.size() == 0) {
                 value = obj_t {};
                 return;
@@ -262,13 +276,16 @@ namespace jacylang {
             if (isObjectProjection) {
                 value = obj_t {};
                 for (auto & el : init) {
-                    get<obj_t>().emplace(el.get().get<arr_t>().at(0).get<str_t>(), std::move(el.get().get<arr_t>().at(1)));
+                    auto pair = el.get().get<arr_t>();
+                    get<obj_t>().emplace(pair.at(0).get<str_t>(), std::move(pair.at(1)));
                 }
             } else {
                 value = arr_t(init.begin(), init.end());
             }
         }
 
+        // Assignment //
+    public:
         jon & operator=(jon other) noexcept (
             std::is_nothrow_move_constructible_v<storage_t> &&
             std::is_nothrow_move_assignable_v<storage_t>
@@ -362,13 +379,13 @@ namespace jacylang {
         // Common methods //
     public:
         template<class T>
-        inline constexpr T & get() {
+        T & get() {
             getTypeAssert<T>();
             return std::get<T>(value);
         }
 
         template<class T>
-        inline constexpr const T & get() const {
+        const T & get() const {
             getTypeAssert<T>();
             return std::get<T>(value);
         }
@@ -1015,11 +1032,7 @@ namespace jacylang {
                             if (std::find(checkedProps.begin(), checkedProps.end(), prop.first) != checkedProps.end()) {
                                 continue;
                             }
-                            result[path + "/" + prop.first] = jon({
-                                {"message", "Missing property"},
-                                {"data", {}},
-                                {"keyword", "!optional"},
-                            });
+                            result[path + "/" + prop.first] = jon({ 1, 2, 3});
                         }
                     }
                 } else if (not extras and not objectValue.empty()) {
@@ -1179,25 +1192,25 @@ namespace jacylang {
 
         template<class T>
         static constexpr const char * typeStrArticle() {
-            if constexpr (std::is_same_v<T, null_t>) {
+            if constexpr (std::is_same<T, null_t>::value) {
                 return "a null";
             }
-            else if constexpr (std::is_same_v<T, bool_t>) {
+            else if constexpr (std::is_same<T, bool_t>::value) {
                 return "a bool";
             }
-            else if constexpr (std::is_same_v<T, int_t>) {
+            else if constexpr (std::is_same<T, int_t>::value) {
                 return "an int";
             }
-            else if constexpr (std::is_same_v<T, float_t>) {
+            else if constexpr (std::is_same<T, float_t>::value) {
                 return "a float";
             }
-            else if constexpr (std::is_same_v<T, str_t>) {
+            else if constexpr (std::is_same<T, str_t>::value) {
                 return "a string";
             }
-            else if constexpr (std::is_same_v<T, obj_t>) {
+            else if constexpr (std::is_same<T, obj_t>::value) {
                 return "an object";
             }
-            else if constexpr (std::is_same_v<T, arr_t>) {
+            else if constexpr (std::is_same<T, arr_t>::value) {
                 return "an array";
             }
             else {

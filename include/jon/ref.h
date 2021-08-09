@@ -11,6 +11,12 @@ namespace jacylang::detail {
         jon_ref(const T & val) : ref(&val) {}
         jon_ref(std::initializer_list<jon_ref> init) : owned(init) {}
 
+        template<class JCT>
+        jon_ref(JCT && val) : owned(std::move(val)) {}
+
+        template<class JCT>
+        jon_ref(const JCT & val) : owned(val) {}
+
         template<class ...Args, std::enable_if<std::is_constructible<T, Args...>::value, int> = 0>
         jon_ref(Args && ...args) : owned(std::forward<Args>(args)...) {}
 

@@ -7,6 +7,8 @@ int main(const int, const char**) {
 
     auto file = jon::fromFile("/home/hazer-hazer/dev/jacylang/jon/examples/sample_1.jon");
 
+    std::cout << file.dump(2) << std::endl;
+
     auto val = file.at("value");
     auto schema = file.at("schema");
 
