@@ -191,7 +191,7 @@ namespace jacylang {
         }
 
         ast::value_ptr parseValue(bool root = false) {
-            if (root or isKey() and lookupIs(TokenKind::Colon)) {
+            if (root and isKey() and lookupIs(TokenKind::Colon)) {
                 return parseObject(true);
             }
 
