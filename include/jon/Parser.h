@@ -177,6 +177,7 @@ namespace jacylang {
                 case TokenKind::NaN:
                 case TokenKind::PosNaN:
                 case TokenKind::NegNaN: {
+                    advance();
                     return std::make_unique<ast::Float>(std::numeric_limits<double>::quiet_NaN());
                 }
                 case TokenKind::Inf:
