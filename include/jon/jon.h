@@ -155,6 +155,24 @@ namespace jacylang {
             }
         }
 
+        // Debug //
+    private:
+        bool debug{false};
+
+        // Debug interface //
+    public:
+        bool isDebug() const noexcept {
+            return debug;
+        }
+
+        void enableDebug() noexcept {
+            debug = true;
+        }
+
+        void disableDebug() noexcept {
+            debug = false;
+        }
+
         // Constructors //
     public:
         jon(std::nullptr_t = nullptr) noexcept : value(null_t {}) {}
