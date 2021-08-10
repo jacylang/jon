@@ -28,6 +28,7 @@ namespace jacylang {
         void printAst(const ast::value_ptr & ast) {
             indent = 0;
             ast->accept(*this);
+            nl();
         }
 
     private:
