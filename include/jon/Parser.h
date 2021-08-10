@@ -51,6 +51,13 @@ namespace jacylang {
             return peek().kind == kind;
         }
 
+        bool lookupIs(TokenKind kind) const {
+            if (eof()) {
+                return false;
+            }
+            return tokens.at(index + 1).kind == kind;
+        }
+
         Token skip(TokenKind kind, const std::string & expected, bool rightNls) {
             auto token = peek();
             if (token.kind == kind) {
@@ -209,9 +216,6 @@ namespace jacylang {
                     return std::make_unique<ast::Ref>(ast::Ident {advance().val});
                 }
                 default: {
-                    if (root) {
-                        return parseObject(root);
-                    }
                     expectedError("value");
                 }
             }
