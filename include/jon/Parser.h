@@ -51,6 +51,31 @@ namespace jacylang {
             return peek().kind == kind;
         }
 
+        bool isKey() const {
+            switch (peek().kind) {
+                case TokenKind::Null:
+                case TokenKind::False:
+                case TokenKind::True:
+                case TokenKind::NaN:
+                case TokenKind::PosNaN:
+                case TokenKind::NegNaN:
+                case TokenKind::Inf:
+                case TokenKind::PosInf:
+                case TokenKind::NegInf:
+                case TokenKind::BinInt:
+                case TokenKind::HexInt:
+                case TokenKind::OctoInt:
+                case TokenKind::DecInt:
+                case TokenKind::Float:
+                case TokenKind::String: {
+                    return true;
+                }
+                default: {
+                    return false;
+                }
+            }
+        }
+
         bool lookupIs(TokenKind kind) const {
             if (eof()) {
                 return false;
