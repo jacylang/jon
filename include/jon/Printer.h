@@ -69,6 +69,7 @@ namespace jacylang {
             }
 
             indent--;
+            printIndent();
             out("}");
         }
 
