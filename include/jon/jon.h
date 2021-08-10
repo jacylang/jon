@@ -319,7 +319,7 @@ namespace jacylang {
 
         // Custom constructors //
     public:
-        static jon fromFile(const std::filesystem::path & path) {
+        static jon fromFile(const std::filesystem::path & path, bool debug = false) {
             std::fstream file(path);
 
             if (not file.is_open()) {
@@ -330,13 +330,13 @@ namespace jacylang {
             ss << file.rdbuf();
             file.close();
 
-            return parse(ss.str());
+            return parse(ss.str(), debug);
         }
 
-        static jon parse(const str_t & source) {
+        static jon parse(const str_t & source, bool debug = false) {
             Parser parser;
             std::vector<detail::jon_ref<jon>> refs;
-            auto ast = parser.parse(source);
+            auto ast = parser.parse(source, debug);
 
             return fromAst(std::move(ast), refs);
         }

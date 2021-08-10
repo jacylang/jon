@@ -13,7 +13,7 @@ namespace jacylang {
         virtual ~Printer() = default;
 
         void printTokens(const TokenStream & tokens) {
-            out("Tokens: [");
+            out("[jon:debug] (printing tokens): [");
             nl();
             const auto ind = std::string(2, ' ');
             for (auto it = tokens.begin(); it != tokens.end(); it++) {
@@ -26,6 +26,8 @@ namespace jacylang {
         }
 
         void printAst(const ast::value_ptr & ast) {
+            out("[jon:debug] (printing AST)");
+            nl();
             indent = 0;
             ast->accept(*this);
             nl();

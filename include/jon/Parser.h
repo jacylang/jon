@@ -11,7 +11,7 @@ namespace jacylang {
         Parser() {}
         ~Parser() = default;
 
-        ast::value_ptr parse(const std::string & source) {
+        ast::value_ptr parse(const std::string & source, bool debug) {
             index = 0;
             lastNl = 0;
             this->source = source;
@@ -19,7 +19,14 @@ namespace jacylang {
             Lexer lexer;
             tokens = lexer.lex(source);
 
-            return parseValue(true);
+            auto ast = parseValue(true);
+            if (debug) {
+                Printer printer;
+                printer.printTokens(tokens);
+                printer.printAst(ast);
+            }
+
+            return ast;
         }
 
     private:
