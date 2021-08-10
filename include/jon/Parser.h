@@ -191,6 +191,10 @@ namespace jacylang {
         }
 
         ast::value_ptr parseValue(bool root = false) {
+            if (root or isKey() and lookupIs(TokenKind::Colon)) {
+                return parseObject(true);
+            }
+
             switch (peek().kind) {
                 case TokenKind::LBrace: {
                     return parseObject();
