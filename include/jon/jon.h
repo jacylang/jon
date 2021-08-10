@@ -78,6 +78,8 @@ namespace jacylang {
     private:
         storage_t value;
 
+        // Private Value Interface //
+    private:
         void assertType(Type check, const std::string & errorMsg) const {
             if (this->type() != check) {
                 throw type_error(errorMsg);
@@ -626,34 +628,6 @@ namespace jacylang {
             return result;
         }
 
-    private:
-        static void _flatten(const std::string & refString, const jon & value, jon & result) {
-            switch (value.type()) {
-                case Type::Object: {
-                    if (value.empty()) {
-                        return;
-                    }
-                    for (const auto & entry : value.get<obj_t>()) {
-                        _flatten(refString + "/" + escstr(entry.first), entry.second, result);
-                    }
-                    break;
-                }
-                case Type::Array: {
-                    if (value.empty()) {
-                        return;
-                    }
-                    size_t index{0};
-                    for (const auto & el : value.get<arr_t>()) {
-                        _flatten(refString + "/" + std::to_string(index), el, result);
-                    }
-                    break;
-                }
-                default: {
-                    result[refString] = value;
-                }
-            }
-        }
-
         // Array interface //
     public:
         jon & operator[](size_t idx) {
@@ -685,6 +659,36 @@ namespace jacylang {
             get<arr_t>().push_back(el);
         }
 
+        // Utility interface //
+    private:
+        static void _flatten(const std::string & refString, const jon & value, jon & result) {
+            switch (value.type()) {
+                case Type::Object: {
+                    if (value.empty()) {
+                        return;
+                    }
+                    for (const auto & entry : value.get<obj_t>()) {
+                        _flatten(refString + "/" + escstr(entry.first), entry.second, result);
+                    }
+                    break;
+                }
+                case Type::Array: {
+                    if (value.empty()) {
+                        return;
+                    }
+                    size_t index{0};
+                    for (const auto & el : value.get<arr_t>()) {
+                        _flatten(refString + "/" + std::to_string(index), el, result);
+                    }
+                    break;
+                }
+                default: {
+                    result[refString] = value;
+                }
+            }
+        }
+
+        // Serialization //
     public:
         std::string dump(const std::string & indentStr) const {
             return dump(Indent{indentStr, 0});
