@@ -7,7 +7,7 @@ int main(const int, const char**) {
 
     auto file = jon::fromFile("../../examples/sample_1.jon", true);
 
-    std::cout << file.dump(2) << std::endl;
+    std::cout << file.typeStr() << std::endl;
 
 //    auto val = file.at("value");
 //    auto schema = file.at("schema");

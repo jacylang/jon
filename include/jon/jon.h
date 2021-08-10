@@ -17,6 +17,21 @@
 #include "Parser.h"
 #include "Printer.h"
 #include "ref.h"
+#include <cstdlib>
+#include <memory>
+#include <cxxabi.h>
+std::string demangle(const char* name) {
+
+    int status = -4; // some arbitrary value to eliminate the compiler warning
+
+    // enable c++11 by passing the flag -std=c++11 to g++
+    std::unique_ptr<char, void(*)(void*)> res {
+        abi::__cxa_demangle(name, NULL, NULL, &status),
+        std::free
+    };
+
+    return (status==0) ? res.get() : name ;
+}
 
 namespace jacylang {
     namespace detail {
@@ -193,12 +208,12 @@ namespace jacylang {
         }
 
         template<class T>
-        using no_cvr = std::remove_cv<std::remove_reference_t<T>>;
+        using no_cvr = std::remove_reference<typename std::remove_cv<T>::type>;
 
         template<class T>
         using is_jon = std::is_same<T, jon>;
 
-        template<class T, class U = no_cvr<T>>
+        template<class T, class U = typename no_cvr<T>::type>
         jon(const T & val) noexcept {
             if constexpr (std::is_same<U, bool_t>::value) {
                 value = static_cast<bool_t>(val);
@@ -223,7 +238,7 @@ namespace jacylang {
             static_assert(true, "Invalid type for jon constructor");
         }
 
-        template<class T, class U = no_cvr<T>>
+        template<class T, class U = typename no_cvr<T>::type>
         jon(T && val) noexcept {
             if constexpr (std::is_same<U, bool_t>::value) {
                 value = static_cast<bool_t>(std::move(val));
