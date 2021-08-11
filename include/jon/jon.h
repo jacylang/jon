@@ -157,7 +157,7 @@ namespace jacylang {
 
         // Constructors //
     public:
-        jon(std::nullptr_t = nullptr) noexcept : value(null_t {}) {}
+        explicit jon(std::nullptr_t = nullptr) noexcept : value(null_t {}) {}
 
         jon(Type t) noexcept {
             switch (t) {
@@ -200,6 +200,11 @@ namespace jacylang {
 
         template<class T, class U = typename no_cvr<T>::type>
         jon(const T & val) noexcept {
+            if constexpr (std::is_same<U, null_t>::value) {
+                value = null_t {};
+                return;
+            }
+
             if constexpr (std::is_same<U, bool_t>::value) {
                 value = static_cast<bool_t>(val);
                 return;
@@ -225,6 +230,11 @@ namespace jacylang {
 
         template<class T, class U = typename no_cvr<T>::type>
         jon(T && val) noexcept {
+            if constexpr (std::is_same<U, null_t>::value) {
+                value = null_t {};
+                return;
+            }
+
             if constexpr (std::is_same<U, bool_t>::value) {
                 value = static_cast<bool_t>(std::move(val));
                 return;
@@ -252,7 +262,7 @@ namespace jacylang {
 
         jon(const jon & other) noexcept : value(other.value) {}
         jon(jon && other) noexcept : value(std::move(other.value)) {
-            other.value = {};
+            // other.value = {};
         }
 
         jon(std::initializer_list<detail::jon_ref<jon>> init, bool typeDeduction = true, Type type = Type::Array) {
@@ -456,11 +466,16 @@ namespace jacylang {
         }
 
         bool operator==(const jon & other) const {
+            std::cout << "types: " << typeStr() << " / " << other.typeStr() << std::endl;
+
             if (other.type() != type()) {
+                std::cout << "diff types" << std::endl;
                 return false;
             }
 
             if (size() != other.size()) {
+                std::cout << "diff size" << std::endl;
+
                 return false;
             }
 
