@@ -237,7 +237,12 @@ namespace jacylang {
                 return;
             }
 
-            if constexpr (std::is_same<U, str_t>::value or std::is_same<U, obj_t>::value or std::is_same<U, arr_t>::value) {
+            if constexpr (std::is_convertible<U, str_t>::value) {
+                value = val;
+                return;
+            }
+
+            if constexpr (std::is_same<U, obj_t>::value or std::is_same<U, arr_t>::value) {
                 value = val;
                 return;
             }
@@ -267,7 +272,12 @@ namespace jacylang {
                 return;
             }
 
-            if constexpr (std::is_same<U, str_t>::value or std::is_same<U, obj_t>::value or std::is_same<U, arr_t>::value) {
+            if constexpr (std::is_convertible<U, str_t>::value) {
+                value = std::move(val);
+                return;
+            }
+
+            if constexpr (std::is_same<U, obj_t>::value or std::is_same<U, arr_t>::value) {
                 value = std::move(val);
                 return;
             }
