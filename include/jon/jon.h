@@ -493,16 +493,11 @@ namespace jacylang {
         }
 
         bool operator==(const jon & other) const {
-            std::cout << "types: " << typeStr() << " / " << other.typeStr() << std::endl;
-
             if (other.type() != type()) {
-                std::cout << "diff types" << std::endl;
                 return false;
             }
 
             if (size() != other.size()) {
-                std::cout << "diff size" << std::endl;
-
                 return false;
             }
 
