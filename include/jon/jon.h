@@ -238,7 +238,7 @@ namespace jacylang {
             }
 
             if constexpr (std::is_convertible<U, str_t>::value) {
-                value = val;
+                value = str_t(val);
                 return;
             }
 
@@ -273,7 +273,7 @@ namespace jacylang {
             }
 
             if constexpr (std::is_convertible<U, str_t>::value) {
-                value = std::move(val);
+                value = str_t(std::move(val));
                 return;
             }
 
