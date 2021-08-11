@@ -18,6 +18,23 @@
 #include "Printer.h"
 #include "ref.h"
 
+#include <cstdlib>
+#include <memory>
+#include <cxxabi.h>
+
+static inline std::string demangle(const char* name) {
+
+    int status = -4; // some arbitrary value to eliminate the compiler warning
+
+    // enable c++11 by passing the flag -std=c++11 to g++
+    std::unique_ptr<char, void(*)(void*)> res {
+        abi::__cxa_demangle(name, NULL, NULL, &status),
+        std::free
+    };
+
+    return (status==0) ? res.get() : name ;
+}
+
 namespace jacylang {
     namespace detail {
         enum class Type : uint8_t {
@@ -210,12 +227,12 @@ namespace jacylang {
                 return;
             }
 
-            if constexpr (std::is_same<U, int_t>::value) {
+            if constexpr (std::is_integral<U>::value) {
                 value = static_cast<int_t>(val);
                 return;
             }
 
-            if constexpr (std::is_same<U, float_t>::value) {
+            if constexpr (std::is_floating_point<U>::value) {
                 value = static_cast<float_t>(val);
                 return;
             }
@@ -240,12 +257,12 @@ namespace jacylang {
                 return;
             }
 
-            if constexpr (std::is_same<U, int_t>::value) {
+            if constexpr (std::is_integral<U>::value) {
                 value = static_cast<int_t>(std::move(val));
                 return;
             }
 
-            if constexpr (std::is_same<U, float_t>::value) {
+            if constexpr (std::is_floating_point<U>::value) {
                 value = static_cast<float_t>(std::move(val));
                 return;
             }
