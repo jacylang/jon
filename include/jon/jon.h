@@ -41,6 +41,25 @@ namespace jacylang {
 
         template<class JonT>
         using arr_t = std::vector<JonT>;
+
+        // Type Traits //
+        template<class T>
+        class HasToJon {
+        private:
+            using true_t = char[1];
+            using false_t = char[2];
+
+            template<class U>
+            static true_t & check(decltype(&U::toJon));
+
+            template<class U>
+            static false_t & check(...);
+
+        public:
+            enum {
+                value = sizeof(check<T>(0)) == sizeof(true_t)
+            };
+        };
     }
 
     class jon {
@@ -63,6 +82,7 @@ namespace jacylang {
                 case Type::Null: return "null";
                 case Type::Bool: return "bool";
                 case Type::Int: return "int";
+
                 case Type::Float: return "float";
                 case Type::String: return "string";
                 case Type::Object: return "object";
