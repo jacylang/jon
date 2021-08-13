@@ -464,6 +464,7 @@ namespace jacylang {
                     closed = true;
                     break;
                 } else if (isNL() or is(quote)) {
+                    closed = true;
                     break;
                 }
 
