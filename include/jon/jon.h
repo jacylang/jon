@@ -702,9 +702,9 @@ namespace jacylang {
             return (*it).second.get<T>();
         }
 
-        template<class T>
+        template<class T, class U = no_cvr<T>>
         T atAs(const str_t & key) const {
-            return T::fromJon(at(key));
+            return U::fromJon(at(key));
         }
 
         jon flatten() const {
