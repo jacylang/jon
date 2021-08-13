@@ -708,7 +708,7 @@ namespace jacylang {
             }
 
             throw parse_error(
-                mstr("\n", line, "\n", pointLine)
+                mstr("(Lexing error)", line, "\n", pointLine)
             );
         }
     };

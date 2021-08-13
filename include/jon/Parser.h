@@ -354,7 +354,7 @@ namespace jacylang {
             }
 
             throw parse_error(
-                mstr("\n", line, "\n", pointLine)
+                mstr("(Parsing error)", line, "\n", pointLine)
             );
         }
     };

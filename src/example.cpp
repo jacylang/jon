@@ -20,7 +20,7 @@ int main(const int, const char**) {
 
     std::cout << file.typeStr() << std::endl;
 
-    S s = file.at<jon::int_t>("num");
+    S s = file.atAs<S>("struct");
 
 //    auto val = file.at("value");
 //    auto schema = file.at("schema");
