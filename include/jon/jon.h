@@ -60,6 +60,24 @@ namespace jacylang {
                 value = sizeof(check<T>(0)) == sizeof(true_t)
             };
         };
+
+        template<class T>
+        class HasFromJon {
+        private:
+            using true_t = char[1];
+            using false_t = char[2];
+
+            template<class U>
+            static true_t & check(decltype(&U::fromJon));
+
+            template<class U>
+            static false_t & check(...);
+
+        public:
+            enum {
+                value = sizeof(check<T>(0)) == sizeof(true_t)
+            };
+        };
     }
 
     class jon {
