@@ -702,6 +702,11 @@ namespace jacylang {
             return (*it).second.get<T>();
         }
 
+        template<class T>
+        T atAs(const str_t & key) const {
+            return T::fromJon(at(key));
+        }
+
         jon flatten() const {
             jon result {arr_t {}};
             _flatten("", *this, result);
