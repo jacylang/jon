@@ -175,8 +175,6 @@ namespace jacylang {
         ~Lexer() = default;
 
         TokenStream lex(const std::string & source) {
-            std::cout << "Lexing..." << std::endl;
-
             this->source = source;
             index = 0;
             lastNl = 0;
