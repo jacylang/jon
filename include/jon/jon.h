@@ -454,9 +454,9 @@ namespace jacylang {
 
         // Common methods //
     public:
-        template<class T>
+        template<class T, class U = typename no_cvr<T>::type>
         T getAs() noexcept(detail::HasFromJon<T>::value) {
-            return T::fromJon(*this);
+            return U::fromJon(*this);
         }
 
         template<class T>
@@ -702,9 +702,9 @@ namespace jacylang {
             return (*it).second.get<T>();
         }
 
-        template<class T>
+        template<class T, class U = typename no_cvr<T>::type>
         T atAs(const str_t & key) noexcept(detail::HasFromJon<T>::value) {
-            return T::fromJon(at(key));
+            return U::fromJon(at(key));
         }
 
         jon flatten() const {
