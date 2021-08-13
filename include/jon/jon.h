@@ -279,7 +279,7 @@ namespace jacylang {
             }
 
             if constexpr (detail::HasToJon<U>::value) {
-                value = val.toJon();
+                *this = U::toJon(val);
                 return;
             }
 
