@@ -455,7 +455,7 @@ namespace jacylang {
         // Common methods //
     public:
         template<class T, class U = no_cvr<T>>
-        T get() noexcept(detail::HasFromJon<U>::value) {
+        T getAs() noexcept(detail::HasFromJon<U>::value) {
             return U::fromJon(*this);
         }
 
