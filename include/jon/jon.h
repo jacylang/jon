@@ -159,15 +159,25 @@ namespace jacylang {
         static constexpr const char * valueAsKey(const T & t) {
             if constexpr (std::is_same<T, null_t>::value) {
                 return "null";
-            } else if constexpr (std::is_same<T, bool_t>::value) {
+            }
+
+            if constexpr (std::is_same<T, bool_t>::value) {
                 return t ? "true" : "false";
-            } else if constexpr (std::is_same<T, int_t>::value or std::is_same<T, float_t>::value) {
+            }
+
+            if constexpr (std::is_same<T, int_t>::value or std::is_same<T, float_t>::value) {
                 return std::to_string(t);
-            } else if constexpr (std::is_same<T, str_t>::value) {
+            }
+
+            if constexpr (std::is_same<T, str_t>::value) {
                 return t;
-            } else if constexpr (std::is_same<T, obj_t>::value) {
+            }
+
+            if constexpr (std::is_same<T, obj_t>::value) {
                 throw type_error("Unable to use object as object key");
-            } else if constexpr (std::is_same<T, arr_t>::value) {
+            }
+
+            if constexpr (std::is_same<T, arr_t>::value) {
                 throw type_error("Unable to use array as object key");
             }
         }
@@ -1243,27 +1253,32 @@ namespace jacylang {
             if constexpr (std::is_same<T, null_t>::value) {
                 return "a null";
             }
-            else if constexpr (std::is_same<T, bool_t>::value) {
+
+            if constexpr (std::is_same<T, bool_t>::value) {
                 return "a bool";
             }
-            else if constexpr (std::is_same<T, int_t>::value) {
+
+            if constexpr (std::is_same<T, int_t>::value) {
                 return "an int";
             }
-            else if constexpr (std::is_same<T, float_t>::value) {
+
+            if constexpr (std::is_same<T, float_t>::value) {
                 return "a float";
             }
-            else if constexpr (std::is_same<T, str_t>::value) {
+
+            if constexpr (std::is_same<T, str_t>::value) {
                 return "a string";
             }
-            else if constexpr (std::is_same<T, obj_t>::value) {
+
+            if constexpr (std::is_same<T, obj_t>::value) {
                 return "an object";
             }
-            else if constexpr (std::is_same<T, arr_t>::value) {
+
+            if constexpr (std::is_same<T, arr_t>::value) {
                 return "an array";
             }
-            else {
-                throw std::logic_error("[jon bug] called `typeStr<T>` with non-supported type `T`");
-            }
+
+            throw std::logic_error("[jon bug] called `typeStr<T>` with non-supported type `T`");
         }
 
         /// Helper overload for schema validation, throws `invalid_error` instead of `type_error`
