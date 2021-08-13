@@ -11,6 +11,13 @@ struct S {
     static S fromJon(const jon & val) {
         return S {val.at<jon::int_t>("num"), val.at<jon::str_t>("str")};
     }
+
+    static jon toJon(const S & s) {
+        return jon({
+            {"num", s.field},
+            {"str", s.kek},
+        });
+    }
 };
 
 int main(const int, const char**) {
@@ -21,6 +28,10 @@ int main(const int, const char**) {
     std::cout << file.typeStr() << std::endl;
 
     S s = file.atAs<S>("struct");
+
+    jon j = s;
+
+    std::cout << j.dump(2);
 
 //    auto val = file.at("value");
 //    auto schema = file.at("schema");
