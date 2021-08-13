@@ -142,6 +142,9 @@ namespace jacylang {
                 case TokenKind::Float: {
                     return "number `" + val + "`";
                 }
+                case TokenKind::Ref: {
+                    return "ref `" + val + "`";
+                }
             }
         }
 
