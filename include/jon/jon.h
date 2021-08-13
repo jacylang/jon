@@ -279,11 +279,8 @@ namespace jacylang {
         }
 
         jon(const detail::jon_ref<jon> & ref) : jon(ref.get()) {}
-
         jon(const jon & other) noexcept : value(other.value) {}
-        jon(jon && other) noexcept : value(std::move(other.value)) {
-            // other.value = {};
-        }
+        jon(jon && other) noexcept : value(std::move(other.value)) {}
 
         jon(std::initializer_list<detail::jon_ref<jon>> init, bool typeDeduction = true, Type type = Type::Array) {
             if (init.size() == 0) {
@@ -365,15 +362,12 @@ namespace jacylang {
 
         static jon parse(const str_t & source, bool debug = false) {
             Parser parser;
-            std::vector<detail::jon_ref<jon>> refs;
-            auto ast = parser.parse(source, debug);
-
-            return fromAst(std::move(ast), refs);
+            return fromAst(parser.parse(source, debug));
         }
 
         // Serialization/Deserialization //
     private:
-        static jon fromAst(ast::value_ptr && ast, std::vector<detail::jon_ref<jon>> & refs) {
+        static jon fromAst(ast::value_ptr && ast) {
             switch (ast->kind) {
                 case ast::ValueKind::Null: {
                     return jon {};
@@ -393,14 +387,14 @@ namespace jacylang {
                 case ast::ValueKind::Object: {
                     obj_t entries;
                     for (auto && keyVal : ast::Value::as<ast::Object>(std::move(ast))->entries) {
-                        entries.emplace(keyVal.key.val, fromAst(std::move(keyVal.val), refs));
+                        entries.emplace(keyVal.key.val, fromAst(std::move(keyVal.val)));
                     }
                     return jon(std::move(entries));
                 }
                 case ast::ValueKind::Array: {
                     arr_t values;
                     for (auto && val : ast::Value::as<ast::Array>(std::move(ast))->values) {
-                        values.emplace_back(fromAst(std::move(val), refs));
+                        values.emplace_back(fromAst(std::move(val)));
                     }
                     return jon(std::move(values));
                 }
