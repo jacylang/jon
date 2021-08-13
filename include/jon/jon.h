@@ -260,6 +260,11 @@ namespace jacylang {
                 return;
             }
 
+            if constexpr (detail::HasToJon<U>::value) {
+                value = val.toJon();
+                return;
+            }
+
             static_assert(true, "Invalid type for jon constructor");
         }
 
@@ -292,6 +297,11 @@ namespace jacylang {
 
             if constexpr (std::is_same<U, obj_t>::value or std::is_same<U, arr_t>::value) {
                 value = std::move(val);
+                return;
+            }
+
+            if constexpr (detail::HasToJon<U>::value) {
+                value = std::move(val).toJon();
                 return;
             }
 
