@@ -471,6 +471,30 @@ namespace jacylang {
             return std::get<T>(value);
         }
 
+        bool_t & getBool() {
+            return get<bool_t>();
+        }
+
+        int_t & getInt() {
+            return get<int_t>();
+        }
+
+        float_t & getFloat() {
+            return get<float_t>();
+        }
+
+        str_t & getStr() {
+            return get<str_t>();
+        }
+
+        obj_t & getObj() {
+            return get<obj_t>();
+        }
+
+        arr_t & getArr() {
+            return get<arr_t>();
+        }
+
         bool empty() const noexcept {
             if (isNull()) {
                 return true;
