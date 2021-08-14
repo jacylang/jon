@@ -455,7 +455,7 @@ namespace jacylang {
         // Common methods //
     public:
         template<class T, class U = typename no_cvr<T>::type>
-        T getAs() noexcept(detail::HasFromJon<T>::value) {
+        T as() const noexcept(detail::HasFromJon<T>::value) {
             return U::fromJon(*this);
         }
 
@@ -703,7 +703,7 @@ namespace jacylang {
         }
 
         template<class T, class U = typename no_cvr<T>::type>
-        T atAs(const str_t & key) noexcept(detail::HasFromJon<T>::value) {
+        T atAs(const str_t & key) const noexcept(detail::HasFromJon<T>::value) {
             return U::fromJon(at(key));
         }
 
