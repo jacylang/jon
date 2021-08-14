@@ -475,7 +475,15 @@ namespace jacylang {
             return get<bool_t>();
         }
 
+        const bool_t & getBool() const {
+            return get<bool_t>();
+        }
+
         int_t & getInt() {
+            return get<int_t>();
+        }
+
+        const int_t & getInt() const {
             return get<int_t>();
         }
 
@@ -483,7 +491,15 @@ namespace jacylang {
             return get<float_t>();
         }
 
+        const float_t & getFloat() const {
+            return get<float_t>();
+        }
+
         str_t & getStr() {
+            return get<str_t>();
+        }
+
+        const str_t & getStr() const {
             return get<str_t>();
         }
 
@@ -491,7 +507,15 @@ namespace jacylang {
             return get<obj_t>();
         }
 
+        const obj_t & getObj() const {
+            return get<obj_t>();
+        }
+
         arr_t & getArr() {
+            return get<arr_t>();
+        }
+
+        const arr_t & getArr() const {
             return get<arr_t>();
         }
 
