@@ -755,6 +755,62 @@ namespace jacylang {
             return U::fromJon(at(key));
         }
 
+        null_t & nullAt(const str_t & key) {
+            return at<null_t>(key);
+        }
+
+        const null_t & nullAt(const str_t & key) const {
+            return at<null_t>(key);
+        }
+
+        bool_t & boolAt(const str_t & key) {
+            return at<bool_t>(key);
+        }
+
+        const bool_t & boolAt(const str_t & key) const {
+            return at<bool_t>(key);
+        }
+
+        int_t & intAt(const str_t & key) {
+            return at<int_t>(key);
+        }
+
+        const int_t & intAt(const str_t & key) const {
+            return at<int_t>(key);
+        }
+
+        float_t & floatAt(const str_t & key) {
+            return at<float_t>(key);
+        }
+
+        const float_t & floatAt(const str_t & key) const {
+            return at<float_t>(key);
+        }
+
+        str_t & strAt(const str_t & key) {
+            return at<str_t>(key);
+        }
+
+        const str_t & strAt(const str_t & key) const {
+            return at<str_t>(key);
+        }
+
+        obj_t & objAt(const str_t & key) {
+            return at<obj_t>(key);
+        }
+
+        const obj_t & objAt(const str_t & key) const {
+            return at<obj_t>(key);
+        }
+
+        arr_t & arrAt(const str_t & key) {
+            return at<arr_t>(key);
+        }
+
+        const arr_t & arrAt(const str_t & key) const {
+            return at<arr_t>(key);
+        }
+
         jon flatten() const {
             jon result {arr_t {}};
             _flatten("", *this, result);
