@@ -19,12 +19,16 @@ namespace jacylang {
             Lexer lexer;
             tokens = lexer.lex(source);
 
-            skipNls(true);
+            Printer printer;
 
-            auto ast = parseValue(true);
             if (debug) {
-                Printer printer;
                 printer.printTokens(tokens);
+            }
+
+            skipNls(true);
+            auto ast = parseValue(true);
+
+            if (debug) {
                 printer.printAst(ast);
             }
 
