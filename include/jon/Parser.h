@@ -196,8 +196,18 @@ namespace jacylang {
                 case TokenKind::Ref: {
                     return ast::Ident {"$" + advance().val};
                 }
-                default: {
+                case TokenKind::Eof:
+                case TokenKind::NL:
+                case TokenKind::Comma:
+                case TokenKind::Colon:
+                case TokenKind::LBrace:
+                case TokenKind::RBrace:
+                case TokenKind::LBracket:
+                case TokenKind::RBracket: {
                     expectedError("key");
+                }
+                default: {
+                    throw std::logic_error("Unhandled `TokenKind` in `Parser::parseKey`");
                 }
             }
         }
