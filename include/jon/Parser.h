@@ -164,30 +164,39 @@ namespace jacylang {
                     };
                 }
                 case TokenKind::Null: {
+                    advance();
                     return ast::Ident {"null"};
                 }
                 case TokenKind::False: {
+                    advance();
                     return ast::Ident {"false"};
                 }
                 case TokenKind::True: {
+                    advance();
                     return ast::Ident {"true"};
                 }
                 case TokenKind::NaN: {
+                    advance();
                     return ast::Ident {"nan"};
                 }
                 case TokenKind::PosNaN: {
+                    advance();
                     return ast::Ident {"+nan"};
                 }
                 case TokenKind::NegNaN: {
+                    advance();
                     return ast::Ident {"-nan"};
                 }
                 case TokenKind::Inf: {
+                    advance();
                     return ast::Ident {"inf"};
                 }
                 case TokenKind::PosInf: {
+                    advance();
                     return ast::Ident {"+inf"};
                 }
                 case TokenKind::NegInf: {
+                    advance();
                     return ast::Ident {"-inf"};
                 }
                 case TokenKind::DecInt:
