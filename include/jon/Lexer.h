@@ -639,7 +639,7 @@ namespace jacylang {
                 } else if (trimmed == "false") {
                     addToken(TokenKind::False, 5);
                 } else if (trimmed == "true") {
-                    addToken(TokenKind::False, 4);
+                    addToken(TokenKind::True, 4);
                 } else if (trimmed == "nan") {
                     addToken(TokenKind::NaN, 3);
                 } else if (trimmed == "-nan") {
