@@ -72,8 +72,18 @@ namespace jacylang {
                 case TokenKind::String: {
                     return true;
                 }
-                default: {
+                case TokenKind::LBrace:
+                case TokenKind::Eof:
+                case TokenKind::NL:
+                case TokenKind::Comma:
+                case TokenKind::Colon:
+                case TokenKind::RBrace:
+                case TokenKind::LBracket:
+                case TokenKind::RBracket: {
                     return false;
+                }
+                default: {
+                    throw std::logic_error("Unhandled `TokenKind` in `Parser::isKey`");
                 }
             }
         }
