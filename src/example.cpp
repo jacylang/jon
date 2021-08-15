@@ -1,42 +1,97 @@
 #include "jon/jon.h"
 
 using jon = jacylang::jon;
+using namespace jacylang::literal;
 
-struct S {
-    S(jon::int_t field, std::string kek) : field {field}, kek {kek} {}
+const static auto config = R"(
+extensions: ['jc']
 
-    jon::int_t field;
-    jon::str_t kek;
+default-command: 'compile'
 
-    static S fromJon(const jon & val) {
-        return S {val.at<jon::int_t>("num"), val.at<jon::str_t>("str")};
+arg-delimiters: '=,'
+
+bool-values: {
+    true: [
+        'yes'
+        'y'
+        'true'
+        '1'
+        'on'
+    ]
+    false: [
+        'no'
+        'n'
+        'false'
+        '0'
+        'off'
+    ]
+}
+
+common-flags: [
+    {
+        name: 'help'
+        type: 'bool'
+        aliases: ['h']
     }
+]
 
-    static jon toJon(const S & s) {
-        return jon({
-            {"num", s.field},
-            {"str", s.kek},
-        });
+commands: [
+    {
+        name: 'compile'
+        flags: [
+            {
+                name: 'print'
+                type: 'string'
+                description: 'Debug option that prints different intermediate representations'
+                duplicates: 'merge'
+                values: [
+                    'dir-tree'
+                    'tokens'
+                    'ast'
+                    'sugg'
+                    'source'
+                    'mod-tree'
+                    'ast-names'
+                    'ast-node-map'
+                    'ribs'
+                    'resolutions'
+                    'definitions'
+                    'all'
+                ]
+            }
+            {
+                name: 'compile-depth'
+                type: 'string'
+                values: [
+                    'parser'
+                    'name-resolution'
+                    'lowering'
+                ]
+            }
+            {
+                name: 'dev'
+                type: 'bool'
+            }
+            {
+                name: 'log-level'
+                type: 'string'
+                values: [
+                    'dev'
+                    'debug'
+                    'info'
+                    'warn'
+                    'error'
+                ]
+            }
+        ]
     }
-};
+]
+    )"_jon;
 
 int main(const int, const char**) {
     using namespace jacylang::literal;
 
-    auto file = jon::fromFile("../../examples/sample_1.jon", true);
 
-    std::cout << file.typeStr() << std::endl;
-
-    S s = file.atAs<S>("struct");
-
-    jon j = s;
-
-    std::cout << j.dump(2);
-
-//    auto val = file.at("value");
-//    auto schema = file.at("schema");
-//
-//    std::cout << val.validate(schema).dump("  ") << std::endl;
 
     return 0;
 }

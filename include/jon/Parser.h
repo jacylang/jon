@@ -19,6 +19,8 @@ namespace jacylang {
             Lexer lexer;
             tokens = lexer.lex(source);
 
+            skipNls(true);
+
             auto ast = parseValue(true);
             if (debug) {
                 Printer printer;
@@ -338,13 +340,9 @@ namespace jacylang {
                 advance();
             }
 
-            std::cout << sliceTo << " " << index << std::endl;
-
             const auto & lastNlPos = tokens.at(lastNl).span.pos;
             const auto & line = source.substr(lastNlPos, tokens.at(sliceTo).span.pos - lastNlPos);
             const auto col = tokens.at(errorIndex).span.pos - lastNlPos;
-
-            std::cout << mstr(lastNlPos, " ", lastNl, " ", col);
 
             std::string pointLine;
             if (msg.size() + 2 < col) {
