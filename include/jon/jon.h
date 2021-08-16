@@ -105,6 +105,10 @@ namespace jacylang {
                 case Type::String: return "string";
                 case Type::Object: return "object";
                 case Type::Array: return "array";
+
+                default: {
+                    throw std::logic_error("[jon bug]: Unhandled `Type` in `jon::typeStr`");
+                }
             }
         }
 
@@ -236,6 +240,9 @@ namespace jacylang {
                 case Type::Array: {
                     value = arr_t {};
                     break;
+                }
+                default: {
+                    throw std::logic_error("[jon bug]: Unhandled `Type` in `jon::jon(Type)`");
                 }
             }
         }
@@ -965,6 +972,9 @@ namespace jacylang {
                     }
                     ss << "]";
                     return ss.str();
+                }
+                default: {
+                    throw std::logic_error("[jon bug]: Unhandled `Type` in `jon::dump`");
                 }
             }
         }
