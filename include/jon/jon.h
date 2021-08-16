@@ -326,7 +326,7 @@ namespace jacylang {
             }
 
             if constexpr (detail::HasToJon<U>::value) {
-                *this = U::toJon(std::move(val));
+                value = U::toJon(std::move(val)).value;
                 return;
             }
 
