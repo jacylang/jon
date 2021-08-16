@@ -343,7 +343,7 @@ namespace jacylang {
             throw std::logic_error("Invalid type for jon move constructor");
         }
 
-        jon(const detail::jon_ref<jon> & ref) : jon{ref.get()} {}
+        jon(const detail::jon_ref<jon> & ref) noexcept : jon{ref.get()} {}
         jon(const jon & other) noexcept : value(other.value) {}
         jon(jon && other) noexcept : value(std::move(other.value)) {}
 

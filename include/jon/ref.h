@@ -7,18 +7,18 @@ namespace jacylang::detail {
     template<class T>
     class jon_ref {
     public:
-        jon_ref(T && val) : owned(std::move(val)) {}
-        jon_ref(const T & val) : ref(&val) {}
-        jon_ref(std::initializer_list<jon_ref> init) : owned(init) {}
+        jon_ref(T && val) noexcept : owned(std::move(val)) {}
+        jon_ref(const T & val) noexcept : ref(&val) {}
+        jon_ref(std::initializer_list<jon_ref> init) noexcept : owned(init) {}
 
         template<class JCT>
-        jon_ref(JCT && val) : owned(std::move(val)) {}
+        jon_ref(JCT && val) noexcept : owned(std::move(val)) {}
 
         template<class JCT>
-        jon_ref(const JCT & val) : owned(val) {}
+        jon_ref(const JCT & val) noexcept : owned(val) {}
 
         template<class ...Args, std::enable_if<std::is_constructible<T, Args...>::value, int> = 0>
-        jon_ref(Args && ...args) : owned(std::forward<Args>(args)...) {}
+        jon_ref(Args && ...args) noexcept : owned(std::forward<Args>(args)...) {}
 
         jon_ref(jon_ref&&) noexcept = default;
         ~jon_ref() = default;
