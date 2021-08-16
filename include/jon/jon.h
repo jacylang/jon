@@ -234,11 +234,11 @@ namespace jacylang {
                     break;
                 }
                 case Type::Object: {
-                    value.emplace<obj_t>({});
+                    value.emplace<obj_t>(obj_t {});
                     break;
                 }
                 case Type::Array: {
-                    value.emplace<arr_t>({});
+                    value.emplace<arr_t>(arr_t {});
                     break;
                 }
                 default: {
@@ -256,37 +256,41 @@ namespace jacylang {
         template<class T, class U = typename no_cvr<T>::type>
         jon(const T & val) noexcept {
             if constexpr (std::is_same<U, null_t>::value) {
-                value = null_t {};
+                value.emplace<null_t>();
                 return;
             }
 
             if constexpr (std::is_same<U, bool_t>::value) {
-                value = static_cast<bool_t>(val);
+                value.emplace<bool_t>(static_cast<bool_t>(val));
                 return;
             }
 
             if constexpr (std::is_integral<U>::value) {
-                value = static_cast<int_t>(val);
+                value.emplace<int_t>(static_cast<int_t>(val));
                 return;
             }
 
             if constexpr (std::is_floating_point<U>::value) {
-                value = static_cast<float_t>(val);
+                value.emplace<float_t>(static_cast<float_t>(val));
                 return;
             }
 
             if constexpr (std::is_convertible<U, str_t>::value) {
-                value = str_t(val);
+                value.emplace<str_t>(static_cast<str_t>(val));
                 return;
             }
 
-            if constexpr (std::is_same<U, obj_t>::value or std::is_same<U, arr_t>::value) {
-                value = val;
+            if constexpr (std::is_same<U, obj_t>::value) {
+                value.emplace<obj_t>(val);
+            }
+
+            if constexpr (std::is_same<U, arr_t>::value) {
+                value.emplace<arr_t>(val);
                 return;
             }
 
             if constexpr (detail::HasToJon<U>::value) {
-                value = U::toJon(val).value;
+                *this = U::toJon(val);
                 return;
             }
 
