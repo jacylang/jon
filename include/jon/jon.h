@@ -630,7 +630,35 @@ namespace jacylang {
         // Type checks //
     public:
         Type type() const noexcept {
-            return static_cast<Type>(value.index());
+            if (std::holds_alternative<null_t>(value)) {
+                return Type::Null;
+            }
+
+            if (std::holds_alternative<bool_t>(value)) {
+                return Type::Bool;
+            }
+
+            if (std::holds_alternative<int_t>(value)) {
+                return Type::Int;
+            }
+
+            if (std::holds_alternative<float_t>(value)) {
+                return Type::Float;
+            }
+
+            if (std::holds_alternative<str_t>(value)) {
+                return Type::String;
+            }
+
+            if (std::holds_alternative<obj_t>(value)) {
+                return Type::Object;
+            }
+
+            if (std::holds_alternative<arr_t>(value)) {
+                return Type::Array;
+            }
+
+            std:
         }
 
         auto check(Type expectedType) const {
