@@ -750,9 +750,8 @@ namespace jacylang {
 
         const jon & at(const str_t & key) const {
             assertTypeObject(key);
-            auto obj = get<obj_t>();
-            auto it = obj.find(key);
-            if (it == obj.end()) {
+            auto it = get<obj_t>().find(key);
+            if (it == get<obj_t>().end()) {
                 throw out_of_range("`at` by key '" + key + "'");
             }
             return (*it).second;
@@ -760,9 +759,8 @@ namespace jacylang {
 
         jon & at(const str_t & key) {
             assertObjectFirstAccess(key);
-            auto & obj = get<obj_t>();
-            auto it = obj.find(key);
-            if (it == obj.end()) {
+            auto it = get<obj_t>().find(key);
+            if (it == get<obj_t>().end()) {
                 throw out_of_range("`at` by key '" + key + "'");
             }
             return (*it).second;
@@ -771,9 +769,8 @@ namespace jacylang {
         template<class T>
         const T & at(const str_t & key) const {
             assertTypeObject(key);
-            const auto & obj = get<obj_t>();
-            auto it = obj.find(key);
-            if (it == obj.end()) {
+            auto it = get<obj_t>().find(key);
+            if (it == get<obj_t>().end()) {
                 throw out_of_range("`at` by key '" + key + "'");
             }
             return (*it).second.get<T>();
@@ -782,9 +779,8 @@ namespace jacylang {
         template<class T>
         T & at(const str_t & key) {
             assertObjectFirstAccess(key);
-            auto obj = get<obj_t>();
-            auto it = obj.find(key);
-            if (it == obj.end()) {
+            auto it = get<obj_t>().find(key);
+            if (it == get<obj_t>().end()) {
                 throw out_of_range("`at` by key '" + key + "'");
             }
             return (*it).second.get<T>();
