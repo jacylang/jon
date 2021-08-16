@@ -134,7 +134,7 @@ namespace jacylang {
 
         void assertArrayFirstAccess() {
             if (type() == Type::Null) {
-                value = arr_t {};
+                *this = arr_t {};
             } else {
                 assertTypeArray();
             }
@@ -146,7 +146,7 @@ namespace jacylang {
 
         void assertObjectFirstAccess(const std::string & key) {
             if (type() == Type::Null) {
-                value = obj_t {};
+                *this = obj_t {};
             } else {
                 assertTypeObject(key);
             }
@@ -347,7 +347,7 @@ namespace jacylang {
 
         jon(std::initializer_list<detail::jon_ref<jon>> init, bool typeDeduction = true, Type type = Type::Array) {
             if (init.size() == 0) {
-                value = obj_t {};
+                *this = obj_t {};
                 return;
             }
 
@@ -366,13 +366,13 @@ namespace jacylang {
             }
 
             if (isObjectProjection) {
-                value = obj_t {};
+                *this = obj_t {};
                 for (auto & el : init) {
                     auto pair = el.get().get<arr_t>();
                     get<obj_t>().emplace(pair.at(0).get<str_t>(), std::move(pair.at(1)));
                 }
             } else {
-                value = arr_t(init.begin(), init.end());
+                *this = arr_t(init.begin(), init.end());
             }
         }
 
@@ -388,7 +388,7 @@ namespace jacylang {
 
         jon & operator=(std::initializer_list<detail::jon_ref<jon>> init) noexcept {
             if (init.size() == 0) {
-                value = obj_t {};
+                *this = obj_t {};
                 return *this;
             }
 
@@ -397,12 +397,12 @@ namespace jacylang {
             });
 
             if (isObjectProjection) {
-                value = obj_t {};
+                *this = obj_t {};
                 for (auto & el : init) {
                     get<obj_t>().emplace(el.get().get<arr_t>().at(0).get<str_t>(), std::move(el.get().get<arr_t>().at(1)));
                 }
             } else {
-                value = arr_t(init.begin(), init.end());
+                *this = arr_t(init.begin(), init.end());
             }
             return *this;
         }
