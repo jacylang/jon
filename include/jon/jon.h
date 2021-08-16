@@ -658,7 +658,7 @@ namespace jacylang {
                 return Type::Array;
             }
 
-            std:
+            throw std::logic_error("Unknown type of `jon` value");
         }
 
         auto check(Type expectedType) const {
