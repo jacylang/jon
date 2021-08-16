@@ -290,7 +290,7 @@ namespace jacylang {
                 return;
             }
 
-            static_assert(true, "Invalid type for jon constructor");
+            throw std::logic_error("Invalid type for jon constructor");
         }
 
         template<class T, class U = typename no_cvr<T>::type>
@@ -330,7 +330,7 @@ namespace jacylang {
                 return;
             }
 
-            static_assert(true, "Invalid type for jon constructor");
+            throw std::logic_error("Invalid type for jon constructor");
         }
 
         jon(const detail::jon_ref<jon> & ref) : jon(ref.get()) {}
