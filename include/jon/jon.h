@@ -209,7 +209,7 @@ namespace jacylang {
 
         // Constructors //
     public:
-        explicit jon(std::nullptr_t = nullptr) noexcept : value(null_t {}) {}
+        explicit jon(std::nullptr_t = nullptr) noexcept : value{null_t {}} {}
 
         jon(Type t) {
             switch (t) {
@@ -282,6 +282,7 @@ namespace jacylang {
 
             if constexpr (std::is_same<U, obj_t>::value) {
                 value.emplace<obj_t>(val);
+                return;
             }
 
             if constexpr (std::is_same<U, arr_t>::value) {
@@ -294,7 +295,7 @@ namespace jacylang {
                 return;
             }
 
-            throw std::logic_error("Invalid type for jon constructor");
+            throw std::logic_error("Invalid type for jon copy constructor");
         }
 
         template<class T, class U = typename no_cvr<T>::type>
@@ -338,10 +339,10 @@ namespace jacylang {
                 return;
             }
 
-            throw std::logic_error("Invalid type for jon constructor");
+            throw std::logic_error("Invalid type for jon move constructor");
         }
 
-        jon(const detail::jon_ref<jon> & ref) : jon(ref.get()) {}
+        jon(const detail::jon_ref<jon> & ref) : jon{ref.get()} {}
         jon(const jon & other) noexcept : value(other.value) {}
         jon(jon && other) noexcept : value(std::move(other.value)) {}
 
