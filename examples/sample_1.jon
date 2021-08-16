@@ -1,3 +1,8 @@
+struct: {
+    num: 123
+    str: 'lol kek chebureck'
+}
+
 value: {
 
 }

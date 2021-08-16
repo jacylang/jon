@@ -142,6 +142,9 @@ namespace jacylang {
                 case TokenKind::Float: {
                     return "number `" + val + "`";
                 }
+                case TokenKind::Ref: {
+                    return "ref `" + val + "`";
+                }
             }
         }
 
@@ -464,6 +467,7 @@ namespace jacylang {
                     closed = true;
                     break;
                 } else if (isNL() or is(quote)) {
+                    closed = true;
                     break;
                 }
 
@@ -635,7 +639,7 @@ namespace jacylang {
                 } else if (trimmed == "false") {
                     addToken(TokenKind::False, 5);
                 } else if (trimmed == "true") {
-                    addToken(TokenKind::False, 4);
+                    addToken(TokenKind::True, 4);
                 } else if (trimmed == "nan") {
                     addToken(TokenKind::NaN, 3);
                 } else if (trimmed == "-nan") {
@@ -708,7 +712,7 @@ namespace jacylang {
             }
 
             throw parse_error(
-                mstr("\n", line, "\n", pointLine)
+                mstr("(Lexing error)", line, "\n", pointLine)
             );
         }
     };

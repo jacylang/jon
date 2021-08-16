@@ -18,23 +18,6 @@
 #include "Printer.h"
 #include "ref.h"
 
-#include <cstdlib>
-#include <memory>
-#include <cxxabi.h>
-
-static inline std::string demangle(const char* name) {
-
-    int status = -4; // some arbitrary value to eliminate the compiler warning
-
-    // enable c++11 by passing the flag -std=c++11 to g++
-    std::unique_ptr<char, void(*)(void*)> res {
-        abi::__cxa_demangle(name, NULL, NULL, &status),
-        std::free
-    };
-
-    return (status==0) ? res.get() : name ;
-}
-
 namespace jacylang {
     namespace detail {
         enum class Type : uint8_t {
@@ -58,6 +41,43 @@ namespace jacylang {
 
         template<class JonT>
         using arr_t = std::vector<JonT>;
+
+        // Type Traits //
+        template<class T>
+        class HasToJon {
+        private:
+            using true_t = char[1];
+            using false_t = char[2];
+
+            template<class U>
+            static true_t & check(decltype(&U::toJon));
+
+            template<class U>
+            static false_t & check(...);
+
+        public:
+            enum {
+                value = sizeof(check<T>(0)) == sizeof(true_t)
+            };
+        };
+
+        template<class T>
+        class HasFromJon {
+        private:
+            using true_t = char[1];
+            using false_t = char[2];
+
+            template<class U>
+            static true_t & check(decltype(&U::fromJon));
+
+            template<class U>
+            static false_t & check(...);
+
+        public:
+            enum {
+                value = sizeof(check<T>(0)) == sizeof(true_t)
+            };
+        };
     }
 
     class jon {
@@ -80,6 +100,7 @@ namespace jacylang {
                 case Type::Null: return "null";
                 case Type::Bool: return "bool";
                 case Type::Int: return "int";
+
                 case Type::Float: return "float";
                 case Type::String: return "string";
                 case Type::Object: return "object";
@@ -159,15 +180,25 @@ namespace jacylang {
         static constexpr const char * valueAsKey(const T & t) {
             if constexpr (std::is_same<T, null_t>::value) {
                 return "null";
-            } else if constexpr (std::is_same<T, bool_t>::value) {
+            }
+
+            if constexpr (std::is_same<T, bool_t>::value) {
                 return t ? "true" : "false";
-            } else if constexpr (std::is_same<T, int_t>::value or std::is_same<T, float_t>::value) {
+            }
+
+            if constexpr (std::is_same<T, int_t>::value or std::is_same<T, float_t>::value) {
                 return std::to_string(t);
-            } else if constexpr (std::is_same<T, str_t>::value) {
+            }
+
+            if constexpr (std::is_same<T, str_t>::value) {
                 return t;
-            } else if constexpr (std::is_same<T, obj_t>::value) {
+            }
+
+            if constexpr (std::is_same<T, obj_t>::value) {
                 throw type_error("Unable to use object as object key");
-            } else if constexpr (std::is_same<T, arr_t>::value) {
+            }
+
+            if constexpr (std::is_same<T, arr_t>::value) {
                 throw type_error("Unable to use array as object key");
             }
         }
@@ -247,6 +278,11 @@ namespace jacylang {
                 return;
             }
 
+            if constexpr (detail::HasToJon<U>::value) {
+                *this = U::toJon(val);
+                return;
+            }
+
             static_assert(true, "Invalid type for jon constructor");
         }
 
@@ -282,15 +318,17 @@ namespace jacylang {
                 return;
             }
 
+            if constexpr (detail::HasToJon<U>::value) {
+                *this = U::toJon(std::move(val));
+                return;
+            }
+
             static_assert(true, "Invalid type for jon constructor");
         }
 
         jon(const detail::jon_ref<jon> & ref) : jon(ref.get()) {}
-
         jon(const jon & other) noexcept : value(other.value) {}
-        jon(jon && other) noexcept : value(std::move(other.value)) {
-            // other.value = {};
-        }
+        jon(jon && other) noexcept : value(std::move(other.value)) {}
 
         jon(std::initializer_list<detail::jon_ref<jon>> init, bool typeDeduction = true, Type type = Type::Array) {
             if (init.size() == 0) {
@@ -372,15 +410,12 @@ namespace jacylang {
 
         static jon parse(const str_t & source, bool debug = false) {
             Parser parser;
-            std::vector<detail::jon_ref<jon>> refs;
-            auto ast = parser.parse(source, debug);
-
-            return fromAst(std::move(ast), refs);
+            return fromAst(parser.parse(source, debug));
         }
 
         // Serialization/Deserialization //
     private:
-        static jon fromAst(ast::value_ptr && ast, std::vector<detail::jon_ref<jon>> & refs) {
+        static jon fromAst(ast::value_ptr && ast) {
             switch (ast->kind) {
                 case ast::ValueKind::Null: {
                     return jon {};
@@ -400,14 +435,14 @@ namespace jacylang {
                 case ast::ValueKind::Object: {
                     obj_t entries;
                     for (auto && keyVal : ast::Value::as<ast::Object>(std::move(ast))->entries) {
-                        entries.emplace(keyVal.key.val, fromAst(std::move(keyVal.val), refs));
+                        entries.emplace(keyVal.key.val, fromAst(std::move(keyVal.val)));
                     }
                     return jon(std::move(entries));
                 }
                 case ast::ValueKind::Array: {
                     arr_t values;
                     for (auto && val : ast::Value::as<ast::Array>(std::move(ast))->values) {
-                        values.emplace_back(fromAst(std::move(val), refs));
+                        values.emplace_back(fromAst(std::move(val)));
                     }
                     return jon(std::move(values));
                 }
@@ -419,6 +454,11 @@ namespace jacylang {
 
         // Common methods //
     public:
+        template<class T, class U = typename no_cvr<T>::type>
+        T as() const noexcept(detail::HasFromJon<T>::value) {
+            return U::fromJon(*this);
+        }
+
         template<class T>
         T & get() {
             getTypeAssert<T>();
@@ -429,6 +469,54 @@ namespace jacylang {
         const T & get() const {
             getTypeAssert<T>();
             return std::get<T>(value);
+        }
+
+        bool_t & getBool() {
+            return get<bool_t>();
+        }
+
+        const bool_t & getBool() const {
+            return get<bool_t>();
+        }
+
+        int_t & getInt() {
+            return get<int_t>();
+        }
+
+        const int_t & getInt() const {
+            return get<int_t>();
+        }
+
+        float_t & getFloat() {
+            return get<float_t>();
+        }
+
+        const float_t & getFloat() const {
+            return get<float_t>();
+        }
+
+        str_t & getStr() {
+            return get<str_t>();
+        }
+
+        const str_t & getStr() const {
+            return get<str_t>();
+        }
+
+        obj_t & getObj() {
+            return get<obj_t>();
+        }
+
+        const obj_t & getObj() const {
+            return get<obj_t>();
+        }
+
+        arr_t & getArr() {
+            return get<arr_t>();
+        }
+
+        const arr_t & getArr() const {
+            return get<arr_t>();
         }
 
         bool empty() const noexcept {
@@ -655,6 +743,67 @@ namespace jacylang {
                 throw out_of_range("`at` by key '" + key + "'");
             }
             return (*it).second.get<T>();
+        }
+
+        template<class T, class U = typename no_cvr<T>::type>
+        T atAs(const str_t & key) const noexcept(detail::HasFromJon<T>::value) {
+            return U::fromJon(at(key));
+        }
+
+        null_t & nullAt(const str_t & key) {
+            return at<null_t>(key);
+        }
+
+        const null_t & nullAt(const str_t & key) const {
+            return at<null_t>(key);
+        }
+
+        bool_t & boolAt(const str_t & key) {
+            return at<bool_t>(key);
+        }
+
+        const bool_t & boolAt(const str_t & key) const {
+            return at<bool_t>(key);
+        }
+
+        int_t & intAt(const str_t & key) {
+            return at<int_t>(key);
+        }
+
+        const int_t & intAt(const str_t & key) const {
+            return at<int_t>(key);
+        }
+
+        float_t & floatAt(const str_t & key) {
+            return at<float_t>(key);
+        }
+
+        const float_t & floatAt(const str_t & key) const {
+            return at<float_t>(key);
+        }
+
+        str_t & strAt(const str_t & key) {
+            return at<str_t>(key);
+        }
+
+        const str_t & strAt(const str_t & key) const {
+            return at<str_t>(key);
+        }
+
+        obj_t & objAt(const str_t & key) {
+            return at<obj_t>(key);
+        }
+
+        const obj_t & objAt(const str_t & key) const {
+            return at<obj_t>(key);
+        }
+
+        arr_t & arrAt(const str_t & key) {
+            return at<arr_t>(key);
+        }
+
+        const arr_t & arrAt(const str_t & key) const {
+            return at<arr_t>(key);
         }
 
         jon flatten() const {
@@ -1238,27 +1387,32 @@ namespace jacylang {
             if constexpr (std::is_same<T, null_t>::value) {
                 return "a null";
             }
-            else if constexpr (std::is_same<T, bool_t>::value) {
+
+            if constexpr (std::is_same<T, bool_t>::value) {
                 return "a bool";
             }
-            else if constexpr (std::is_same<T, int_t>::value) {
+
+            if constexpr (std::is_same<T, int_t>::value) {
                 return "an int";
             }
-            else if constexpr (std::is_same<T, float_t>::value) {
+
+            if constexpr (std::is_same<T, float_t>::value) {
                 return "a float";
             }
-            else if constexpr (std::is_same<T, str_t>::value) {
+
+            if constexpr (std::is_same<T, str_t>::value) {
                 return "a string";
             }
-            else if constexpr (std::is_same<T, obj_t>::value) {
+
+            if constexpr (std::is_same<T, obj_t>::value) {
                 return "an object";
             }
-            else if constexpr (std::is_same<T, arr_t>::value) {
+
+            if constexpr (std::is_same<T, arr_t>::value) {
                 return "an array";
             }
-            else {
-                throw std::logic_error("[jon bug] called `typeStr<T>` with non-supported type `T`");
-            }
+
+            throw std::logic_error("[jon bug] called `typeStr<T>` with non-supported type `T`");
         }
 
         /// Helper overload for schema validation, throws `invalid_error` instead of `type_error`

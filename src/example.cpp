@@ -1,18 +1,17 @@
 #include "jon/jon.h"
 
 using jon = jacylang::jon;
+using namespace jacylang::literal;
+
+const static auto config = R"(
+true: 'kek'
+false: 'lol'
+    )"_jon;
 
 int main(const int, const char**) {
     using namespace jacylang::literal;
 
-    auto file = jon::fromFile("../../examples/sample_1.jon", true);
-
-    std::cout << file.typeStr() << std::endl;
-
-//    auto val = file.at("value");
-//    auto schema = file.at("schema");
-//
-//    std::cout << val.validate(schema).dump("  ") << std::endl;
+    std::cout << config.dump(2) << std::endl;
 
     return 0;
 }

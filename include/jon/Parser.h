@@ -19,10 +19,16 @@ namespace jacylang {
             Lexer lexer;
             tokens = lexer.lex(source);
 
-            auto ast = parseValue(true);
+            Printer printer;
+
             if (debug) {
-                Printer printer;
                 printer.printTokens(tokens);
+            }
+
+            skipNls(true);
+            auto ast = parseValue(true);
+
+            if (debug) {
                 printer.printAst(ast);
             }
 
@@ -70,8 +76,18 @@ namespace jacylang {
                 case TokenKind::String: {
                     return true;
                 }
-                default: {
+                case TokenKind::LBrace:
+                case TokenKind::Eof:
+                case TokenKind::NL:
+                case TokenKind::Comma:
+                case TokenKind::Colon:
+                case TokenKind::RBrace:
+                case TokenKind::LBracket:
+                case TokenKind::RBracket: {
                     return false;
+                }
+                default: {
+                    throw std::logic_error("Unhandled `TokenKind` in `Parser::isKey`");
                 }
             }
         }
@@ -148,30 +164,39 @@ namespace jacylang {
                     };
                 }
                 case TokenKind::Null: {
+                    advance();
                     return ast::Ident {"null"};
                 }
                 case TokenKind::False: {
+                    advance();
                     return ast::Ident {"false"};
                 }
                 case TokenKind::True: {
+                    advance();
                     return ast::Ident {"true"};
                 }
                 case TokenKind::NaN: {
+                    advance();
                     return ast::Ident {"nan"};
                 }
                 case TokenKind::PosNaN: {
+                    advance();
                     return ast::Ident {"+nan"};
                 }
                 case TokenKind::NegNaN: {
+                    advance();
                     return ast::Ident {"-nan"};
                 }
                 case TokenKind::Inf: {
+                    advance();
                     return ast::Ident {"inf"};
                 }
                 case TokenKind::PosInf: {
+                    advance();
                     return ast::Ident {"+inf"};
                 }
                 case TokenKind::NegInf: {
+                    advance();
                     return ast::Ident {"-inf"};
                 }
                 case TokenKind::DecInt:
@@ -184,8 +209,18 @@ namespace jacylang {
                 case TokenKind::Ref: {
                     return ast::Ident {"$" + advance().val};
                 }
-                default: {
+                case TokenKind::Eof:
+                case TokenKind::NL:
+                case TokenKind::Comma:
+                case TokenKind::Colon:
+                case TokenKind::LBrace:
+                case TokenKind::RBrace:
+                case TokenKind::LBracket:
+                case TokenKind::RBracket: {
                     expectedError("key");
+                }
+                default: {
+                    throw std::logic_error("Unhandled `TokenKind` in `Parser::parseKey`");
                 }
             }
         }
@@ -338,13 +373,9 @@ namespace jacylang {
                 advance();
             }
 
-            std::cout << sliceTo << " " << index << std::endl;
-
             const auto & lastNlPos = tokens.at(lastNl).span.pos;
             const auto & line = source.substr(lastNlPos, tokens.at(sliceTo).span.pos - lastNlPos);
             const auto col = tokens.at(errorIndex).span.pos - lastNlPos;
-
-            std::cout << mstr(lastNlPos, " ", lastNl, " ", col);
 
             std::string pointLine;
             if (msg.size() + 2 < col) {
@@ -354,7 +385,7 @@ namespace jacylang {
             }
 
             throw parse_error(
-                mstr("\n", line, "\n", pointLine)
+                mstr("(Parsing error)", line, "\n", pointLine)
             );
         }
     };
