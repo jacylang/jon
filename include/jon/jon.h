@@ -211,34 +211,34 @@ namespace jacylang {
     public:
         explicit jon(std::nullptr_t = nullptr) noexcept : value(null_t {}) {}
 
-        jon(Type t) noexcept {
+        jon(Type t) {
             switch (t) {
                 case Type::Null: {
-                    value = null_t {};
+                    value.emplace<null_t>();
                     break;
                 }
                 case Type::Bool: {
-                    value = bool_t {};
+                    value.emplace<bool_t>(false);
                     break;
                 }
                 case Type::Int: {
-                    value = int_t {};
+                    value.emplace<int_t>(0);
                     break;
                 }
                 case Type::Float: {
-                    value = float_t {};
+                    value.emplace<float_t>(0.0);
                     break;
                 }
                 case Type::String: {
-                    value = str_t {};
+                    value.emplace<str_t>("");
                     break;
                 }
                 case Type::Object: {
-                    value = obj_t {};
+                    value.emplace<obj_t>({});
                     break;
                 }
                 case Type::Array: {
-                    value = arr_t {};
+                    value.emplace<arr_t>({});
                     break;
                 }
                 default: {
