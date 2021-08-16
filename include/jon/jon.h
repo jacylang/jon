@@ -327,6 +327,7 @@ namespace jacylang {
 
             if constexpr (std::is_same<U, obj_t>::value) {
                 value.emplace<obj_t>(std::move(val));
+                return;
             } 
             
             if constexpr (std::is_same<U, arr_t>::value) {
