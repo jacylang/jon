@@ -300,37 +300,41 @@ namespace jacylang {
         template<class T, class U = typename no_cvr<T>::type>
         jon(T && val) noexcept {
             if constexpr (std::is_same<U, null_t>::value) {
-                value = null_t {};
+                value.emplace<null_t>();
                 return;
             }
 
             if constexpr (std::is_same<U, bool_t>::value) {
-                value = static_cast<bool_t>(std::move(val));
+                value.emplace<bool_t>(static_cast<bool_t>(std::move(val)));
                 return;
             }
 
             if constexpr (std::is_integral<U>::value) {
-                value = static_cast<int_t>(std::move(val));
+                value.emplace<int_t>(static_cast<int_t>(std::move(val)));
                 return;
             }
 
             if constexpr (std::is_floating_point<U>::value) {
-                value = static_cast<float_t>(std::move(val));
+                value.emplace<float_t>(static_cast<float_t>(std::move(val)));
                 return;
             }
 
             if constexpr (std::is_convertible<U, str_t>::value) {
-                value = str_t(std::move(val));
+                value.emplace<str_t>(std::move(val));
                 return;
             }
 
-            if constexpr (std::is_same<U, obj_t>::value or std::is_same<U, arr_t>::value) {
-                value = std::move(val);
+            if constexpr (std::is_same<U, obj_t>::value) {
+                value.emplace<obj_t>(std::move(val));
+            } 
+            
+            if constexpr (std::is_same<U, arr_t>::value) {
+                value.emplace<arr_t>(std::move(val));
                 return;
             }
 
             if constexpr (detail::HasToJon<U>::value) {
-                value = U::toJon(std::move(val)).value;
+                *this = U::toJon(std::move(val));
                 return;
             }
 
