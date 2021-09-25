@@ -1143,7 +1143,7 @@ namespace jacylang {
 
                 if (schema.has("minLen")) {
                     auto min = schema.schemaAt<int_t>("minLen", path);
-                    if (stringValue.size() < min) {
+                    if (cmp_less(stringValue.size(), min)) {
                         result[path + "/minLen"] = jon({
                             {"message", mstr("Invalid string length: ", stringValue.size(), " is less than ", min)},
                             {"data", *this},
@@ -1154,7 +1154,7 @@ namespace jacylang {
 
                 if (schema.has("maxLen")) {
                     auto max = schema.schemaAt<int_t>("maxLen", path);
-                    if (stringValue.size() > max) {
+                    if (cmp_greater(stringValue.size(), max)) {
                         result[path + "/maxLen"] = jon({
                             {"message", mstr("Invalid string length: ", stringValue.size(), " is greater than ", max)},
                             {"data", *this},
@@ -1180,7 +1180,7 @@ namespace jacylang {
 
                 if (schema.has("minSize")) {
                     auto min = schema.schemaAt<int_t>("minSize", path);
-                    if (arrayValue.size() < min) {
+                    if (cmp_less(arrayValue.size(), min)) {
                         result[path + "/minSize"] = jon({
                             {"message", mstr("Invalid array size: ", arrayValue.size(), " is less than ", min)},
                             {"data",    *this},
@@ -1191,7 +1191,7 @@ namespace jacylang {
 
                 if (schema.has("maxSize")) {
                     auto max = schema.schemaAt<int_t>("maxSize", path);
-                    if (arrayValue.size() > max) {
+                    if (cmp_greater(arrayValue.size(), max)) {
                         result[path + "/maxSize"] = jon({
                             {"message", mstr("Invalid array size: ", arrayValue.size(), " is greater than ", max)},
                             {"data", *this},
@@ -1214,7 +1214,7 @@ namespace jacylang {
 
                 if (schema.has("minProps")) {
                     auto min = schema.schemaAt<int_t>("minProps", path);
-                    if (objectValue.size() < min) {
+                    if (cmp_less(objectValue.size(), min)) {
                         result[path + "/minProps"] = jon({
                             {"message", mstr("Invalid object properties count: ", objectValue.size(), " is less than ", min)},
                             {"data", *this},
@@ -1225,7 +1225,7 @@ namespace jacylang {
 
                 if (schema.has("maxProps")) {
                     auto max = schema.schemaAt<int_t>("maxProps", path);
-                    if (objectValue.size() > max) {
+                    if (cmp_greater(objectValue.size(), max)) {
                         result[path + "/maxProps"] = jon({
                             {"message", mstr("Invalid object properties count: ", objectValue.size(), " is greater than ", max)},
                             {"data", *this},
