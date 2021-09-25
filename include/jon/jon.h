@@ -865,7 +865,7 @@ namespace jacylang {
 
         const jon & at(size_t idx) const {
             assertTypeArray();
-            if (idx > get<arr_t>().size()) {
+            if (idx >= get<arr_t>().size()) {
                 throw out_of_range(mstr("`at` by index '", idx, "'"));
             }
             return get<arr_t>().at(idx);
@@ -873,7 +873,7 @@ namespace jacylang {
 
         jon & at(size_t idx) {
             assertTypeArray();
-            if (idx > get<arr_t>().size()) {
+            if (idx >= get<arr_t>().size()) {
                 throw out_of_range(mstr("`at` by index '", idx, "'"));
             }
             return get<arr_t>().at(idx);

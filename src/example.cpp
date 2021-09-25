@@ -86,7 +86,7 @@ commands: [
 int main(const int, const char**) {
     using namespace jacylang::literal;
 
-    std::cout << config.at<jon::arr_t>("extensions").size() << std::endl;
+    std::cout << config.strAt("default-command") << std::endl;
 
     return 0;
 }
