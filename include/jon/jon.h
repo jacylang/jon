@@ -209,7 +209,7 @@ namespace jacylang {
 
         // Constructors //
     public:
-        explicit jon(std::nullptr_t = nullptr) noexcept : value{null_t {}} {}
+        explicit jon(std::nullptr_t = nullptr) : value{null_t {}} {}
 
         jon(Type t) {
             switch (t) {
@@ -254,7 +254,7 @@ namespace jacylang {
         using is_jon = std::is_same<T, jon>;
 
         template<class T, class U = typename no_cvr<T>::type>
-        jon(const T & val) noexcept {
+        jon(const T & val) {
             if constexpr (std::is_same<U, null_t>::value) {
                 value.emplace<null_t>();
                 return;
@@ -299,7 +299,7 @@ namespace jacylang {
         }
 
         template<class T, class U = typename no_cvr<T>::type>
-        jon(T && val) noexcept {
+        jon(T && val) {
             if constexpr (std::is_same<U, null_t>::value) {
                 value.emplace<null_t>();
                 return;
@@ -343,9 +343,9 @@ namespace jacylang {
             throw std::logic_error("Invalid type for jon move constructor");
         }
 
-        jon(const detail::jon_ref<jon> & ref) noexcept : jon{ref.get()} {}
-        jon(const jon & other) noexcept : value(other.value) {}
-        jon(jon && other) noexcept : value(std::move(other.value)) {}
+        jon(const detail::jon_ref<jon> & ref) : jon{ref.get()} {}
+        jon(const jon & other) : value(other.value) {}
+        jon(jon && other) : value(std::move(other.value)) {}
 
         jon(std::initializer_list<detail::jon_ref<jon>> init, bool typeDeduction = true, Type type = Type::Array) {
             if (init.size() == 0) {
@@ -388,7 +388,7 @@ namespace jacylang {
             return *this;
         }
 
-        jon & operator=(std::initializer_list<detail::jon_ref<jon>> init) noexcept {
+        jon & operator=(std::initializer_list<detail::jon_ref<jon>> init) {
             if (init.size() == 0) {
                 *this = obj_t {};
                 return *this;
@@ -536,7 +536,7 @@ namespace jacylang {
             return get<arr_t>();
         }
 
-        bool empty() const noexcept {
+        bool empty() const {
             if (isNull()) {
                 return true;
             }
@@ -552,7 +552,7 @@ namespace jacylang {
             return false;
         }
 
-        bool has(const str_t & key) const noexcept {
+        bool has(const str_t & key) const {
             if (isObject()) {
                 const auto & obj = get<obj_t>();
                 return obj.find(key) != obj.end();
@@ -561,7 +561,7 @@ namespace jacylang {
             return false;
         }
 
-        void clear() noexcept {
+        void clear() {
             *this = jon(type());
         }
 
@@ -588,12 +588,12 @@ namespace jacylang {
         // Operators //
     public:
         template<class T, typename = typename std::enable_if_t<std::is_scalar_v<T>, T>>
-        friend bool operator==(const jon & lhs, const T & rhs) noexcept {
+        friend bool operator==(const jon & lhs, const T & rhs) {
             return lhs == jon(rhs);
         }
 
         template<class T, typename = typename std::enable_if_t<std::is_scalar_v<T>, T>>
-        friend bool operator==(const T & lhs, const jon & rhs) noexcept {
+        friend bool operator==(const T & lhs, const jon & rhs) {
             return jon(lhs) == rhs;
         }
 
