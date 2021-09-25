@@ -90,7 +90,6 @@ namespace jacylang {
         using obj_t = detail::obj_t<jon>;
         using arr_t = detail::arr_t<jon>;
 
-        using obj_el_t = std::pair<str_t, jon>;
         using storage_t = std::variant<null_t, bool_t, int_t, float_t, str_t, obj_t, arr_t>;
 
         using Type = detail::Type;
@@ -249,9 +248,6 @@ namespace jacylang {
 
         template<class T>
         using no_cvr = std::remove_reference<typename std::remove_cv<T>::type>;
-
-        template<class T>
-        using is_jon = std::is_same<T, jon>;
 
         template<class T, class U = typename no_cvr<T>::type>
         jon(const T & val) {
@@ -639,7 +635,7 @@ namespace jacylang {
 
         // Type checks //
     public:
-        Type type() const noexcept {
+        Type type() const {
             if (std::holds_alternative<null_t>(value)) {
                 return Type::Null;
             }
