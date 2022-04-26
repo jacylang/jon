@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
 
-project(jon VERSION 0.0.7 LANGUAGES CXX)
+project(jon VERSION 0.0.13 LANGUAGES CXX)
 
 ### Target
 set(JON_TARGET_NAME ${PROJECT_NAME})
@@ -13,6 +13,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS_DEBUG "-g -Og")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS "-std=c++17")
+
+if (POLICY CMP0077)
+    cmake_policy(SET CMP0077 NEW)
+endif ()
 
 add_compile_options(
         # WARNINGS #
